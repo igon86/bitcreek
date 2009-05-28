@@ -11,7 +11,7 @@ public class UploadManager implements Runnable{
     BitCreekPeer peer;
     Creek c;
     
-    public void UploadManager(BitCreekPeer peer, Creek c){
+    public UploadManager(BitCreekPeer peer, Creek c){
         this.peer = peer;
         this.c= c;
     }
