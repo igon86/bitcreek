@@ -102,7 +102,7 @@ public class BitCreekPeer {
         stubcb = null;
         callback = null;
         connessioni = 0;
-        //Avvio del thread Pool
+        /* Avvio del thread Pool */
         TP = Executors.newFixedThreadPool(NUMTHREAD);
 
         /* Creazione cartelle se non esistenti*/
@@ -333,6 +333,9 @@ public class BitCreekPeer {
             throw new ErrorException("Param null");
         }
         //int id = creek.getId();
+
+        /* RIMESSO CONTROLLO VECCHIO */
+
         boolean trovato = false;
         for (Creek c : arraydescr) {
             if ((c.getName()).compareTo(creek.getName()) == 0) {
