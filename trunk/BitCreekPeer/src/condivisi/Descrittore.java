@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Classe che definisce il descrittore di un file
- * @author Bandettini
+ * @author Bandettini Lottarini
  */
 
 public class Descrittore implements Serializable{
