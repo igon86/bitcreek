@@ -1,0 +1,5 @@
+#!/bin/bash
+
+make clean
+rm -r -f ../../BitCreekPeer2
+cp -r ../../BitCreekPeer ../../BitCreekPeer2
