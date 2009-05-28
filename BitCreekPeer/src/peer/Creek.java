@@ -224,7 +224,7 @@ public class Creek extends Descrittore implements Serializable {
 
     @Override
     public synchronized Creek copia() throws ErrorException {
-        System.out.println("COPIA CREEK");
+        //System.out.println("COPIA CREEK");
         Descrittore temp = super.copia();
         Creek c = new Creek(temp, this.stato, this.pubblicato);
         c.peer = peer;

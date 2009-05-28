@@ -233,7 +233,7 @@ public class BitCreekPeer {
      * @return arraydescr
      */
     public synchronized ArrayList<Creek> getDescr() throws ErrorException {
-        System.out.println("GETDESCR");
+        //System.out.println("GETDESCR");
         ArrayList<Creek> ris = new ArrayList<Creek>();
         for (Creek c : arraydescr) {
             Creek nuovo = c.copia();
@@ -332,15 +332,16 @@ public class BitCreekPeer {
         if (creek == null) {
             throw new ErrorException("Param null");
         }
-        int id = creek.getId();
-        //boolean trovato = false;
-        //for (Creek c : arraydescr) {
-        //    if ((c.getName()).compareTo(nome) == 0) {
-        //       trovato = true;
-        //        break;
-        //    }
-        //}
-        boolean trovato = this.presenza(id);
+        //int id = creek.getId();
+        boolean trovato = false;
+        for (Creek c : arraydescr) {
+            if ((c.getName()).compareTo(creek.getName()) == 0) {
+               trovato = true;
+                break;
+            }
+        }
+        //boolean trovato = this.presenza(id);
+        System.out.println("Sono in addCrek");
         if (!trovato) {
             System.out.println(Thread.currentThread().getName()+"CREEK NON PRESENTE IN ARRAYDESCR");
             FileOutputStream c = null;
@@ -364,7 +365,8 @@ public class BitCreekPeer {
                 throw new ErrorException("Impossibile aggiungere il file: IOEXCEPTION");
             }
             arraydescr.add(creek);
-        }
+        }else
+            System.out.println("Trovato creek in arraydescr");
         return !trovato;
     }
 
