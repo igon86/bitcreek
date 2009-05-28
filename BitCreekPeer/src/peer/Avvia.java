@@ -19,8 +19,8 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public class Avvia implements Runnable {
 
-    BitCreekPeer peer;
-    int[] array;
+    private BitCreekPeer peer;
+    private int[] array;
 
     //array e` l'array di indici dei descrittori da avviare
     public Avvia(BitCreekPeer peer, int[] array) {
@@ -30,8 +30,10 @@ public class Avvia implements Runnable {
 
     public void run() {
         System.out.println(Thread.currentThread().getName()+" AVVIA");
-        
+
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
+        Creek c = null;
+        Descrittore d = null;
         
         for (int index : this.array) {
 
@@ -39,14 +41,13 @@ public class Avvia implements Runnable {
             ObjectInputStream oin = null;
             
             //questa provoca l'aggiornamento dell;interfaccia grafica
-            Creek c = null; //true perchè il file è in download,false perchè non lo ho pubblicato
             try {
                 System.out.println(Thread.currentThread().getName()+" AVVIO IL DESCR "+index+" SU UNA LISTA DI DIMENSIONE "+peer.getCercati().size());
-                Descrittore test = peer.getCercati().get(0);
-                if(test == null) System.out.println("STA SCAZZANDO");
-                test = peer.getCercati().get(index);
-                if(test == null) System.out.println("STA SCAZZANDO 2");
-                c = new Creek(test, true, false);
+                d = peer.getCercati().get(0);
+                if(d == null) System.out.println("STA SCAZZANDO");
+                d = peer.getCercati().get(index);
+                if(d == null) System.out.println("STA SCAZZANDO 2");
+                c = new Creek(d, true, false);
                 //introduce una serie di problemi tragici!
                 c.setPIO();
                 if (c == null) System.out.println("NON E POSSIBILE!!!");
@@ -56,12 +57,7 @@ public class Avvia implements Runnable {
             }
 
             //recupero della lista Peer dal tracker
-            int portatracker = -1;
-            try {
-                portatracker = peer.getCercati().get(index).getTCP();
-            } catch (ErrorException ex) {
-                Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            int portatracker = d.getTCP();
             System.out.println(Thread.currentThread().getName()+" porta tracker : " + portatracker);
             try {
                 s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);

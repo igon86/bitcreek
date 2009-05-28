@@ -47,8 +47,8 @@ public class BitCreekPeer {
     private final int NUMTHREAD = 100;
     /*dimensione del blocco*/
     public static final int DIMBLOCCO = 4096;
-    /*TIMEOUT delle receive*/
-    public static final int TIMEOUT = 2000;
+    protected static final int MAXCONNESSIONI = 100;
+    protected static final int TIMEOUTCONNESSIONE = 500;
     /* Variabili d'istanza */
     /** Mio ip */
     private InetAddress mioip;
@@ -77,6 +77,8 @@ public class BitCreekPeer {
     private ImplementazioneCallback callback;
     /** ThreadPool per il p2p*/
     private ExecutorService TP;
+    /** Numero di connessioni aperte */
+    private int connessioni;
     
 
     /**
@@ -99,7 +101,7 @@ public class BitCreekPeer {
         stub = null;
         stubcb = null;
         callback = null;
-        
+        connessioni = 0;
         //Avvio del thread Pool
         TP = Executors.newFixedThreadPool(NUMTHREAD);
 
@@ -134,6 +136,26 @@ public class BitCreekPeer {
     }
 
     //METODI GETTER
+    /**
+     * Restituisce il numero di connessioni
+     * @return
+     */
+    public synchronized int getConnessioni(){
+        return this.connessioni;
+    }
+
+    /**
+     * Incrementa il numero di connessioni
+     */
+    public synchronized void incrConnessioni(){
+        this.connessioni++;
+    }
+    /**
+     * Incrementa il numero di connessioni
+     */
+    public synchronized void decrConnessioni(){
+        this.connessioni--;
+    }
     /**
      * Restituisce l' ip del client
      * @return mioip
