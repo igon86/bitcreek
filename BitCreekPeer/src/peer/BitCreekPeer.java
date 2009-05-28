@@ -207,13 +207,14 @@ public class BitCreekPeer {
      * @return arraydescr
      */
     public synchronized ArrayList<Creek> getDescr() throws ErrorException {
-        //System.out.println("GETDESCR");
-        //ArrayList<Creek> ris = new ArrayList<Creek>();
-        //for (Creek c : arraydescr) {
-        //    Creek nuovo = c.copia();
-        //    ris.add(nuovo);
-        //}
-        return this.arraydescr;
+        System.out.println("GETDESCR");
+        ArrayList<Creek> ris = new ArrayList<Creek>();
+        for (Creek c : arraydescr) {
+            Creek nuovo = c.copia();
+            ris.add(nuovo);
+        }
+        //return this.arraydescr;
+        return ris;
     }
 
     //SETTER
