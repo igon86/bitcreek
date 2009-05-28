@@ -80,7 +80,7 @@ public class Ascolto implements Runnable {
                         conn = temp;
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
-                    peer.getTP().execute(new Uploader(conn));
+                    peer.addTask(new Uploader(conn));
                     //in.close();
                     //out.close();
                     //OPERAZIONI ULTERIORI SE SONO LEECHER nello SWARM
@@ -95,7 +95,7 @@ public class Ascolto implements Runnable {
                         Bitfield b = (Bitfield) in.readObject();
                         conn.setSocketDown(mysock);
                         conn.setBitfield(b.getBitfield());
-                        peer.getTP().execute(new Downloader(contacted, conn));
+                        peer.addTask(new Downloader(contacted, conn));
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(Ascolto.class.getName()).log(Level.SEVERE, null, ex);

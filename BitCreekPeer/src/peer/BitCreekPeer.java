@@ -165,6 +165,13 @@ public class BitCreekPeer {
     }
 
     /**
+     * Aggiunge un task al pool
+     * @param r
+     */
+    public synchronized void addTask(Runnable r){
+        this.TP.execute(r);
+    }
+    /**
      * Restituisce il numero della porta in ascolto
      * @return portarichieste
      */
@@ -188,9 +195,6 @@ public class BitCreekPeer {
         return this.bloccato;
     }
     
-    public synchronized ExecutorService getTP(){
-        return this.TP;
-    }
     /**
      * Restituisce lo stub per le callback
      * @return stubcb
