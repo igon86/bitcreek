@@ -126,9 +126,13 @@ public class Avvia implements Runnable {
 
             }
 
-        //AVVIO l'uploadManager
-        //peer.getTP().execute(new UploadManager());
-
+            System.out.println("creo uploader manager");
+            /* avvio l'uploadManager anche se nessuno mi ha risposto ???????? */
+            peer.addTask(new UploadManager(peer, c));
+            /* inutile continuare a ciclare se non posso creare connessioni */
+            if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
+                break;
+            }
 
 
         }
