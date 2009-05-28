@@ -68,10 +68,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         });
     }
 
-    
-    
-    
-    
     /**
      * Stampa un messaggio su un dialogo
      * @param message messaggio da visualizzare
@@ -103,11 +99,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         });
     }
 
-    
-    
-    
-    
-    
     /**
      * Esegue l'aggiornamento grafico in seguito alla connetti
      */
@@ -204,11 +195,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         });
     }
 
-    
-    
-    
-    
-    
     /** 
      * Metodo che inizializza i componenti grafici
      */
@@ -917,48 +903,16 @@ public class BitCreekGui extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    
-    
-    
     /**
      * Aggiorna il grafico
      * @param evt
      */
-    private static int numero = 0;
 
     private void graficolistenerActionPerformed(ActionEvent evt) {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                numero++;
-                if (numero == 1) {
-                    FunctionPanel.settaConnessioni(0);
-                } else if (numero == 2) {
-                    FunctionPanel.settaConnessioni(10);
-                } else if (numero == 3) {
-                    FunctionPanel.settaConnessioni(15);
-                } else if (numero == 4) {
-                    FunctionPanel.settaConnessioni(5);
-                } else if (numero == 5) {
-                    FunctionPanel.settaConnessioni(17);
-                } else if (numero == 19) {
-                    FunctionPanel.settaConnessioni(65);
-                } else if (numero == 20) {
-                    FunctionPanel.settaConnessioni(70);
-                } else if (numero == 21) {
-                    FunctionPanel.settaConnessioni(71);
-                } else if (numero == 30) {
-                    FunctionPanel.settaConnessioni(-1);
-                } else if (numero == 31) {
-                    FunctionPanel.settaConnessioni(120);
-                } else if (numero == 32) {
-                    FunctionPanel.settaConnessioni(100);
-                } else if (numero == 33) {
-                    FunctionPanel.settaConnessioni(99);
-                } else {
-                    FunctionPanel.settaConnessioni(0);
-                }
+                FunctionPanel.settaConnessioni(peer.getConnessioni());
                 grafico.repaint();
             }
         });
@@ -1069,12 +1023,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         });
     }
 
-    
-    
-    
-    
-    
-    
     /**
      * Chiude l'applicazione chiamando l'handler pulizia
      * @param evt
@@ -1480,11 +1428,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     }
 }//GEN-LAST:event_bottonefortunaMouseClicked
 
-
-
-
-
-
     /**
      * Handler che si occupa di far partire uno o più download 
      * tutti gli handler degli eventi/bottoni collegati ad avvia
@@ -1494,7 +1437,7 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private void avvia() {
         int[] arraycerca = tabellaricerca.getSelectedRows();
         int[] arraydown = tabellamieicreek.getSelectedRows();
-        
+
         //qui siamo sempre neel'eventLoop, sposto i file cercati in arraydescr, va messo come thread!!
         if (arraycerca.length != 0) {
             try {
@@ -1505,9 +1448,9 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
             }
         }
         //recupero la listaPeer
-        
+
         //manca la gestione di chi e` gia in arrayDescr
-        
+
         //thread avvia + thread Listener + Upload Manager
         //i thread downloader e uploader vengono creti da listener o da avvia
 
