@@ -145,7 +145,6 @@ public class Crea implements Runnable {
                     System.out.println("Entro in addcreek");
                     peer.addCreek(c);
                 } catch (ErrorException ex) {
-                    System.out.println("PROBLEMAAAAAAAAAAAAAAAAAAAAAAAA");
                     problema = true;
                 }
             }
