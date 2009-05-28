@@ -6,7 +6,9 @@ import condivisi.NetRecord;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,28 +31,34 @@ public class Avvia implements Runnable {
     }
 
     public void run() {
-        System.out.println(Thread.currentThread().getName()+" AVVIA");
+        System.out.println(Thread.currentThread().getName() + " AVVIA");
 
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         Creek c = null;
         Descrittore d = null;
-        
+
         for (int index : this.array) {
 
             SSLSocket s = null;
             ObjectInputStream oin = null;
-            
+
             //questa provoca l'aggiornamento dell;interfaccia grafica
             try {
-                System.out.println(Thread.currentThread().getName()+" AVVIO IL DESCR "+index+" SU UNA LISTA DI DIMENSIONE "+peer.getCercati().size());
+                System.out.println(Thread.currentThread().getName() + " AVVIO IL DESCR " + index + " SU UNA LISTA DI DIMENSIONE " + peer.getCercati().size());
                 d = peer.getCercati().get(0);
-                if(d == null) System.out.println("STA SCAZZANDO");
+                if (d == null) {
+                    System.out.println("STA SCAZZANDO");
+                }
                 d = peer.getCercati().get(index);
-                if(d == null) System.out.println("STA SCAZZANDO 2");
+                if (d == null) {
+                    System.out.println("STA SCAZZANDO 2");
+                }
                 c = new Creek(d, true, false);
                 //introduce una serie di problemi tragici!
                 c.setPIO();
-                if (c == null) System.out.println("NON E POSSIBILE!!!");
+                if (c == null) {
+                    System.out.println("NON E POSSIBILE!!!");
+                }
                 peer.addCreek(c);
             } catch (ErrorException ex) {
                 Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,11 +66,11 @@ public class Avvia implements Runnable {
 
             //recupero della lista Peer dal tracker
             int portatracker = d.getTCP();
-            System.out.println(Thread.currentThread().getName()+" porta tracker : " + portatracker);
+            System.out.println(Thread.currentThread().getName() + " porta tracker : " + portatracker);
             try {
                 s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);
                 oin = new ObjectInputStream(s.getInputStream());
-                
+
                 // leggo la dimensione della lista
                 int dimlista = oin.readInt();
                 System.out.println("dimlista : " + dimlista);
@@ -76,52 +84,53 @@ public class Avvia implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             //devo contattare i peer nella lista
-            for (NetRecord n : lista){
+            for (NetRecord n : lista) {
                 try {
+                    if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
+                        break;
+                    }
                     //contatto il peer n
-                    Socket sock = new Socket(n.getIp(), n.getPorta());
-                    //ma e la timeoutException? per ora e`  2 secondi e non da problemi -> ci pensa albe
-                    //sock.setSoTimeout(BitCreekPeer.TIMEOUT);
+                    Socket sock = null;
+                    SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
+                    sock = new Socket();
+                    sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
                     Bitfield b = null;
                     ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
                     ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
                     //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
-                    contactOUT.writeObject(new Contact(peer.getMioIp(),peer.getPortaRichieste(),c.getId()));
+                    contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
                     try {
                         //lui mi risponde con il suo bitfield
                         b = (Bitfield) contactIN.readObject();
-                        System.out.println(Thread.currentThread().getName()+" Ricevuto Bitfield");
-                        //aggiungo l'oggetto connessione
+                        System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
+                    //aggiungo l'oggetto connessione
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                     //aggiungo l'oggetto connessione - manca il monitor
-                    Connessione conn = new Connessione(sock,null,b.getBitfield(),n.getPorta());
+                    Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
                     c.addConnessione(conn);
-                    
+
                     //creo il thread per il download e lo aggiungo al ThreadPool
-                    peer.getTP().execute(new Downloader(c,conn));
-                    
+                    peer.getTP().execute(new Downloader(c, conn));
+
                 } catch (IOException ex) {
-                    /**il timeout puo` essere catchato qui piu` formalmente,
-                     * l'azione da compiere e` semplicemente passare
-                     * al prossimo netRecord()
-                     */
-                    
                     Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
+                    /* passo al prossimo netrecord perchè nessuno mi ha risposto */
+                    continue;
                 }
-                
-                
+
+
             }
-            
-            //AVVIO l'uploadManager
-            //peer.getTP().execute(new UploadManager());
-            
-            
-            
+
+        //AVVIO l'uploadManager
+        //peer.getTP().execute(new UploadManager());
+
+
+
         }
     }
 }
