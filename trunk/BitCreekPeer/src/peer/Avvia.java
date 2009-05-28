@@ -118,7 +118,6 @@ public class Avvia implements Runnable {
                     peer.addTask(new Downloader(c, conn));
 
                 } catch (IOException ex) {
-                    Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
                     /* passo al prossimo netrecord perchè nessuno mi ha risposto */
                     continue;
                 }
@@ -127,7 +126,6 @@ public class Avvia implements Runnable {
             }
 
             System.out.println("creo uploader manager");
-            /* avvio l'uploadManager anche se nessuno mi ha risposto ???????? */
             peer.addTask(new UploadManager(peer, c));
             /* inutile continuare a ciclare se non posso creare connessioni */
             if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {

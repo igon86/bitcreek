@@ -23,7 +23,7 @@ public class Downloader implements Runnable{
     }
 
     public void run() {
-        System.out.println("DOWNLOADER DEL FILE "+c.getName()+" AVVIATO");
+        /*System.out.println("DOWNLOADER DEL FILE "+c.getName()+" AVVIATO");
         
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
         
@@ -82,7 +82,7 @@ public class Downloader implements Runnable{
             } catch (InterruptedException ex) {
                 Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
     }
     
 }

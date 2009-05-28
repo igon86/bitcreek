@@ -142,8 +142,10 @@ public class Crea implements Runnable {
 
             if (!problema) {
                 try {
+                    System.out.println("Entro in addcreek");
                     peer.addCreek(c);
                 } catch (ErrorException ex) {
+                    System.out.println("PROBLEMAAAAAAAAAAAAAAAAAAAAAAAA");
                     problema = true;
                 }
             }
@@ -158,7 +160,6 @@ public class Crea implements Runnable {
             }
             File f = new File("./FileCondivisi/" + nomefilesorgente);
             f.delete();
-            //MA NON E~ VERO!!!
             gui.PrintInformation("Errore Server", gui.ERRORE);
         }
         /* ricambio il cursore */

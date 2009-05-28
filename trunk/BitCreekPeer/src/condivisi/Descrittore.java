@@ -136,7 +136,7 @@ public class Descrittore implements Serializable{
     public Descrittore copia() throws ErrorException{
         Descrittore d = null;
         try {
-            System.out.println("COPIA - DESCRITTORE");
+            //System.out.println("COPIA - DESCRITTORE");
             d = new Descrittore(nomefile, dimensione, hash, stubcb);
         } catch (ErrorException e) {
             throw new ErrorException(e.getMessage());
