@@ -115,7 +115,7 @@ public class Avvia implements Runnable {
                     c.addConnessione(conn);
 
                     //creo il thread per il download e lo aggiungo al ThreadPool
-                    peer.getTP().execute(new Downloader(c, conn));
+                    peer.addTask(new Downloader(c, conn));
 
                 } catch (IOException ex) {
                     Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
