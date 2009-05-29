@@ -234,13 +234,13 @@ public class BitCreekPeer {
      */
     public synchronized ArrayList<Creek> getDescr() throws ErrorException {
         //System.out.println("GETDESCR");
-        ArrayList<Creek> ris = new ArrayList<Creek>();
-        for (Creek c : arraydescr) {
-            Creek nuovo = c.copia();
-            ris.add(nuovo);
-        }
-        //return this.arraydescr;
-        return ris;
+        //ArrayList<Creek> ris = new ArrayList<Creek>();
+        //for (Creek c : arraydescr) {
+        //    Creek nuovo = c.copia();
+        //    ris.add(nuovo);
+        //}
+        return this.arraydescr; // -----------> da fare ammodo !!!!!!!!!!!!
+        //return ris;
     }
 
     //SETTER
@@ -286,10 +286,11 @@ public class BitCreekPeer {
      * @return true se esiste già, false altrimenti
      * @throws condivisi.ErrorException se nome è null
      */
-    public synchronized boolean presenza(int id) throws ErrorException {
+    public synchronized boolean presenza(/*int id*/String nome) throws ErrorException {
         boolean presenza = false;
         for (Creek c : arraydescr) {
-            if (c.getId() == id) {
+            //if (c.getId() == id) {
+            if(c.getName().compareTo(nome) == 0){
                 presenza = true;
                 break;
             }

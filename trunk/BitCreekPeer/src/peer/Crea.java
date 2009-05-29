@@ -67,11 +67,11 @@ public class Crea implements Runnable {
         
         System.out.println(Thread.currentThread().getName()+" INIZIO CREA");
         //QUESTO CONTROLLO LO DEVE FARE IL SERVER ... E A REGOLA ERA IMPLEMENTATO
-        //try {
-        //    presenza = peer.presenza(nomefilesorgente);
-        //} catch (ErrorException ex) {
-        //    problema = true;
-        //}
+        try {
+            presenza = peer.presenza(nomefilesorgente);
+        } catch (ErrorException ex) {
+            problema = true;
+        }
 
         Creek c = null;
 
@@ -130,6 +130,7 @@ public class Crea implements Runnable {
             if (!problema && p != null) {
                 descr.setPortaTCP(p.getPortaTCP());
                 descr.setPortaUDP(p.getPortaUDP());
+                System.out.println( Thread.currentThread().getName() + " Crea : getId() = " +p.getId());
                 descr.setId(p.getId());
                 try {
                     c = new Creek(descr, false, p.getPubblicato());

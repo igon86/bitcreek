@@ -31,7 +31,7 @@ public class Avvia implements Runnable {
     }
 
     public void run() {
-        System.out.println(Thread.currentThread().getName() + " AVVIA");
+        //System.out.println(Thread.currentThread().getName() + " AVVIA");
 
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         Creek c = null;
@@ -45,7 +45,7 @@ public class Avvia implements Runnable {
 
             //questa provoca l'aggiornamento dell' interfaccia grafica
             try {
-                System.out.println(Thread.currentThread().getName() + " AVVIO IL DESCR " + index + " SU UNA LISTA DI DIMENSIONE " + peer.getCercati().size());
+                System.out.println(Thread.currentThread().getName() + " : Avvia : Avvio descr " + index + " su una lista lunga " + peer.getCercati().size());
                 //d = peer.getCercati().get(0);
                 //if (d == null) {
                 //    System.out.println("STA SCAZZANDO");
@@ -71,22 +71,24 @@ public class Avvia implements Runnable {
             if (!presenza) {
                 //recupero della lista Peer dal tracker
                 int portatracker = d.getTCP();
-                System.out.println(Thread.currentThread().getName() + " porta tracker : " + portatracker);
+                System.out.println(Thread.currentThread().getName() + " : Avvia : !presenza --> Contatto tracker sulla porta : " + portatracker);
                 try {
                     s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);
                     oin = new ObjectInputStream(s.getInputStream());
 
                     // leggo la dimensione della lista
                     int dimlista = oin.readInt();
-                    System.out.println("dimlista : " + dimlista);
+                    System.out.println(Thread.currentThread().getName() + " : Avvia : dimlista : " + dimlista);
                     // faccio un for per leggere i netrecord
                     for (int j = 0; j < dimlista; j++) {
                         lista.add((NetRecord) oin.readObject());
                     }
                     s.close();
                 } catch (ClassNotFoundException ex) {
+                    System.out.println(Thread.currentThread().getName() + " Avvia : Classnotfound");
                     Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
+                    System.out.println(Thread.currentThread().getName() + " Avvia : IOIO");
                     Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -96,6 +98,7 @@ public class Avvia implements Runnable {
                         if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                             break;
                         }
+                        System.out.println(Thread.currentThread().getName() + " Avvia : Contatto peer con porta " + n.getPorta());
                         //contatto il peer n
                         Socket sock = null;
                         SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
@@ -112,27 +115,32 @@ public class Avvia implements Runnable {
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
                         //aggiungo l'oggetto connessione
                         } catch (ClassNotFoundException ex) {
+                            System.out.println(Thread.currentThread().getName() + " Avvia : Classnotfound");
                             Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
                         //aggiungo l'oggetto connessione
+                        System.out.println(Thread.currentThread().getName() + " Avvia : Aggiungo connessione");
                         Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
                         c.addConnessione(conn);
 
+                        System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");
                         //creo il thread per il download e lo aggiungo al ThreadPool
                         peer.addTask(new Downloader(c, conn));
+                        System.out.println(Thread.currentThread().getName() + " Avvia : Incrconnessioni");
                         /* incremento  il numero di connessioni */
                         peer.incrConnessioni();
 
                     } catch (IOException ex) {
                         /* passo al prossimo netrecord perchè nessuno mi ha risposto */
+                        System.out.println(Thread.currentThread().getName() + " Avvia : Passo al prossimo netrecord");
                         continue;
                     }
 
 
                 }
 
-                System.out.println("creo uploader manager");
+                System.out.println(Thread.currentThread().getName() + " Avvia : CREO UPLOADER MANAGER !!!!!");
                 peer.addTask(new UploadManager(peer, c));
                 /* inutile continuare a ciclare se non posso creare connessioni */
                 if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
