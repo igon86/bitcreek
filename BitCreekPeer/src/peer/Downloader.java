@@ -72,8 +72,14 @@ public class Downloader implements Runnable{
             }
             //if(! pendingRequest){
                 PIO p = c.getNext(this.conn.getBitfied());
-                conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
-                System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato");
+                if(p != null){
+                    conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
+                    System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato");
+                }else{
+                    System.out.println(Thread.currentThread().getName() + " vediamo se esco dal while");
+                    break;
+                }
+
             try {
                 //}
                 //TEMPORANEO!!!
@@ -82,6 +88,7 @@ public class Downloader implements Runnable{
                 Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println(Thread.currentThread().getName() + " Downloader terminato");
     }
     
 }
