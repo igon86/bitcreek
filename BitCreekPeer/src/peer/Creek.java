@@ -114,6 +114,26 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     /**
+     * ritorna un chunk bello caldo per l'offset specificato
+     * @param id
+     */
+    public synchronized Chunk getChunk(int offset){
+        int ridden = 0;
+        byte[] buffer = new byte[BitCreekPeer.DIMBLOCCO];
+        for (int i = 0; i < buffer.length; i++) {
+            buffer[i] = 0;
+        }
+        try {
+            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
+            ridden = raf.read(buffer);
+        } catch (IOException ex) {
+            System.out.println(Thread.currentThread().getName()+" ERRORE IN LETTURA");
+            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new Chunk(buffer,offset,ridden);
+    }
+
+    /**
      * metodo che controlla se ci sono chunk da scaricare tra quelli presenti
      * in bitfield
      * @param bitfield
