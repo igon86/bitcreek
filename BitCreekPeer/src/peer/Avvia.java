@@ -100,15 +100,23 @@ public class Avvia implements Runnable {
                         }
                         System.out.println(Thread.currentThread().getName() + " Avvia : Contatto peer con porta " + n.getPorta());
                         //contatto il peer n
-                        Socket sock = null;
                         SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
-                        sock = new Socket();
+                        System.out.println(Thread.currentThread().getName() + "fatto inetsocketaddress");
+                        Socket sock = new Socket();
+                        System.out.println(Thread.currentThread().getName() + "aftta socket");
                         sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                        Bitfield b = null;
+                        System.out.println(Thread.currentThread().getName() + "fatto connect");
+                        Bitfield b = new Bitfield(null);
                         ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
+                        System.out.println(Thread.currentThread().getName() + "fatto OUT");
+
+                        /* SI PIANTA SU QUESTA !!!! */
                         ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
+
+                        System.out.println(Thread.currentThread().getName() + "fatto IN");
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
+                        System.out.println(Thread.currentThread().getName() + "fatto write delle info");
                         try {
                             //lui mi risponde con il suo bitfield
                             b = (Bitfield) contactIN.readObject();
