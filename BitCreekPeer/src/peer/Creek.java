@@ -3,6 +3,7 @@ package peer;
 import condivisi.Descrittore;
 import condivisi.ErrorException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
@@ -84,12 +85,13 @@ public class Creek extends Descrittore implements Serializable {
         this.connessioni = new ArrayList<Connessione>();
 
 
-    //file = new File("./FileCondivisi"+this.getName());
-    //try {
-    //    fout = new RandomAccessFile(file, "rw");
-    //} catch (FileNotFoundException ex) {
-    //    Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
-    //}
+        file = new File("./FileCondivisi" + this.getName());
+        try {
+            raf = new RandomAccessFile(file, "rw");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("CREEK COSTRUITO");
     }
 
     //METODI PER IL P2P
@@ -142,7 +144,7 @@ public class Creek extends Descrittore implements Serializable {
     public synchronized PIO getNext(boolean[] bitfield) {
         if (this.situazioneDownload == STARTED) {
             PIO temp = this.next(bitfield);
-            if(temp == null){
+            if (temp == null) {
                 return null;
             }
             temp.setBusy();
