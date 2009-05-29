@@ -109,7 +109,6 @@ public class Creek extends Descrittore implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     /**
@@ -143,6 +142,9 @@ public class Creek extends Descrittore implements Serializable {
     public synchronized PIO getNext(boolean[] bitfield) {
         if (this.situazioneDownload == STARTED) {
             PIO temp = this.next(bitfield);
+            if(temp == null){
+                return null;
+            }
             temp.setBusy();
             return temp;
         }
