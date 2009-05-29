@@ -13,10 +13,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Task che si occupa di creare e pubblicare un creek
@@ -24,7 +27,6 @@ import java.util.ArrayList;
  */
 public class Crea implements Runnable {
 
-    
     /* Variabili d'istanza */
     File sorgente;
     BitCreekPeer peer;
@@ -56,7 +58,7 @@ public class Crea implements Runnable {
 
         FileInputStream input = null;
         FileOutputStream output = null;
-        
+
         long dimensione = sorgente.length();
         String nomefilesorgente = sorgente.getName();
 
@@ -64,8 +66,8 @@ public class Crea implements Runnable {
 
         boolean problema = false;
         boolean presenza = false;
-        
-        System.out.println(Thread.currentThread().getName()+" INIZIO CREA");
+
+        System.out.println(Thread.currentThread().getName() + " INIZIO CREA");
         //QUESTO CONTROLLO LO DEVE FARE IL SERVER ... E A REGOLA ERA IMPLEMENTATO
         try {
             presenza = peer.presenza(nomefilesorgente);
@@ -88,6 +90,9 @@ public class Crea implements Runnable {
                 }
                 input.close();
                 output.close();
+                File f = new File("FileCondivisi"+nomefilesorgente);
+                if(!f.delete())
+                    System.out.println(f.getAbsolutePath()+" : non lo cancello");
             } catch (FileNotFoundException e) {
                 problema = true;
             } catch (IOException e) {
@@ -95,9 +100,11 @@ public class Crea implements Runnable {
             }
 
             Descrittore descr = null;
-            
-            if(problema) System.out.println("AIA1");
-            
+
+            if (problema) {
+                System.out.println("AIA1");
+            }
+
             if (!problema) {
                 try {
                     System.out.println("CREA - NEW DESCRITTORE");
@@ -106,8 +113,10 @@ public class Crea implements Runnable {
                     problema = true;
                 }
             }
-            
-            if(problema) System.out.println("AIA2");
+
+            if (problema) {
+                System.out.println("AIA2");
+            }
             /* invio al server il descrittore e contestualmente mi registro per la callback */
 
             Porte p = null;
@@ -116,7 +125,7 @@ public class Crea implements Runnable {
             if (!problema && stub != null) {
                 try {
                     p = stub.inviaDescr(descr, peer.getMioIp(), peer.getPortaRichieste());
-                    System.out.println(Thread.currentThread().getName()+" INVIATO AL SERVER!");
+                    System.out.println(Thread.currentThread().getName() + " INVIATO AL SERVER!");
                 } catch (RemoteException ex) {
                     problema = true;
                     System.out.println("TRAGGEDIA RMI");
@@ -124,13 +133,15 @@ public class Crea implements Runnable {
             } else {
                 problema = true;
             }
-            
-            if(problema) System.out.println("AIA3");
-            
+
+            if (problema) {
+                System.out.println("AIA3");
+            }
+
             if (!problema && p != null) {
                 descr.setPortaTCP(p.getPortaTCP());
                 descr.setPortaUDP(p.getPortaUDP());
-                System.out.println( Thread.currentThread().getName() + " Crea : getId() = " +p.getId());
+                System.out.println(Thread.currentThread().getName() + " Crea : getId() = " + p.getId());
                 descr.setId(p.getId());
                 try {
                     c = new Creek(descr, false, p.getPubblicato());
@@ -152,7 +163,7 @@ public class Crea implements Runnable {
         }
         if (problema) {
             try {
-                if(peer == null){
+                if (peer == null) {
                     System.out.println("il peer e` null");
                 }
                 peer.deleteCreek(c.getName());
@@ -164,7 +175,7 @@ public class Crea implements Runnable {
         }
         /* ricambio il cursore */
         gui.getRootPane().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        System.out.println(Thread.currentThread().getName()+  " MUORO " );
+        System.out.println(Thread.currentThread().getName() + " MUORO ");
     }
 
     /**
@@ -177,22 +188,37 @@ public class Crea implements Runnable {
         if (input == null || output == null) {
             throw new ErrorException("Param null");
         }
-
-        boolean exit = false;
-        int c = 0;
-
-        BufferedInputStream in = new BufferedInputStream(input);
-        BufferedOutputStream out = new BufferedOutputStream(output);
-        while (!exit) {
-            try {
-                while ((c = in.read()) != -1) {
-                    out.write((char) c);
-                }
-                out.write((char) c);
-                exit = true;
-            } catch (IOException ex) {
+        FileChannel inChannel = input.getChannel();
+        FileChannel outChannel = output.getChannel();
+        try {
+            inChannel.transferTo(0, inChannel.size(),outChannel);
+            if (inChannel != null) {
+                inChannel.close();
             }
+            if (outChannel != null) {
+                outChannel.close();
+            }
+        } catch (IOException e) {
+            System.out.println("Casino nella copia del file");
         }
+
+
+    /*
+    boolean exit = false;
+    int c = 0;
+
+    BufferedInputStream in = new BufferedInputStream(input);
+    BufferedOutputStream out = new BufferedOutputStream(output);
+    while (!exit) {
+    try {
+    while ((c = in.read()) != -1) {
+    out.write((char) c);
+    }
+    out.write((char) c);
+    exit = true;
+    } catch (IOException ex) {
+    }
+    }*/
     }
 
     /**
