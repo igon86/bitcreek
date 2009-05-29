@@ -68,7 +68,7 @@ public class Avvia implements Runnable {
             }
 
             /* contatto gli altri e creo i thread solo se non ho già in download quel file */
-            if (!presenza) {
+            if (presenza) {
                 //recupero della lista Peer dal tracker
                 int portatracker = d.getTCP();
                 System.out.println(Thread.currentThread().getName() + " : Avvia : !presenza --> Contatto tracker sulla porta : " + portatracker);
@@ -146,7 +146,8 @@ public class Avvia implements Runnable {
                 if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                     break;
                 }
-            }
+            }else
+                System.out.println(Thread.currentThread().getName() + " Avvia : non aggiunto");
 
         }
     }
