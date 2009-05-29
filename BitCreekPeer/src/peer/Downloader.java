@@ -23,19 +23,18 @@ public class Downloader implements Runnable{
     }
 
     public void run() {
-        System.out.println("DOWNLOADER DEL FILE "+c.getName()+" AVVIATO");
         
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
         
         if(c.interested(conn.getBitfied())){
             conn.setInteresseDown(true);
             conn.sendDown(new Messaggio(Messaggio.INTERESTED,null));
-            System.out.println(Thread.currentThread().getName()+" DOWNLOADER:La connessione e` interessante");
+            System.out.println(Thread.currentThread().getName() + " Downloader : connessione interessante ");
         }
         else{
             conn.setInteresseDown(false);
             conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED,null));
-            System.out.println(Thread.currentThread().getName()+" DOWNLOADER:La connessione non e` interessante");
+            System.out.println(Thread.currentThread().getName() + " Downloader : ! connessione interessante");
         }
         int count=0;
         while(true){
@@ -45,7 +44,7 @@ public class Downloader implements Runnable{
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE:{
-                    System.out.println("Ricevuto Messaggio HAVE");
+                    System.out.println(Thread.currentThread().getName() + " Downloader : HAVE ricevuto");
                     boolean[] bitfield = (boolean[]) m.getObj();
                     this.conn.setBitfield(bitfield);
                     if (this.conn.getInteresseDown()==false){
@@ -54,12 +53,12 @@ public class Downloader implements Runnable{
                     break;
                 }
                 case Messaggio.CHOKE:{
-                    System.out.println(Thread.currentThread().getName()+" Ricevuto Messaggio CHOKE");
+                    System.out.println(Thread.currentThread().getName() + " Downloader : CHOCKE ricevuto");
                     this.conn.setStatoDown(Connessione.CHOKED);
                     break;
                 }
                 case Messaggio.UNCHOKE:{
-                    System.out.println(Thread.currentThread().getName()+" Ricevuto Messaggio UNCHOKE");
+                    System.out.println(Thread.currentThread().getName() + " Downloader : UNCHOKE ricevuto");
                     this.conn.setStatoDown(Connessione.UNCHOKED);
                     break;
                 }
@@ -74,7 +73,7 @@ public class Downloader implements Runnable{
             //if(! pendingRequest){
                 PIO p = c.getNext(this.conn.getBitfied());
                 conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
-                System.out.println("INVIATO Messaggio REQUEST: "+count);
+                System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato");
             try {
                 //}
                 //TEMPORANEO!!!

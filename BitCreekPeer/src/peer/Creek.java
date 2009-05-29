@@ -67,8 +67,8 @@ public class Creek extends Descrittore implements Serializable {
         //aggiunte per il p2p
         int dimArray = (int) Math.ceil(d.getDimensione() / BitCreekPeer.DIMBLOCCO);
         have = new boolean[dimArray];
-        if(this.getStato()==LEECHER){
-            System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
+        if(this.getStato() == LEECHER){
+            //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
             //SONO LEECHER
             for (int i =0; i< dimArray;i++){
                 have[i] = false;
