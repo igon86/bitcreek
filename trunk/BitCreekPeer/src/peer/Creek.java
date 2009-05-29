@@ -3,11 +3,14 @@ package peer;
 import condivisi.Descrittore;
 import condivisi.ErrorException;
 import java.io.File;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe che definisce la struttura dati del client di supporto al 
@@ -19,30 +22,28 @@ public class Creek extends Descrittore implements Serializable {
     /* Costanti */
     private final int NONATTIVO = -1;
     public static final long serialVersionUID = 45;
-    
     private static final boolean LEECHER = true;
     private static final boolean SEEDER = false;
     private static final int STARTED = 0;
-    
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
+
     private boolean situazione; // true se attivo, false altrimenti
+
     private int situazioneDownload;
     private int percentuale;
     private boolean pubblicato;
     private int peer;
     private int peercercano;
     private InetAddress ind;
-    
     private boolean[] have; //false se non posseduto true se posseduto
+
     private ArrayList<PIO> toDo;
     private ArrayList<Connessione> connessioni;
-    
     //Strutture per la gestione del file
     private File file;
-    RandomAccessFile fout;
-  
-    
+    RandomAccessFile raf;
+
     /**
      * Costruttore
      * @param d descrittore file
@@ -67,114 +68,123 @@ public class Creek extends Descrittore implements Serializable {
         //aggiunte per il p2p
         int dimArray = (int) Math.ceil(d.getDimensione() / BitCreekPeer.DIMBLOCCO);
         have = new boolean[dimArray];
-        if(this.getStato() == LEECHER){
+        if (this.getStato() == LEECHER) {
             //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
             //SONO LEECHER
-            for (int i =0; i< dimArray;i++){
+            for (int i = 0; i < dimArray; i++) {
                 have[i] = false;
             }
             this.situazioneDownload = STARTED;
-        }
-        else{
-            for (int i =0;i<dimArray;i++){
+        } else {
+            for (int i = 0; i < dimArray; i++) {
                 have[i] = true;
             }
         }
         this.toDo = new ArrayList<PIO>();
         this.connessioni = new ArrayList<Connessione>();
-        
-        
-        //file = new File("./FileCondivisi"+this.getName());
-        //try {
-        //    fout = new RandomAccessFile(file, "rw");
-        //} catch (FileNotFoundException ex) {
-        //    Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
-        //}
+
+
+    //file = new File("./FileCondivisi"+this.getName());
+    //try {
+    //    fout = new RandomAccessFile(file, "rw");
+    //} catch (FileNotFoundException ex) {
+    //    Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+    //}
     }
-    
+
     //METODI PER IL P2P
     /**
      * Ci vuole questo metodo in quanto in alcune piattaforme puo` esistere un solo
      * FileOutputStream per file
      * @param c
      */
-    public synchronized void scriviChunk(Chunk c){
-        throw new UnsupportedOperationException();
+    public synchronized void scriviChunk(Chunk c) {
+        int offset = c.getOffset();
+        //la lunghezza serve perché il buffer passato ha sempre la dimensione
+        //di 1K ma l'ultimo è zero-padded quindi non lo devo scrivere
+        int length = c.getDim();
+        try {
+            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
+            raf.write(c.getData(), 0, length);
+        } catch (IOException ex) {
+            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
-    
+
     /**
      * metodo che controlla se ci sono chunk da scaricare tra quelli presenti
      * in bitfield
      * @param bitfield
      * @return
      */
-    public synchronized boolean interested(boolean[] bitfield){
-        for (PIO p : toDo){
-            if(bitfield[p.getId()] == true){
+    public synchronized boolean interested(boolean[] bitfield) {
+        for (PIO p : toDo) {
+            if (bitfield[p.getId()] == true) {
                 return true;
             }
         }
         return false;
     }
-    
-    public synchronized PIO next(boolean[] bitfield){
+
+    public synchronized PIO next(boolean[] bitfield) {
         boolean b = false;
         int index = 0;
         Iterator h = this.toDo.iterator();
-        while(h.hasNext()){
+        while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            if(! temp.getBusy() && bitfield[temp.getId()]){
+            if (!temp.getBusy() && bitfield[temp.getId()]) {
                 return temp;
             }
         }
         return null;
     }
-    
-    public synchronized PIO getNext(boolean[] bitfield){
-         if (this.situazioneDownload == STARTED){
-             PIO temp = this.next(bitfield);
-             temp.setBusy();
-             return temp;
-         }
-         return null;
-    }
-    
-    public void addConnessione(Connessione conn){
-        this.connessioni.add(conn);
-    }
-    
-    public Connessione presenzaConnessione(Connessione conn){
-        for ( Connessione c : this.connessioni){
-            if (c.confronta(conn.getIPVicino(),conn.getPortaVicino()))
-                    return c;
+
+    public synchronized PIO getNext(boolean[] bitfield) {
+        if (this.situazioneDownload == STARTED) {
+            PIO temp = this.next(bitfield);
+            temp.setBusy();
+            return temp;
         }
         return null;
     }
-    
-    public synchronized void closeFile(){
-        
+
+    public void addConnessione(Connessione conn) {
+        this.connessioni.add(conn);
     }
-    public synchronized void closeAndDeleteFile(){
-        
+
+    public Connessione presenzaConnessione(Connessione conn) {
+        for (Connessione c : this.connessioni) {
+            if (c.confronta(conn.getIPVicino(), conn.getPortaVicino())) {
+                return c;
+            }
+        }
+        return null;
     }
-    
+
+    public synchronized void closeFile() {
+    }
+
+    public synchronized void closeAndDeleteFile() {
+    }
+
     //metodo chiamato al momento della creazione del creek (in Download)
-    public synchronized void setPIO(){
-        int count =0;
-        if(stato == LEECHER){
-            for ( boolean b : this.have){
-                if(!b){
+    public synchronized void setPIO() {
+        int count = 0;
+        if (stato == LEECHER) {
+            for (boolean b : this.have) {
+                if (!b) {
                     this.toDo.add(new PIO(count));
                 }
                 count++;
             }
         }
     }
-    
-    public synchronized void removePIO(PIO p){
+
+    public synchronized void removePIO(PIO p) {
         throw new UnsupportedOperationException();
     }
-    
+
     //GETTER
     public boolean getStato() {
         return this.stato;
@@ -199,20 +209,19 @@ public class Creek extends Descrittore implements Serializable {
     public int getPeerCerca() {
         return this.peercercano;
     }
-    
-    public boolean[] getHave(){
+
+    public boolean[] getHave() {
         return this.have;
     }
     //SETTER
-    
-    
+
     public void settaPeerCerca() {
         if (this.peercercano != NONATTIVO) {
             this.peercercano++;
         }
     }
-    
-    public void settaIdentita(InetAddress ind){
+
+    public void settaIdentita(InetAddress ind) {
         if (this.peercercano != NONATTIVO && ind != null) {
             this.ind = ind;
         }
