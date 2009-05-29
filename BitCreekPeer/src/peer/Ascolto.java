@@ -93,7 +93,7 @@ public class Ascolto implements Runnable {
                         conn = temp;
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
-                    peer.addTask(new Uploader(conn));
+                    peer.addTask(new Uploader(conn,contacted));
                     /* chiudo i file : NO */
                     //in.close();
                     //out.close();
