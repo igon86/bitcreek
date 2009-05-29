@@ -8,9 +8,11 @@ package peer;
 public class Uploader implements Runnable{
     
     Connessione conn;
+    Creek c;
     
-    public Uploader(Connessione conn){
+    public Uploader(Connessione conn, Creek c){
         this.conn = conn;
+        this.c = c;
     }
 
     public void run() {
@@ -24,9 +26,10 @@ public class Uploader implements Runnable{
                     int pezzo = idPezzo.intValue();
                     System.out.println("THREAD "+Thread.currentThread().getName()+" Mando chunk con id"+pezzo);
                     //creo il chunk corretto da mandare
-                    
+                    Chunk pezzoRichiesto = c.getChunk(pezzo);
+                    Messaggio nuovo = new Messaggio(Messaggio.CHUNK,pezzoRichiesto);
                     //riempio il buffer
-                    this.conn.sendUp(new Messaggio(Messaggio.CHUNK,new Chunk(null,idPezzo,BitCreekPeer.DIMBLOCCO)));
+                    this.conn.sendUp(nuovo);
                     break;
                 }
                 case Messaggio.INTERESTED:{
