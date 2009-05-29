@@ -23,6 +23,9 @@ public class Uploader implements Runnable{
                     Integer idPezzo = (Integer) m.getObj();
                     int pezzo = idPezzo.intValue();
                     System.out.println("THREAD "+Thread.currentThread().getName()+" Mando chunk con id"+pezzo);
+                    //creo il chunk corretto da mandare
+                    
+                    //riempio il buffer
                     this.conn.sendUp(new Messaggio(Messaggio.CHUNK,new Chunk(null,idPezzo,BitCreekPeer.DIMBLOCCO)));
                     break;
                 }
