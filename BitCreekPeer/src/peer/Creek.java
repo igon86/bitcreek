@@ -42,8 +42,8 @@ public class Creek extends Descrittore implements Serializable {
     private ArrayList<PIO> toDo;
     private ArrayList<Connessione> connessioni;
     //Strutture per la gestione del file
-    private File file;
-    RandomAccessFile raf;
+    protected File file;
+    private RandomAccessFile raf;
 
     /**
      * Costruttore
@@ -105,8 +105,9 @@ public class Creek extends Descrittore implements Serializable {
         //la lunghezza serve perché il buffer passato ha sempre la dimensione
         //di 1K ma l'ultimo è zero-padded quindi non lo devo scrivere
         int length = c.getDim();
+        System.out.println("Sto per scrivere un chunk di dimensione: "+length);
         try {
-            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
+            raf.seek(offset*BitCreekPeer.DIMBLOCCO);
             raf.write(c.getData(), 0, length);
         } catch (IOException ex) {
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,8 +125,12 @@ public class Creek extends Descrittore implements Serializable {
             buffer[i] = 0;
         }
         try {
-            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
+            if(raf == null) System.out.println("E` successa una tragedia al RAF");
+            long indice = offset*BitCreekPeer.DIMBLOCCO;
+            raf.seek(indice);
+            System.out.println("Mi sono spostato al byte:"+indice);
             ridden = raf.read(buffer);
+            System.out.println("HO LETTO "+ridden+" BYTE");
         } catch (IOException ex) {
             System.out.println(Thread.currentThread().getName()+" ERRORE IN LETTURA");
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
