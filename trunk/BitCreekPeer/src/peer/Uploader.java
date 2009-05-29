@@ -17,6 +17,8 @@ public class Uploader implements Runnable{
 
     public void run() {
         System.out.println("UPLOADER AVVIATO");
+        System.out.println("IL file si chiama: "+c.getName());
+        if (c.file.exists()) System.out.println("SEI UN CRETINO E MANGI SASSI PORCODIO!!!");
         while(true){
             Messaggio m = this.conn.receiveUp();
             int tipo = m.getTipo();
