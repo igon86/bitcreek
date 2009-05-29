@@ -68,6 +68,7 @@ public class Ascolto implements Runnable {
                 try {
                     //RICEVO UN CONTATTO
                     Contact con = (Contact) in.readObject();
+                    System.out.println(Thread.currentThread().getName() + " : Ascolto : contatto ricevuto : " + con.getIp() +","+ con.getSS() +"," +con.getId());
                     int swarmId = con.getId();
                     Creek contacted = peer.getCreek(swarmId);
                     //INVIO IL BITFILED RELATIVO
@@ -75,8 +76,9 @@ public class Ascolto implements Runnable {
                     /*
                      * EFFETTUO IL CONTROLLO CHE L'OGGETTO NON ESISTA GIA
                      */
+                    System.out.println(Thread.currentThread().getName() + " : Ascolto : con.getSS :: " + con.getSS());
                     Connessione conn = new Connessione(null, scambio, null, con.getSS());
-                    Connessione temp;
+                    Connessione temp = null;
                     if ((temp = contacted.presenzaConnessione(conn)) == null) {
                         System.out.println(Thread.currentThread().getName() + " UPLOADER - SONO STATO CONTATTATO, connessione aggiunta");
                         contacted.addConnessione(conn);
@@ -92,7 +94,7 @@ public class Ascolto implements Runnable {
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
                     peer.addTask(new Uploader(conn));
-                    /* chiudo i file */
+                    /* chiudo i file : NO */
                     //in.close();
                     //out.close();
                     /* incremento numero di connessioni */
