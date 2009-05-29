@@ -27,8 +27,8 @@ class FunctionPanel extends JPanel {
         if (c < 0) {
             c = 0;
         }
-        if (c > 100) {
-            c = 100;
+        if (c > /*100*/10) {
+            c = /*100*/10;
         }
         array.add(0, new Integer(c));
     }
@@ -49,7 +49,7 @@ class FunctionPanel extends JPanel {
         }
         int n = 0, j = 0;
         for (--i; i >= 0; i--) {
-            n = (i * SPAZIO);
+            n = (i * /*SPAZIO*/2);
             g.drawString("" + n, INIZIOX - 25, INIZIOY + j++ * SPAZIO + 5);
         }
         g.drawString("Tempo", INIZIOX + (larghezza / 2) - 40, ALTEZZA + 16);
@@ -62,19 +62,20 @@ class FunctionPanel extends JPanel {
      * @param g grafico su cui disegnare
      */
     private void disegnaconnessioni(Graphics g) {
+        // aggiunto i 10* !!!!!!
         int connessioni = 0;
         g.setColor(Color.blue);
         if (array.size() > 0) {
             connessioni = array.get(0).intValue();
-            g.drawLine(INIZIOX, ALTEZZA - 5 - connessioni, INIZIOX, ALTEZZA - 5 - connessioni);
+            g.drawLine(INIZIOX, ALTEZZA - 5 - 10*connessioni, INIZIOX, ALTEZZA - 5 - 10*connessioni);
             int ultimox = INIZIOX;
-            int ultimoy = ALTEZZA - 5 - connessioni;
+            int ultimoy = ALTEZZA - 5 - 10*connessioni;
             int nuovox = ultimox + 10;
             for (int i = 1; i < array.size(); i++) {
                 connessioni = array.get(i).intValue();
-                g.drawLine(ultimox, ultimoy, nuovox, ALTEZZA - 5 - connessioni);
+                g.drawLine(ultimox, ultimoy, nuovox, ALTEZZA - 5 - 10*connessioni);
                 ultimox = nuovox;
-                ultimoy = ALTEZZA - 5 - connessioni;
+                ultimoy = ALTEZZA - 5 - 10*connessioni;
                 nuovox += 10;
                 if (nuovox > larghezza - 13) {
                     break;
