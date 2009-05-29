@@ -107,10 +107,10 @@ public class Ascolto implements Runnable {
                             SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
                             Socket mysock = new Socket();
                             mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                            in = new ObjectInputStream(mysock.getInputStream());
-                            out = new ObjectOutputStream(mysock.getOutputStream());
-                            out.writeObject(mycon);
-                            Bitfield b = (Bitfield) in.readObject();
+                            ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
+                            ObjectOutputStream output = new ObjectOutputStream(mysock.getOutputStream());
+                            output.writeObject(mycon);
+                            Bitfield b = (Bitfield) input.readObject();
                             conn.setSocketDown(mysock);
                             conn.setBitfield(b.getBitfield());
                             System.out.println("Creo thread downloader perchè ho inviato mie credenzioali");
