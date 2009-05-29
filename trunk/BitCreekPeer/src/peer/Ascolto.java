@@ -93,8 +93,8 @@ public class Ascolto implements Runnable {
                     //CREO IL THREAD RELATIVO IN UPLOAD
                     peer.addTask(new Uploader(conn));
                     /* chiudo i file */
-                    in.close();
-                    out.close();
+                    //in.close();
+                    //out.close();
                     /* incremento numero di connessioni */
                     peer.incrConnessioni();
                     /* operazioni ulteriori se sono leecher : creo connessione in down
