@@ -354,9 +354,13 @@ public class BitCreekPeer {
                 System.out.println("INIZIO PEZZO TRAGICO");
                 
                 c = new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek"));
+                //PROBLEMONE!!! non posso serializzare su file system file e randomAccessFile
+                Creek toBeWritten = creek.copia();
+                toBeWritten.setClean();
+                creek.testFile();
                 o = new ObjectOutputStream(c);
                 System.out.println("CREATO LO STREAM");
-                o.writeObject(creek);
+                o.writeObject(toBeWritten);
                 c.close();
                 System.out.println("FINE PEZZO TRAGICO");
             } catch (FileNotFoundException ex) {

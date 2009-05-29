@@ -75,7 +75,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
      * @throws java.rmi.RemoteException
      */
     public Porte inviaDescr(Descrittore d, InetAddress ip, int porta) {
-        System.out.println("inviaDescrs");
+        System.out.println("INVIA DESCR");
         SSLServerSocket welcome = null;
         DatagramSocket alive = null;
         Descrittore temp = null;
@@ -88,7 +88,9 @@ public class ImplementazioneRMI implements InterfacciaRMI {
                 //PER LA CALLBACK
                 return new Porte(temp.getTCP(), temp.getUDP(), temp.getId());
             } catch (ErrorException ex) {
-                // --------> da gestire
+                
+                //DA GESTIRE
+                System.out.println("INVIA DESCR: PROBLEMA CON new Porte");
             }
         }
         // il file non esiste
@@ -136,6 +138,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
         } catch (ErrorException ex) {
             // --------> da gestire
         }
+        System.out.println("TERMINATO INVIA DESCR");
         ris.setPubblicato(); // comunico che ha pubblicato il file
         return ris;
     }

@@ -132,7 +132,22 @@ public class Creek extends Descrittore implements Serializable {
         }
         return new Chunk(buffer,offset,ridden);
     }
-
+    
+    /**
+     * Ripulisce il creek dalla roba non serializzabile;
+     */
+    public synchronized void setClean(){
+        this.raf = null;
+    }
+    
+    public synchronized void testFile(){
+        if (this.raf == null){
+            System.out.println("E` PURGATO ERRORE");
+        }
+        else{
+            System.out.println("E` L'ORIGINALE!! DI LUSSO");
+        }
+    }
     /**
      * metodo che controlla se ci sono chunk da scaricare tra quelli presenti
      * in bitfield
