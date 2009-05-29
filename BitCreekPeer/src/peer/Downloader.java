@@ -66,7 +66,7 @@ public class Downloader implements Runnable{
                     count++;
                     System.out.println(Thread.currentThread().getName()+" Ricevuto Messaggio CHUNK: "+count);
                     Chunk chunk = (Chunk) m.getObj();
-                    //c.scriviChunk(chunk);
+                    c.scriviChunk(chunk);
                     this.pendingRequest = false;
                 }
             }
