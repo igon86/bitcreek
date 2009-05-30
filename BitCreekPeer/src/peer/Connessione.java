@@ -46,13 +46,13 @@ public class Connessione implements Serializable{
     boolean interesseUp;
     
     boolean[] bitfield;
-    int downloaded;
+    int downloaded; /* niìumero pezzi scaricati su questa connessione */
     
     public Connessione(Socket down, Socket up, boolean[] bitfield, int portaVicino){
-        this.down=down;
+        this.down = down;
         this.up = up;
         this.bitfield = bitfield;
-        if (down!=null){
+        if (down != null){
             this.ipVicino = down.getInetAddress();
             try {
                 this.outDown = new ObjectOutputStream(down.getOutputStream());
@@ -74,6 +74,7 @@ public class Connessione implements Serializable{
             }
         }
         this.portaVicino = portaVicino;
+        this.downloaded = 0;
         //Il binding degli stream alle socket viene effettuato solo al momento opportuno
         //dai thread
     }
@@ -189,5 +190,9 @@ public class Connessione implements Serializable{
     
     public void setInteresseUp(boolean b){
         this.interesseUp = b;
+    }
+    
+    public int incrDown(){
+        return ++this.downloaded;
     }
 }
