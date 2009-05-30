@@ -86,14 +86,6 @@ public class Crea implements Runnable {
                 }
                 input.close();
                 output.close();
-
-                /* perchè lo crea???..ma sopratutto perchè non lo cancella?? */
-
-                //File f = new File("FileCondivisi" + nomefilesorgente);
-                //if (!f.delete()) {
-                //    System.out.println(f.getAbsolutePath() + " : non lo cancello");
-                //}
-                
             } catch (FileNotFoundException e) {
                 problema = true;
             } catch (IOException e) {
@@ -199,24 +191,6 @@ public class Crea implements Runnable {
         } catch (IOException e) {
             System.out.println("Casino nella copia del file");
         }
-
-/*
-    
-    boolean exit = false;
-    int c = 0;
-
-    BufferedInputStream in = new BufferedInputStream(input);
-    BufferedOutputStream out = new BufferedOutputStream(output);
-    while (!exit) {
-    try {
-    while ((c = in.read()) != -1) {
-    out.write((char) c);
-    }
-    out.write((char) c);
-    exit = true;
-    } catch (IOException ex) {
-    }
-    }*/
     }
 
     /**
