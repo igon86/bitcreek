@@ -6,8 +6,6 @@ import condivisi.InterfacciaRMI;
 import condivisi.Porte;
 import gui.BitCreekGui;
 import java.awt.Cursor;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,8 +16,6 @@ import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Task che si occupa di creare e pubblicare un creek
@@ -82,7 +78,7 @@ public class Crea implements Runnable {
         if (!presenza) {
             try {
                 input = new FileInputStream(sorgente);
-                output = new FileOutputStream("./FileCondivisi/" + nomefilesorgente);
+                output = new FileOutputStream(new File("./FileCondivisi/" + nomefilesorgente));
                 try {
                     copia(input, output);
                 } catch (ErrorException ex) {
@@ -90,9 +86,14 @@ public class Crea implements Runnable {
                 }
                 input.close();
                 output.close();
-                File f = new File("FileCondivisi"+nomefilesorgente);
-                if(!f.delete())
-                    System.out.println(f.getAbsolutePath()+" : non lo cancello");
+
+                /* perchè lo crea???..ma sopratutto perchè non lo cancella?? */
+
+                //File f = new File("FileCondivisi" + nomefilesorgente);
+                //if (!f.delete()) {
+                //    System.out.println(f.getAbsolutePath() + " : non lo cancello");
+                //}
+                
             } catch (FileNotFoundException e) {
                 problema = true;
             } catch (IOException e) {
@@ -188,22 +189,19 @@ public class Crea implements Runnable {
         if (input == null || output == null) {
             throw new ErrorException("Param null");
         }
+   
         FileChannel inChannel = input.getChannel();
         FileChannel outChannel = output.getChannel();
         try {
-            inChannel.transferTo(0, inChannel.size(),outChannel);
-            if (inChannel != null) {
-                inChannel.close();
-            }
-            if (outChannel != null) {
-                outChannel.close();
-            }
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inChannel.close();
+            outChannel.close();
         } catch (IOException e) {
             System.out.println("Casino nella copia del file");
         }
 
-
-    /*
+/*
+    
     boolean exit = false;
     int c = 0;
 

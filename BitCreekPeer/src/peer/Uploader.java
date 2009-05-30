@@ -26,7 +26,7 @@ public class Uploader implements Runnable{
                 case Messaggio.REQUEST:{
                     Integer idPezzo = (Integer) m.getObj();
                     int pezzo = idPezzo.intValue();
-                    System.out.println("THREAD "+Thread.currentThread().getName()+" Mando chunk con id"+pezzo);
+                    System.out.println("THREAD "+Thread.currentThread().getName()+" Mando chunk con id "+pezzo);
                     //creo il chunk corretto da mandare
                     Chunk pezzoRichiesto = c.getChunk(pezzo);
                     Messaggio nuovo = new Messaggio(Messaggio.CHUNK,pezzoRichiesto);
