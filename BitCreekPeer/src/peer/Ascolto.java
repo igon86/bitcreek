@@ -104,7 +104,7 @@ public class Ascolto implements Runnable {
                     Lo devo fare solo se non ho già una connessione in down, non sono
                     seeder e posso creare connessioni !!!! */
                     if (contacted.getStato() == true/*&& !conn.downAttiva()*/ && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
-                        System.out.println("\n\nSONO ENTRATO\n\n");
+                        System.out.println("\n\n"+Thread.currentThread().getName()+"SONO ENTRATO\n\n");
                             Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
                             SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
                             Socket mysock = new Socket();
@@ -115,7 +115,7 @@ public class Ascolto implements Runnable {
                             Bitfield b = (Bitfield) input.readObject();
                             conn.setSocketDown(mysock);
                             conn.setBitfield(b.getBitfield());
-                            System.out.println("Creo thread downloader perchè ho inviato mie credenzioali");
+                            System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
                             /* aggiungo thread per download */
                             peer.addTask(new Downloader(contacted, conn));
                             /* incremento numero connessioni */
