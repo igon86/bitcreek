@@ -89,11 +89,13 @@ public class Downloader implements Runnable{
                 Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        /**
         try {
             this.c.raf.close();
         } catch (IOException ex) {
             Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
         }
+        */
         System.out.println(Thread.currentThread().getName() + " Downloader terminato");
     }
     
