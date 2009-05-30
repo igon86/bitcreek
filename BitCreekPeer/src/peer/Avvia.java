@@ -56,8 +56,8 @@ public class Avvia implements Runnable {
                 }
                 c = new Creek(d, true, false);
 
-                //introduce una serie di problemi tragici!
-                c.setPIO();
+                //introduce una serie di problemi tragici! fortunosamente risolti....
+                c.setToDo();
 
                 if (c == null) {
                     System.out.println("NON E POSSIBILE!!!");
