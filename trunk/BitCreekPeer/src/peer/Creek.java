@@ -101,7 +101,9 @@ public class Creek extends Descrittore implements Serializable {
      * @param c
      */
     public synchronized void scriviChunk(Chunk c) {
+        //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
+        this.removePIO(offset);
         //la lunghezza serve perché il buffer passato ha sempre la dimensione
         //di 1K ma l'ultimo è zero-padded quindi non lo devo scrivere
         int length = c.getDim();
@@ -213,7 +215,7 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     //metodo chiamato al momento della creazione del creek (in Download)
-    public synchronized void setPIO() {
+    public synchronized void setToDo() {
         int count = 0;
         if (stato == LEECHER) {
             for (boolean b : this.have) {
@@ -223,10 +225,20 @@ public class Creek extends Descrittore implements Serializable {
                 count++;
             }
         }
+        //CONTROLLO SUL NUMERO DI PIO
+        System.out.println(Thread.currentThread().getName()+" ToDo ha dimensione: "+this.toDo.size());
     }
 
-    public synchronized void removePIO(PIO p) {
-        throw new UnsupportedOperationException();
+    public synchronized void removePIO(int p) {
+        PIO temp;
+        Iterator h = this.toDo.iterator();
+        while(h.hasNext()){
+            temp  = (PIO) h.next();
+            if (temp.getId() == p){
+                h.remove();
+                break;
+            }
+        }
     }
 
     //GETTER
