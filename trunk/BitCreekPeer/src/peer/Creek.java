@@ -25,13 +25,15 @@ public class Creek extends Descrittore implements Serializable {
     public static final long serialVersionUID = 45;
     private static final boolean LEECHER = true;
     private static final boolean SEEDER = false;
-    private static final int STARTED = 0;
+    private static final boolean NOTSTARTED = false;
+    private static final boolean STARTED = true;
     /* Variabili d'istanza */
+
+    
+
     private boolean stato; // true leecher,false seeder
-
     private boolean situazione; // true se attivo, false altrimenti
-
-    private int situazioneDownload;
+    //private boolean situazioneDownload;
     private int percentuale;
     private boolean pubblicato;
     private int peer;
@@ -44,6 +46,7 @@ public class Creek extends Descrittore implements Serializable {
     //Strutture per la gestione del file
     protected File file;
     private RandomAccessFile raf;
+    private int scaricati;
 
     /**
      * Costruttore
@@ -56,7 +59,7 @@ public class Creek extends Descrittore implements Serializable {
         this.setPortaTCP(d.getTCP());
         this.setPortaUDP(d.getUDP());
         this.stato = stato;
-        this.situazione = false;
+        this.situazione = NOTSTARTED;
         this.percentuale = 0;
         this.pubblicato = pubblicato;
         this.peer = 0;
@@ -78,7 +81,7 @@ public class Creek extends Descrittore implements Serializable {
             for (int i = 0; i < dimArray; i++) {
                 have[i] = false;
             }
-            this.situazioneDownload = STARTED;
+            this.scaricati = 0;
         } else {
             for (int i = 0; i < dimArray; i++) {
                 have[i] = true;
@@ -108,7 +111,7 @@ public class Creek extends Descrittore implements Serializable {
         int offset = c.getOffset();
         this.removePIO(offset);
         //la lunghezza serve perché il buffer passato ha sempre la dimensione
-        //di 1K ma l'ultimo è zero-padded quindi non lo devo scrivere
+        //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
         int length = c.getDim();
         System.out.println("Sto per scrivere un chunk di dimensione: "+length);
         try {
@@ -117,10 +120,12 @@ public class Creek extends Descrittore implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /* tutto bene : aggiorno la percentuale */
+        
     }
 
     /**
-     * ritorna un chunk bello caldo per l'offset specificato
+     * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * @param id
      */
     public synchronized Chunk getChunk(int offset){
@@ -174,8 +179,6 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public synchronized PIO next(boolean[] bitfield) {
-        boolean b = false;
-        int index = 0;
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
@@ -188,7 +191,7 @@ public class Creek extends Descrittore implements Serializable {
 
     public synchronized PIO getNext(boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName()+" getNext: La lista toDO contiene "+this.toDo.size()+ " elementi ->");
-        if (this.situazioneDownload == STARTED) {
+        if (this.situazione == STARTED) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
                 System.out.println("RITORNO NULL");
@@ -205,6 +208,7 @@ public class Creek extends Descrittore implements Serializable {
 
     public void addConnessione(Connessione conn) {
         this.connessioni.add(conn);
+        this.situazione = STARTED;
     }
 
     public Connessione presenzaConnessione(Connessione conn) {
@@ -238,7 +242,7 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public synchronized void removePIO(int p) {
-        PIO temp;
+        PIO temp = null;
         Iterator h = this.toDo.iterator();
         while(h.hasNext()){
             temp  = (PIO) h.next();
@@ -319,10 +323,26 @@ public class Creek extends Descrittore implements Serializable {
         Creek c = new Creek(temp, this.stato, this.pubblicato);
         c.peer = 0;
         c.percentuale = percentuale;
-        c.situazione = false;
+        c.situazione = NOTSTARTED;
         /* controllare se va bene */
         c.peercercano = this.peercercano;
         c.ind = this.ind;
         return c;
+    }
+
+    /**
+     * Incrementa il numero di peer
+     */
+    public void incrPeer() {
+        this.peer++;
+    }
+
+    /**
+     * Setta la percentuale in base al parametro passato
+     * @param np
+     */
+    public void settaPerc() {
+        this.scaricati++;
+        this.percentuale = (this.scaricati * 100) / have.length;
     }
 }

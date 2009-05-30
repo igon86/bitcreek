@@ -138,6 +138,8 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + " Avvia : Incrconnessioni");
                         /* incremento  il numero di connessioni */
                         peer.incrConnessioni();
+                        /* incremento numero peer */
+                        c.incrPeer();
 
                     } catch (IOException ex) {
                         /* passo al prossimo netrecord perchè nessuno mi ha risposto */
