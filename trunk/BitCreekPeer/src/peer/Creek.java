@@ -85,7 +85,7 @@ public class Creek extends Descrittore implements Serializable {
         this.connessioni = new ArrayList<Connessione>();
 
 
-        file = new File("./FileCondivisi" + this.getName());
+        file = new File("./FileCondivisi/" + this.getName());
         try {
             raf = new RandomAccessFile(file, "rw");
         } catch (FileNotFoundException ex) {
@@ -120,16 +120,16 @@ public class Creek extends Descrittore implements Serializable {
      */
     public synchronized Chunk getChunk(int offset){
         int ridden = 0;
-        byte[] buffer = new byte[BitCreekPeer.DIMBLOCCO];
+        byte [] buffer = new byte[BitCreekPeer.DIMBLOCCO];
         for (int i = 0; i < buffer.length; i++) {
             buffer[i] = 0;
         }
         try {
             if(raf == null) System.out.println("E` successa una tragedia al RAF");
-            long indice = offset*BitCreekPeer.DIMBLOCCO;
+            long indice = offset * BitCreekPeer.DIMBLOCCO;
             raf.seek(indice);
-            System.out.println("Mi sono spostato al byte:"+indice);
-            ridden = raf.read(buffer);
+            System.out.println("Mi sono spostato al byte : "+indice);
+            ridden = raf.read(buffer, 0, buffer.length);
             System.out.println("HO LETTO "+ridden+" BYTE");
         } catch (IOException ex) {
             System.out.println(Thread.currentThread().getName()+" ERRORE IN LETTURA");
