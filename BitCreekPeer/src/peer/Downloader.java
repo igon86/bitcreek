@@ -1,6 +1,7 @@
 
 package peer;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,13 +65,13 @@ public class Downloader implements Runnable{
                 }
                 case Messaggio.CHUNK:{
                     count++;
-                    System.out.println(Thread.currentThread().getName()+" Ricevuto Messaggio CHUNK: "+count);
+                    System.out.println(Thread.currentThread().getName()+" Ricevuto Messaggio CHUNK: "+((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
                     c.scriviChunk(chunk);
                     this.pendingRequest = false;
                 }
             }
-            //if(! pendingRequest){
+            if(! pendingRequest){
                 PIO p = c.getNext(this.conn.getBitfied());
                 if(p != null){
                     conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
@@ -79,7 +80,7 @@ public class Downloader implements Runnable{
                     System.out.println(Thread.currentThread().getName() + " vediamo se esco dal while");
                     break;
                 }
-
+            }
             try {
                 //}
                 //TEMPORANEO!!!
@@ -87,6 +88,11 @@ public class Downloader implements Runnable{
             } catch (InterruptedException ex) {
                 Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        try {
+            this.c.raf.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(Thread.currentThread().getName() + " Downloader terminato");
     }
