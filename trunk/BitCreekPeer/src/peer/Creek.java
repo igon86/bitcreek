@@ -67,7 +67,10 @@ public class Creek extends Descrittore implements Serializable {
             this.peercercano = NONATTIVO;
         }
         //aggiunte per il p2p
-        int dimArray = (int) Math.ceil(d.getDimensione() / BitCreekPeer.DIMBLOCCO);
+        float temp = (float) d.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
+        System.out.println(Thread.currentThread().getName()+" NUMERO DI BLOCCHI: "+temp);
+        int dimArray = (int) Math.ceil(temp);
+        System.out.println("FILE HA DIMENSIONE: " +d.getDimensione()+"\nL'ARRAY HAVE HA DIMENSIONE: "+dimArray);
         have = new boolean[dimArray];
         if (this.getStato() == LEECHER) {
             //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
@@ -130,9 +133,9 @@ public class Creek extends Descrittore implements Serializable {
             if(raf == null) System.out.println("E` successa una tragedia al RAF");
             long indice = offset * BitCreekPeer.DIMBLOCCO;
             raf.seek(indice);
-            System.out.println("Mi sono spostato al byte : "+indice);
+            System.out.println(Thread.currentThread().getName()+" MI SONO SPOSTATO AL BYTE : "+indice);
             ridden = raf.read(buffer, 0, buffer.length);
-            System.out.println("HO LETTO "+ridden+" BYTE");
+            System.out.println(Thread.currentThread().getName()+" HO LETTO "+ridden+" BYTE");
         } catch (IOException ex) {
             System.out.println(Thread.currentThread().getName()+" ERRORE IN LETTURA");
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,13 +187,18 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public synchronized PIO getNext(boolean[] bitfield) {
+        System.out.print(Thread.currentThread().getName()+" getNext: La lista toDO contiene "+this.toDo.size()+ " elementi ->");
         if (this.situazioneDownload == STARTED) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
+                System.out.println("RITORNO NULL");
                 return null;
             }
-            temp.setBusy();
-            return temp;
+            else{
+                System.out.println("RITORNO PIO: "+temp.getId());
+                temp.setBusy();
+                return temp;
+            }
         }
         return null;
     }
