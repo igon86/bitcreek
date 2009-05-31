@@ -33,8 +33,14 @@ public class Creek extends Descrittore implements Serializable {
 
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
-    //private boolean situazioneDownload;
+    
+    //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
+    private int statoDownload;
+    
+    // ?!
     private int percentuale;
+    
+    //non e` uguale a stato??? o forse serviva per la callback??
     private boolean pubblicato;
     private int peer;
     private int peercercano;
@@ -104,7 +110,7 @@ public class Creek extends Descrittore implements Serializable {
     //METODI PER IL P2P
     /**
      * Ci vuole questo metodo in quanto in alcune piattaforme puo` esistere un solo
-     * FileOutputStream per file
+     * FileOutputStream per file.... la file channel pero` pare essere thread safe...
      * @param c
      */
     public synchronized void scriviChunk(Chunk c) {
