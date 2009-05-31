@@ -34,7 +34,7 @@ public class Connessione implements Serializable{
     ObjectInputStream inUp;
     ObjectOutputStream outUp;
            
-    
+    //CHOKED o UNCHOKED
     boolean statoDown;
     boolean statoUp;
     
@@ -42,6 +42,7 @@ public class Connessione implements Serializable{
      * interesseUp invece viene inizializzato a NOT_INTERESTED
      */
     
+    //INTERESTED o NOT_INTERESTED
     boolean interesseDown;
     boolean interesseUp;
     
@@ -169,30 +170,30 @@ public class Connessione implements Serializable{
     }
     
     //SETTER
-    public void setStatoDown(boolean stato){
+    public synchronized void setStatoDown(boolean stato){
         this.statoDown = stato;
     } 
     
-    public void setStatoUp(boolean stato){
+    public synchronized void setStatoUp(boolean stato){
         this.statoUp = stato;
     }
-    public void setSocketUp(Socket up){
+    public synchronized void setSocketUp(Socket up){
         this.up = up;
     }
     
-    public void setSocketDown(Socket down){
+    public synchronized void setSocketDown(Socket down){
         this.down = down;
     }
     
-    public void setInteresseDown(boolean b){
+    public synchronized void setInteresseDown(boolean b){
         this.interesseDown = b;
     }
     
-    public void setInteresseUp(boolean b){
+    public synchronized void setInteresseUp(boolean b){
         this.interesseUp = b;
     }
     
-    public int incrDown(){
+    public synchronized int incrDown(){
         return ++this.downloaded;
     }
 }
