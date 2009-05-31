@@ -111,6 +111,8 @@ public class Creek extends Descrittore implements Serializable {
         //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
         this.removePIO(offset);
+        //poi modifico anche l'array have
+        this.have[offset] = true;
         //la lunghezza serve perché il buffer passato ha sempre la dimensione
         //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
         int length = c.getDim();
