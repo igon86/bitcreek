@@ -135,12 +135,13 @@ public class Crea implements Runnable {
                 descr.setPortaTCP(p.getPortaTCP());
                 descr.setPortaUDP(p.getPortaUDP());
                 System.out.println(Thread.currentThread().getName() + " Crea : getId() = " + p.getId());
-                descr.setId(p.getId());
                 try {
                     c = new Creek(descr, false, p.getPubblicato());
                 } catch (ErrorException ex) {
                     problema = true;
                 }
+                c.setId(p.getId());
+                System.out.println("\n\n Creek ha id : " + c.getId());
             } else {
                 problema = true;
             }
@@ -181,7 +182,7 @@ public class Crea implements Runnable {
         if (input == null || output == null) {
             throw new ErrorException("Param null");
         }
-   
+
         FileChannel inChannel = input.getChannel();
         FileChannel outChannel = output.getChannel();
         try {
