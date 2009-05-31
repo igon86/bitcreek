@@ -145,6 +145,7 @@ public class Descrittore implements Serializable{
         d.portaUDP = portaUDP;
         d.numLeechers = numLeechers;
         d.numSeeders = numSeeders;
+	d.id = id;
         return d;
     }
 

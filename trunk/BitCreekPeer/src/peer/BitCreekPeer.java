@@ -333,18 +333,8 @@ public class BitCreekPeer {
         if (creek == null) {
             throw new ErrorException("Param null");
         }
-        //int id = creek.getId();
-
-        /* RIMESSO CONTROLLO VECCHIO */
-
-        boolean trovato = false;
-        for (Creek c : arraydescr) {
-            if ((c.getName()).compareTo(creek.getName()) == 0) {
-               trovato = true;
-                break;
-            }
-        }
-        //boolean trovato = this.presenza(id);
+        /* controllo se il creek è presente */
+        boolean trovato = this.presenza(creek.getName());
         System.out.println("Sono in addCrek");
         if (!trovato) {
             System.out.println(Thread.currentThread().getName()+"CREEK NON PRESENTE IN ARRAYDESCR");

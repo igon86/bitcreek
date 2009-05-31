@@ -46,15 +46,10 @@ public class Avvia implements Runnable {
             //questa provoca l'aggiornamento dell' interfaccia grafica
             try {
                 System.out.println(Thread.currentThread().getName() + " : Avvia : Avvio descr " + index + " su una lista lunga " + peer.getCercati().size());
-                //d = peer.getCercati().get(0);
-                //if (d == null) {
-                //    System.out.println("STA SCAZZANDO");
-                //}
                 d = peer.getCercati().get(index);
-                if (d == null) {
-                    System.out.println("STA SCAZZANDO 2");
-                }
+                System.out.println("\n\n Avvia : descr in cercati ha id : " + d.getId());
                 c = new Creek(d, true, false);
+                System.out.println("\n\n Avvia : creek ha id : " + c.getId());
 
                 //introduce una serie di problemi tragici! fortunosamente risolti....
                 c.setToDo();
@@ -115,6 +110,7 @@ public class Avvia implements Runnable {
 
                         System.out.println(Thread.currentThread().getName() + "fatto IN");
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
+                        System.out.print("\n\n Avvia : " + c.getId());
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
                         System.out.println(Thread.currentThread().getName() + "fatto write delle info");
                         try {

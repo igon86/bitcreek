@@ -58,6 +58,7 @@ public class Creek extends Descrittore implements Serializable {
         super(d.getName(), d.getDimensione(), d.getHash(), d.getCallback());
         this.setPortaTCP(d.getTCP());
         this.setPortaUDP(d.getUDP());
+        this.setId(d.getId());
         this.stato = stato;
         this.situazione = NOTSTARTED;
         this.percentuale = 0;
@@ -344,5 +345,6 @@ public class Creek extends Descrittore implements Serializable {
     public void settaPerc() {
         this.scaricati++;
         this.percentuale = (this.scaricati * 100) / have.length;
+        /* se percentuale = 100 ho finito di scaricare quindi il file può andare in upload */
     }
 }
