@@ -9,7 +9,6 @@ import condivisi.InterfacciaCallback;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -58,6 +57,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
         // eseguo le callback
         while (i.hasNext()) {
             temp = i.next();
+            System.out.println("\nServer : ricerca : descr in tabella con id : " +temp.getId());
             cb = temp.getCallback();
             try {
                 cb.notifyMe(ind, temp.getName());
@@ -120,6 +120,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
             d.setPortaTCP(welcome.getLocalPort());
             d.setPortaUDP(alive.getLocalPort());
             d.setId(BitCreekServer.idcount++);
+            System.out.println("SERVER : creo e mando id descr : " + BitCreekServer.idcount);
             // salviamo id su file
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File("./id.info")));
             out.writeInt(BitCreekServer.idcount);
