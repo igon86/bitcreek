@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Classe che definisce il descrittore di un file
- * @author Bandettini
+ * @author Bandettini Lottarini
  */
 
 public class Descrittore implements Serializable{
@@ -53,6 +53,7 @@ public class Descrittore implements Serializable{
         /* il descrittore si crea solo a partire da un seeder*/
         this.numSeeders=1;
         this.numLeechers=0;
+        this.id = -1;
     }
     /**metodo che ritorna il numero di Seeders attualmente sul descrittore*/
     public int getNumSeeders(){
@@ -135,7 +136,7 @@ public class Descrittore implements Serializable{
     public Descrittore copia() throws ErrorException{
         Descrittore d = null;
         try {
-            System.out.println("COPIA - DESCRITTORE");
+            //System.out.println("COPIA - DESCRITTORE");
             d = new Descrittore(nomefile, dimensione, hash, stubcb);
         } catch (ErrorException e) {
             throw new ErrorException(e.getMessage());
