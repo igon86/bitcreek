@@ -99,11 +99,15 @@ public class Ascolto implements Runnable {
                     //out.close();
                     /* incremento numero di connessioni */
                     peer.incrConnessioni();
+                    /* incremento nuemro peer in upload se sono seeder */
+                    if(!contacted.getStato()){
+                        contacted.incrPeer();
+                    }
                     /* operazioni ulteriori se sono leecher : creo connessione in down
 
                     Lo devo fare solo se non ho già una connessione in down, non sono
                     seeder e posso creare connessioni !!!! */
-                    if (contacted.getStato() == true/*&& !conn.downAttiva()*/ && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
+                    if (contacted.getStato() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
                         System.out.println("\n\n"+Thread.currentThread().getName()+"SONO ENTRATO\n\n");
                             Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
                             SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
@@ -120,6 +124,8 @@ public class Ascolto implements Runnable {
                             peer.addTask(new Downloader(contacted, conn));
                             /* incremento numero connessioni */
                             peer.incrConnessioni();
+                            /* incremento numero peer in download */
+                            contacted.incrPeer();
                     }
                 } catch (IOException ex) {
                     System.out.println("IOException in Ascolto");
