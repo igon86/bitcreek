@@ -45,6 +45,7 @@ public class Creek extends Descrittore implements Serializable {
     //Strutture per la gestione del file
     protected File file;
     private RandomAccessFile raf;
+    //ma che roba e`
     private int scaricati;
 
     /**
@@ -124,7 +125,7 @@ public class Creek extends Descrittore implements Serializable {
         }
         /* tutto bene : aggiorno la percentuale */
     }
-
+    
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * @param id
@@ -210,6 +211,7 @@ public class Creek extends Descrittore implements Serializable {
 
     public void addConnessione(Connessione conn) {
         this.connessioni.add(conn);
+        //ma perche`???
         this.situazione = STARTED;
     }
 
