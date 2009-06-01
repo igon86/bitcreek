@@ -52,17 +52,21 @@ public class Ascolto implements Runnable {
                     throw new NullPointerException();
                 }
                 try {
+                    scambio = new Socket(); /* da questo si vede che sono disperato*/
                     scambio = peer.getSS().accept();
                 } catch (SocketTimeoutException e) {
                     // timeout scaduto : continuo a ciclare
                     continue;
                 } catch (IOException ex) {
                     System.err.println(Thread.currentThread().getName() + " Sono stato disconnesso : la socket di benvenuto è stata chiusa");
+                    continue;
                 }
                 try {
+                    /* li ho invertiti per vedere se ora vanno : ma non vanno PORCA TROIA!!!*/
                     in = new ObjectInputStream(scambio.getInputStream());
                     out = new ObjectOutputStream(scambio.getOutputStream());
                 } catch (IOException ex) {
+                    System.out.println("Ascolto : IOExcpetion dopo out =  e in =");
                     Logger.getLogger(Ascolto.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -104,10 +108,9 @@ public class Ascolto implements Runnable {
                         contacted.incrPeer();
                     }
                     /* operazioni ulteriori se sono leecher : creo connessione in down
-
                     Lo devo fare solo se non ho già una connessione in down, non sono
                     seeder e posso creare connessioni !!!! */
-                    if (contacted.getStato() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
+                    if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
                         System.out.println("\n\n"+Thread.currentThread().getName()+"SONO ENTRATO\n\n");
                             Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
                             SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());

@@ -79,7 +79,15 @@ public class Connessione implements Serializable{
         //Il binding degli stream alle socket viene effettuato solo al momento opportuno
         //dai thread
     }
-    
+
+    /**
+     * Restituisce true se la socket in download è null
+     * @return
+     */
+    public boolean DownNull(){
+        return down == null;
+    }
+
     /**
      * Metodo utilizzato per controllare se una connessione e` gia presente
      * @param ip
