@@ -49,6 +49,13 @@ public class ModelloTabellaMieiCreek extends AbstractTableModel{
         if(i < 0 || i >= vettore.size()) throw new ErrorException("Param invalid");
         vettore.remove(i);
     }
+
+    /**
+     * Rimuove tutto
+     */
+    public void removeTutti(){
+        vettore.clear();
+    }
     
     /**
      * Restituisce la riga in posizone i

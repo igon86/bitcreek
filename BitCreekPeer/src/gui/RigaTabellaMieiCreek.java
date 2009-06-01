@@ -6,39 +6,39 @@ import condivisi.ErrorException;
  * Definisce una riga della tabella dei file in download
  * @author Bandettini
  */
-
 public class RigaTabellaMieiCreek {
-    
-    /* Variabili d'istanza */
 
+    /* Variabili d'istanza */
     private String file;
     private String dimensione;
     private String stato;
     private String situazione;
     private String percentuale;
     private String peer;
-    
+
     /**
      * Costruttore
      * @param file nome del file
      * @param dimensione dimensione del file
      */
-
-    public RigaTabellaMieiCreek(String file,String dimensione){
+    public RigaTabellaMieiCreek(String file, long dimensione, boolean situazione, int percentuale) {
         this.file = file;
-        this.dimensione = dimensione;
+        this.dimensione = ""+dimensione;
         this.stato = "In download";
-        this.situazione = "Non attivo";
-        this.percentuale = "0%";
-        this.peer = "0";
+        if (situazione) {
+            this.situazione = "Attivo";
+        } else {
+            this.situazione = "Non Attivo";
         }
-    
+        this.percentuale = percentuale + "%";
+        this.peer = "0";
+    }
+
     /**
      * Resituisce il nome del file
      * @return file
      */
-
-    public String getFile(){
+    public String getFile() {
         return this.file;
     }
 
@@ -46,8 +46,7 @@ public class RigaTabellaMieiCreek {
      * restituisce la dimensione del file
      * @return dimensione
      */
-
-    public String getDimensione(){
+    public String getDimensione() {
         return this.dimensione;
     }
 
@@ -55,8 +54,7 @@ public class RigaTabellaMieiCreek {
      * Restituisce lo stato del file
      * @return stato
      */
-
-    public String getStato(){
+    public String getStato() {
         return this.stato;
     }
 
@@ -64,8 +62,7 @@ public class RigaTabellaMieiCreek {
      * Restituisce la situaizone del file
      * @return situazione
      */
-
-    public String getSituazione(){
+    public String getSituazione() {
         return this.situazione;
     }
 
@@ -73,8 +70,7 @@ public class RigaTabellaMieiCreek {
      * Restituisce la percentuale del file
      * @return percentuale
      */
-
-    public String getPercentuale(){
+    public String getPercentuale() {
         return this.percentuale;
     }
 
@@ -82,19 +78,19 @@ public class RigaTabellaMieiCreek {
      * Restituisce il numero di peer del file
      * @return peer
      */
-
-    public String getPeer(){
+    public String getPeer() {
         return this.peer;
     }
-    
+
     /**
      * Setta lo stato del file
      * @param stato
      * @exception condivisi.ErrorException se stato è null
      */
-
-    public void setStato(String stato) throws ErrorException{
-        if (stato == null)throw new ErrorException("Param null");
+    public void setStato(String stato) throws ErrorException {
+        if (stato == null) {
+            throw new ErrorException("Param null");
+        }
         this.stato = stato;
     }
 
@@ -103,9 +99,10 @@ public class RigaTabellaMieiCreek {
      * @param situazione
      * @exception condivisi.ErrorException se situaizone è null
      */
-
-    public void setSituazione(String situazione) throws ErrorException{
-        if (situazione == null)throw new ErrorException("Param null");
+    public void setSituazione(String situazione) throws ErrorException {
+        if (situazione == null) {
+            throw new ErrorException("Param null");
+        }
         this.situazione = situazione;
     }
 
@@ -114,9 +111,10 @@ public class RigaTabellaMieiCreek {
      * @param percentuale
      * @exception condivisi.ErrorException se percentuale è null
      */
-
-    public void setPercentuale(String percentuale) throws ErrorException{
-        if (percentuale == null)throw new ErrorException("Param null");
+    public void setPercentuale(String percentuale) throws ErrorException {
+        if (percentuale == null) {
+            throw new ErrorException("Param null");
+        }
         this.percentuale = percentuale;
     }
 
@@ -125,9 +123,10 @@ public class RigaTabellaMieiCreek {
      * @param peer
      * @exception condivisi.ErrorException se peer è null
      */
-
-    public void setPeer(String peer) throws ErrorException{
-        if (peer == null)throw new ErrorException("Param null");
+    public void setPeer(String peer) throws ErrorException {
+        if (peer == null) {
+            throw new ErrorException("Param null");
+        }
         this.peer = peer;
     }
 }
