@@ -28,25 +28,18 @@ public class Creek extends Descrittore implements Serializable {
     private static final boolean NOTSTARTED = false;
     private static final boolean STARTED = true;
     /* Variabili d'istanza */
-
-    
-
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
-    
     //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
     private int statoDownload;
-    
     // ?!
     private int percentuale;
-    
     //non e` uguale a stato??? o forse serviva per la callback??
     private boolean pubblicato;
     private int peer;
     private int peercercano;
     private InetAddress ind;
     private boolean[] have; //false se non posseduto true se posseduto
-
     private ArrayList<PIO> toDo;
     private ArrayList<Connessione> connessioni;
     //Strutture per la gestione del file
@@ -78,9 +71,9 @@ public class Creek extends Descrittore implements Serializable {
         }
         //aggiunte per il p2p
         float temp = (float) d.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
-        System.out.println(Thread.currentThread().getName()+" NUMERO DI BLOCCHI: "+temp);
+        System.out.println(Thread.currentThread().getName() + " NUMERO DI BLOCCHI: " + temp);
         int dimArray = (int) Math.ceil(temp);
-        System.out.println("FILE HA DIMENSIONE: " +d.getDimensione()+"\nL'ARRAY HAVE HA DIMENSIONE: "+dimArray);
+        System.out.println("FILE HA DIMENSIONE: " + d.getDimensione() + "\nL'ARRAY HAVE HA DIMENSIONE: " + dimArray);
         have = new boolean[dimArray];
         if (this.getStato() == LEECHER) {
             //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
@@ -122,56 +115,57 @@ public class Creek extends Descrittore implements Serializable {
         //la lunghezza serve perché il buffer passato ha sempre la dimensione
         //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
         int length = c.getDim();
-        System.out.println("Sto per scrivere un chunk di dimensione: "+length);
+        System.out.println("Sto per scrivere un chunk di dimensione: " + length);
         try {
-            raf.seek(offset*BitCreekPeer.DIMBLOCCO);
+            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
             raf.write(c.getData(), 0, length);
         } catch (IOException ex) {
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
         /* tutto bene : aggiorno la percentuale */
-        
     }
 
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * @param id
      */
-    public synchronized Chunk getChunk(int offset){
+    public synchronized Chunk getChunk(int offset) {
         int ridden = 0;
-        byte [] buffer = new byte[BitCreekPeer.DIMBLOCCO];
+        byte[] buffer = new byte[BitCreekPeer.DIMBLOCCO];
         for (int i = 0; i < buffer.length; i++) {
             buffer[i] = 0;
         }
         try {
-            if(raf == null) System.out.println("E` successa una tragedia al RAF");
+            if (raf == null) {
+                System.out.println("E` successa una tragedia al RAF");
+            }
             long indice = offset * BitCreekPeer.DIMBLOCCO;
             raf.seek(indice);
-            System.out.println(Thread.currentThread().getName()+" MI SONO SPOSTATO AL BYTE : "+indice);
+            System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
             ridden = raf.read(buffer, 0, buffer.length);
-            System.out.println(Thread.currentThread().getName()+" HO LETTO "+ridden+" BYTE");
+            System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
         } catch (IOException ex) {
-            System.out.println(Thread.currentThread().getName()+" ERRORE IN LETTURA");
+            System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new Chunk(buffer,offset,ridden);
+        return new Chunk(buffer, offset, ridden);
     }
-    
+
     /**
      * Ripulisce il creek dalla roba non serializzabile;
      */
-    public synchronized void setClean(){
+    public synchronized void setClean() {
         this.raf = null;
     }
-    
-    public synchronized void testFile(){
-        if (this.raf == null){
+
+    public synchronized void testFile() {
+        if (this.raf == null) {
             System.out.println("E` PURGATO ERRORE");
-        }
-        else{
+        } else {
             System.out.println("E` L'ORIGINALE!! DI LUSSO");
         }
     }
+
     /**
      * metodo che controlla se ci sono chunk da scaricare tra quelli presenti
      * in bitfield
@@ -199,15 +193,14 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public synchronized PIO getNext(boolean[] bitfield) {
-        System.out.print(Thread.currentThread().getName()+" getNext: La lista toDO contiene "+this.toDo.size()+ " elementi ->");
+        System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
         if (this.situazione == STARTED) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
                 System.out.println("RITORNO NULL");
                 return null;
-            }
-            else{
-                System.out.println("RITORNO PIO: "+temp.getId());
+            } else {
+                System.out.println("RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
@@ -247,15 +240,15 @@ public class Creek extends Descrittore implements Serializable {
             }
         }
         //CONTROLLO SUL NUMERO DI PIO
-        System.out.println(Thread.currentThread().getName()+" ToDo ha dimensione: "+this.toDo.size());
+        System.out.println(Thread.currentThread().getName() + " ToDo ha dimensione: " + this.toDo.size());
     }
 
     public synchronized void removePIO(int p) {
         PIO temp = null;
         Iterator h = this.toDo.iterator();
-        while(h.hasNext()){
-            temp  = (PIO) h.next();
-            if (temp.getId() == p){
+        while (h.hasNext()) {
+            temp = (PIO) h.next();
+            if (temp.getId() == p) {
                 h.remove();
                 break;
             }
@@ -342,7 +335,7 @@ public class Creek extends Descrittore implements Serializable {
     /**
      * Incrementa il numero di peer
      */
-    public void incrPeer() {
+    public synchronized void incrPeer() {
         this.peer++;
     }
 
@@ -350,9 +343,15 @@ public class Creek extends Descrittore implements Serializable {
      * Setta la percentuale in base al parametro passato
      * @param np
      */
-    public void settaPerc() {
+    public synchronized void settaPerc() {
         this.scaricati++;
         this.percentuale = (this.scaricati * 100) / have.length;
         /* se percentuale = 100 ho finito di scaricare quindi il file può andare in upload */
+        if (this.percentuale == 100) {
+            this.stato = SEEDER;
+            this.situazione = NOTSTARTED;
+        }
     }
+
+    
 }

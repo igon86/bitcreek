@@ -70,7 +70,6 @@ public class Downloader implements Runnable{
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
                     conn.incrDown();
                     c.settaPerc();
-
                     /*  controllare lo SHA del pezzo ------> da fare !!!!  */
 
                     this.pendingRequest = false;
