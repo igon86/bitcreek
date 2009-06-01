@@ -352,6 +352,7 @@ public class BitCreekPeer {
                 System.out.println("CREATO LO STREAM");
                 o.writeObject(toBeWritten);
                 c.close();
+                o.close(); /* AGGIUNTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
                 System.out.println("FINE PEZZO TRAGICO");
             } catch (FileNotFoundException ex) {
                 File f = new File("./MetaInfo/" + creek.getName() + ".creek");
