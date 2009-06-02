@@ -30,6 +30,12 @@ public class Creek extends Descrittore implements Serializable {
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
+    
+    private static final int ENDED = 0;
+    private static final int INIT = 1;
+    private static final int RAREST = 2;
+    private static final int ENDGAME = 3;
+    private static final int MINCHUNK = 5;
     //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
     private int statoDownload;
     // ?!
@@ -108,6 +114,13 @@ public class Creek extends Descrittore implements Serializable {
      * @param c
      */
     public synchronized void scriviChunk(Chunk c) {
+        //come prima cosa rendo consistente lo statoDownload
+        if (this.statoDownload == INIT){
+            this.statoDownload = RAREST;
+        }
+        if(this.toDo.size() < MINCHUNK){
+            this.statoDownload = ENDGAME;
+        }
         //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
         this.removePIO(offset);
@@ -123,11 +136,11 @@ public class Creek extends Descrittore implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /* tutto bene : aggiorno la percentuale */
     }
     
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
+     * utilizzato dall'uploader
      * @param id
      */
     public synchronized Chunk getChunk(int offset) {
@@ -166,7 +179,20 @@ public class Creek extends Descrittore implements Serializable {
             System.out.println("E` L'ORIGINALE!! DI LUSSO");
         }
     }
-
+    
+    /**
+     * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PIO
+     * @param bitfield
+     */
+    public synchronized void addRarita(boolean[] bitfield){
+        for (PIO p : toDo){
+            int id = p.getId();
+            if(bitfield[id]){
+                int rarita = p.getRarita();
+                p.setRarita(++rarita);
+            }
+        }
+    }
     /**
      * metodo che controlla se ci sono chunk da scaricare tra quelli presenti
      * in bitfield
@@ -181,7 +207,12 @@ public class Creek extends Descrittore implements Serializable {
         }
         return false;
     }
-
+    
+    /**
+     * Metodo di supporto della getNext()
+     * @param bitfield
+     * @return il primo oggetto PIO libero nel bitfield
+     */
     public synchronized PIO next(boolean[] bitfield) {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
@@ -192,9 +223,11 @@ public class Creek extends Descrittore implements Serializable {
         }
         return null;
     }
-
+    
+    
     public synchronized PIO getNext(boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
+        //questo controllo e` totalmente inutile
         if (this.situazione == STARTED) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
@@ -240,6 +273,12 @@ public class Creek extends Descrittore implements Serializable {
                 }
                 count++;
             }
+        }
+        if(this.toDo.size() < MINCHUNK){
+            this.statoDownload = ENDGAME;
+        }
+        else{
+            this.statoDownload = INIT;
         }
         //CONTROLLO SUL NUMERO DI PIO
         System.out.println(Thread.currentThread().getName() + " ToDo ha dimensione: " + this.toDo.size());

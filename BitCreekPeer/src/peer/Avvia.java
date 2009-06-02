@@ -43,7 +43,7 @@ public class Avvia implements Runnable {
             SSLSocket s = null;
             ObjectInputStream oin = null;
 
-            //questa provoca l'aggiornamento dell' interfaccia grafica
+            //questa provoca l'aggiornamento dell' interfaccia grafica aggiungendo il creek a arraydescr
             try {
                 System.out.println(Thread.currentThread().getName() + " : Avvia : Avvio descr " + index + " su una lista lunga " + peer.getCercati().size());
                 d = peer.getCercati().get(index);
@@ -63,9 +63,13 @@ public class Avvia implements Runnable {
             }
 
             /* contatto gli altri e creo i thread solo se non ho già in download quel file */
+            //NON DOVREMMO CONTROLLARLO PRIMA???
             if (presenza) {
                 //recupero della lista Peer dal tracker
                 int portatracker = d.getTCP();
+                
+                
+                //CONTATTO SSL
                 System.out.println(Thread.currentThread().getName() + " : Avvia : !presenza --> Contatto tracker sulla porta : " + portatracker);
                 try {
                     s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);
@@ -90,24 +94,33 @@ public class Avvia implements Runnable {
                     Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
+                
+                
+                
                 //devo contattare i peer nella lista
                 for (NetRecord n : lista) {
                     try {
                         if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
+                            //INSERIRE MONITOR
                             break;
                         }
+                        
                         if(n.getPorta() == peer.getPortaRichieste() && n.getIp() == peer.getMioIp()){
                             System.out.println("MI STAVO AUTOCONTATTANDO PERCHE SONO IMBECILLE");
                             continue;
                         }
+                        
                         System.out.println(Thread.currentThread().getName() + " Avvia : Contatto peer con porta " + n.getPorta());
                         //contatto il peer n
                         SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
                         System.out.println(Thread.currentThread().getName() + "fatto inetsocketaddress");
+                        
                         Socket sock = new Socket();
                         System.out.println(Thread.currentThread().getName() + "aftta socket");
+                        
                         sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
                         System.out.println(Thread.currentThread().getName() + "fatto connect");
+                        
                         Bitfield b = new Bitfield(null);
                         ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
                         System.out.println(Thread.currentThread().getName() + "fatto OUT");
@@ -121,9 +134,13 @@ public class Avvia implements Runnable {
                         System.out.print("\n\n Avvia : " + c.getId());
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
                         System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress());
+                        
+                        
                         try {
                             //lui mi risponde con il suo bitfield
                             b = (Bitfield) contactIN.readObject();
+                            //AGGIORNA RARITA!! l'altra parte e` gestita dall'upload manager _>se avremo voglia
+                            c.addRarita(b.getBitfield());
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
                         //aggiungo l'oggetto connessione
                         } catch (ClassNotFoundException ex) {
