@@ -105,7 +105,7 @@ public class Avvia implements Runnable {
                             break;
                         }
                         
-                        if(n.getPorta() == peer.getPortaRichieste() && n.getIp() == peer.getMioIp()){
+                        if(n.getPorta() == peer.getPortaRichieste() && n.getIp().getHostAddress().compareTo(peer.getMioIp().getHostAddress()) == 0) {
                             System.out.println("MI STAVO AUTOCONTATTANDO PERCHE SONO IMBECILLE");
                             continue;
                         }
