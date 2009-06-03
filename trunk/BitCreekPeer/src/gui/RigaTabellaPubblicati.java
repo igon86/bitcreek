@@ -11,6 +11,7 @@ public class RigaTabellaPubblicati {
 
     /* Costanti */
     public static final int NONATTIVO = -1;
+    private final int K = 1024;
 
     /* Variabili d'istanza */
     private String file;
@@ -27,9 +28,9 @@ public class RigaTabellaPubblicati {
      * @param dimensione dimensione del file
      * @param pubblicato true se è stato pubblicato dal peer, false altrimenti
      */
-    public RigaTabellaPubblicati(String file, String dimensione, boolean pubblicato) {
+    public RigaTabellaPubblicati(String file, long dimensione, boolean pubblicato) {
         this.file = file;
-        this.dimensione = dimensione;
+        this.dimensione = this.Dim(dimensione);
         this.stato = "In Upload";
         this.situazione = "Non Attivo";
         this.peer = 0;
@@ -154,5 +155,20 @@ public class RigaTabellaPubblicati {
         if (ind != null && peercercano != NONATTIVO) {
             this.identita = ind;
         }
+    }
+    
+    private String Dim(long dimensione){
+        int i = 0;
+        for (i = 0; ; i++){
+            if( (dimensione / K) < 1)
+                break;
+            else
+                dimensione = dimensione / K;
+        }
+        if(i == 1)return dimensione + " Kbyte";
+        if(i == 2)return dimensione + " Mbyte";
+        if(i == 3)return dimensione + " Gbyte";
+        if(i == 4)return dimensione + " Tbyte";
+        return dimensione + " byte";
     }
 }

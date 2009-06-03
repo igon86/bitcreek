@@ -120,12 +120,9 @@ public class Avvia implements Runnable {
                         
                         sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
                         System.out.println(Thread.currentThread().getName() + "fatto connect");
-                        
                         Bitfield b = new Bitfield(null);
                         ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
                         System.out.println(Thread.currentThread().getName() + "fatto OUT");
-
-                        /* SI PIANTA SU QUESTA !!!! */
                         ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
                         System.out.println(Thread.currentThread().getName() + "fatto IN");
 

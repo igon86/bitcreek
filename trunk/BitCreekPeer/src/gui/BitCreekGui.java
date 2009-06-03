@@ -1008,7 +1008,7 @@ public class BitCreekGui extends javax.swing.JFrame {
 
                                 /* creek non presente : lo aggiungo */
 
-                                RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione() + " byte", c.getPubblicato());
+                                RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione() , c.getPubblicato());
                                 try {
                                     modellopubblicati.addRiga(r);
                                 } catch (ErrorException e) {

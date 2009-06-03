@@ -54,7 +54,7 @@ public class ModelloTabellaCerca extends AbstractTableModel{
         if(columnIndex == 0)
             return riga.getNome();
         if(columnIndex == 1)
-            return riga.getDimensione()+" byte";
+            return riga.getDimensione();
         if(columnIndex == 2)
             return riga.getSeeders();
         if(columnIndex == 3)
