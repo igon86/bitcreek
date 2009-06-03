@@ -141,7 +141,23 @@ public class Connessione implements Serializable{
         }
         return null;
     }
+
+    public synchronized void ResetDown(){
+        try {
+            outDown.reset();
+        } catch (IOException ex) {
+            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+    public synchronized void ResetUp(){
+        try {
+            outUp.reset();
+        } catch (IOException ex) {
+            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     //chiamato in seguito ad un messaggio di have
     public synchronized void setBitfield(boolean[] b){
         this.bitfield = b;
