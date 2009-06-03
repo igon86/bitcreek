@@ -9,6 +9,7 @@ import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,9 +118,11 @@ public class Creek extends Descrittore implements Serializable {
         //come prima cosa rendo consistente lo statoDownload
         if (this.statoDownload == INIT){
             this.statoDownload = RAREST;
+            System.out.println("Siamo passati in rarest");
         }
-        if(this.toDo.size() < MINCHUNK){
+        if(this.toDo.size() < MINCHUNK && this.statoDownload != ENDGAME){
             this.statoDownload = ENDGAME;
+            System.out.println("Sono passato in endgame");
         }
         //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
@@ -224,13 +227,40 @@ public class Creek extends Descrittore implements Serializable {
         return null;
     }
     
+    public synchronized PIO orderedNext(boolean[] bitfield){
+        Iterator h = this.toDo.iterator();
+        while (h.hasNext()) {
+            PIO temp = (PIO) h.next();
+            if(temp.getBusy()){
+                return null;
+            }
+            else if (bitfield[temp.getId()]) {
+                return temp;
+            }
+        }
+        return null;
+    }
+    
     
     public synchronized PIO getNext(boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
         //questo controllo e` totalmente inutile
-        if (this.situazione == STARTED) {
+        if (this.statoDownload == INIT || this.statoDownload == ENDGAME) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
+                System.out.println("RITORNO NULL");
+                return null;
+            } else {
+                System.out.println("RITORNO PIO: " + temp.getId());
+                temp.setBusy();
+                return temp;
+            }
+        }
+        else if (this.statoDownload == RAREST){
+           //ordino per rarita
+           Collections.sort(this.toDo);
+           PIO temp = this.next(bitfield);
+           if (temp == null) {
                 System.out.println("RITORNO NULL");
                 return null;
             } else {
