@@ -8,6 +8,9 @@ import condivisi.ErrorException;
  */
 public class RigaTabellaMieiCreek {
 
+    /* Costanti */
+    private final int K = 1024;
+
     /* Variabili d'istanza */
     private String file;
     private String dimensione;
@@ -23,7 +26,7 @@ public class RigaTabellaMieiCreek {
      */
     public RigaTabellaMieiCreek(String file, long dimensione, boolean situazione, int percentuale) {
         this.file = file;
-        this.dimensione = ""+dimensione;
+        this.dimensione = this.Dim(dimensione);
         this.stato = "In download";
         if (situazione) {
             this.situazione = "Attivo";
@@ -128,5 +131,20 @@ public class RigaTabellaMieiCreek {
             throw new ErrorException("Param null");
         }
         this.peer = peer;
+    }
+
+    private String Dim(long dimensione){
+        int i = 0;
+        for (i = 0; ; i++){
+            if( (dimensione / K) < 1)
+                break;
+            else
+                dimensione = dimensione / K;
+        }
+        if(i == 1)return dimensione + " Kbyte";
+        if(i == 2)return dimensione + " Mbyte";
+        if(i == 3)return dimensione + " Gbyte";
+        if(i == 4)return dimensione + " Tbyte";
+        return dimensione + " byte";
     }
 }

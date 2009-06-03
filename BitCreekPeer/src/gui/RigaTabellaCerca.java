@@ -8,8 +8,12 @@ import condivisi.ErrorException;
  */
 public class RigaTabellaCerca {
 
+    /* Costanti */
+    private final int K = 1024;
+
+    /* Variabili d'istanza */
     private String nome;
-    private long dimensione;
+    private String dimensione;
     private int numeroSeeders;
     private int numeroLeechers;
     
@@ -17,7 +21,7 @@ public class RigaTabellaCerca {
     public RigaTabellaCerca(String nome, long dimensione, int numseeders, int numleechers) throws ErrorException{
         if( nome == null || dimensione <= 0 || numseeders < 0 || numleechers < 0 ) throw new ErrorException("Param null");
         this.nome = nome;
-        this.dimensione = dimensione;
+        this.dimensione = this.Dim(dimensione);
         this.numeroSeeders = numseeders;
         this.numeroLeechers = numleechers;
         
@@ -27,7 +31,7 @@ public class RigaTabellaCerca {
         return this.nome;
     }
 
-    public long getDimensione(){
+    public String getDimensione(){
         return this.dimensione;
     }
     
@@ -37,6 +41,21 @@ public class RigaTabellaCerca {
     
     public int getLeechers(){
         return this.numeroLeechers;
+    }
+
+    private String Dim(long dimensione){
+        int i = 0;
+        for (i = 0; ; i++){
+            if( (dimensione / K) < 1)
+                break;
+            else
+                dimensione = dimensione / K;
+        }
+        if(i == 1)return dimensione + " Kbyte";
+        if(i == 2)return dimensione + " Mbyte";
+        if(i == 3)return dimensione + " Gbyte";
+        if(i == 4)return dimensione + " Tbyte";
+        return dimensione + " byte";
     }
     
 }

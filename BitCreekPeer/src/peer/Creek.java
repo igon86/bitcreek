@@ -39,9 +39,7 @@ public class Creek extends Descrittore implements Serializable {
     private static final int MINCHUNK = 5;
     //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
     private int statoDownload;
-    // ?!
     private int percentuale;
-    //non e` uguale a stato??? o forse serviva per la callback??
     private boolean pubblicato;
     private int peer;
     private int peercercano;
@@ -421,6 +419,7 @@ public class Creek extends Descrittore implements Serializable {
         if (this.percentuale == 100) {
             this.stato = SEEDER;
             this.situazione = NOTSTARTED;
+            this.peer = 0;
         }
     }
 
