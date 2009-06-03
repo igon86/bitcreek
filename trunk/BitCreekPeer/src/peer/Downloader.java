@@ -24,6 +24,7 @@ public class Downloader implements Runnable{
 
     public void run() {
         
+        System.out.println("/nSONO UN NUOVO THREAD DOWNLOADER /n");
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
         
         if(c.interested(conn.getBitfied())){

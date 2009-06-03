@@ -41,7 +41,7 @@ public class Ascolto implements Runnable {
             try {
 
                 /* GESTIONE ERRORE + RISCRIVERE STE MILLE ECCEZZIONI */
-                
+
                 ObjectInputStream in = null;
                 ObjectOutputStream out = null;
                 Socket scambio = null;
@@ -72,7 +72,7 @@ public class Ascolto implements Runnable {
                 try {
                     //RICEVO UN CONTATTO
                     Contact con = (Contact) in.readObject();
-                    System.out.println(Thread.currentThread().getName() + " : Ascolto : contatto ricevuto : " + con.getIp() +","+ con.getSS() +"," +con.getId());
+                    System.out.println(Thread.currentThread().getName() + " : Ascolto : contatto ricevuto : " + con.getIp() + "," + con.getSS() + "," + con.getId());
                     int swarmId = con.getId();
                     Creek contacted = peer.getCreek(swarmId);
                     //INVIO IL BITFILED RELATIVO
@@ -97,39 +97,41 @@ public class Ascolto implements Runnable {
                         conn = temp;
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
-                    peer.addTask(new Uploader(conn,contacted));
+                    peer.addTask(new Uploader(conn, contacted));
                     /* chiudo i file : NO */
                     //in.close();
                     //out.close();
                     /* incremento numero di connessioni */
                     peer.incrConnessioni();
                     /* incremento nuemro peer in upload se sono seeder */
-                    if(!contacted.getStato()){
+                    if (!contacted.getStato()) {
                         contacted.incrPeer();
                     }
                     /* operazioni ulteriori se sono leecher : creo connessione in down
                     Lo devo fare solo se non ho già una connessione in down, non sono
                     seeder e posso creare connessioni !!!! */
-                    /*if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
-                        System.out.println("\n\n"+Thread.currentThread().getName()+"SONO ENTRATO\n\n");
-                            Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
-                            SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
-                            Socket mysock = new Socket();
-                            mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                            ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
-                            ObjectOutputStream output = new ObjectOutputStream(mysock.getOutputStream());
-                            output.writeObject(mycon);
-                            Bitfield b = (Bitfield) input.readObject();
-                            conn.setSocketDown(mysock);
-                            conn.setBitfield(b.getBitfield());
-                            System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
-                            /* aggiungo thread per download
-                            peer.addTask(new Downloader(contacted, conn));
-                            /* incremento numero connessioni 
-                            peer.incrConnessioni();
-                            /* incremento numero peer in download 
-                            contacted.incrPeer();
-                    }*/
+                    if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
+                        System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO\n\n");
+                        
+                        Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
+                        SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
+                        Socket mysock = new Socket();
+                        mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
+                        ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
+                        ObjectOutputStream output = new ObjectOutputStream(mysock.getOutputStream());
+                        output.writeObject(mycon);
+                        Bitfield b = (Bitfield) input.readObject();
+                        conn.setSocketDown(mysock);
+                        conn.setBitfield(b.getBitfield());
+
+                        System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
+                        // aggiungo thread per download
+                        peer.addTask(new Downloader(contacted, conn));
+                        // incremento numero connessioni 
+                        peer.incrConnessioni();
+                        // incremento numero peer in download 
+                        contacted.incrPeer();
+                    }
                 } catch (IOException ex) {
                     System.out.println("IOException in Ascolto");
                     Logger.getLogger(Ascolto.class.getName()).log(Level.SEVERE, null, ex);
