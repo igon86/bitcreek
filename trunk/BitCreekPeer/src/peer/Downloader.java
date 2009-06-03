@@ -71,6 +71,9 @@ public class Downloader implements Runnable{
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
                     conn.incrDown();
                     c.settaPerc();
+                    /* resetto il canale per evitare di impallare tutto*/
+                    if( count % 100 == 0)
+                        conn.ResetDown();
                     /*  controllare lo SHA del pezzo ------> da fare !!!!  */
 
                     this.pendingRequest = false;

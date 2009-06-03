@@ -191,6 +191,7 @@ public class Crea implements Runnable {
             outChannel.close();
         } catch (IOException e) {
             System.out.println("Casino nella copia del file");
+            throw new ErrorException("Casino nella copia del file");
         }
     }
 
