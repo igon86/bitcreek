@@ -81,10 +81,12 @@ public class Ascolto implements Runnable {
                      * EFFETTUO IL CONTROLLO CHE L'OGGETTO NON ESISTA GIA
                      */
                     //System.out.println(Thread.currentThread().getName() + " : Ascolto : con.getSS :: " + con.getSS());
-                    Connessione conn;
+                    Connessione conn = null;
                     Connessione toModify = contacted.presenzaConnessione(scambio.getInetAddress(),con.getSS());
                     if (toModify == null ) {
-                        conn = new Connessione(null, scambio, null, con.getSS());
+                        conn = new Connessione();//null, scambio, null, con.getSS());
+                        /*Prova*/
+                        conn.set(false, scambio, in, out, null, con.getSS());
                         contacted.addConnessione(conn);
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
                     } else {
@@ -95,9 +97,9 @@ public class Ascolto implements Runnable {
                         di upload ------------> controllare che sia così anche (e se) quando
                         ci occuperemo dei download stoppati e ripartiti !!!*/
                         //DA RIFARE/!!
-                        toModify.setUp(scambio,in,out);
+                        //toModify.setUp(scambio,in,out);
                         conn = toModify;
-                        
+                        conn.set(false, scambio, in, out, null, con.getSS());
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
                     peer.addTask(new Uploader(conn, contacted));
@@ -116,9 +118,7 @@ public class Ascolto implements Runnable {
                     seeder e posso creare connessioni !!!! */
                     if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
                         System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
-                        
-                        Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
-                        
+                        Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);                
                         SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
                         Socket mysock = new Socket();
                         mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
@@ -129,9 +129,13 @@ public class Ascolto implements Runnable {
                         System.out.println("HO FATTO L'INPUT");
                         output.writeObject(mycon);
                         Bitfield b = (Bitfield) input.readObject();
-                        conn.setSocketDown(mysock);
-                        conn.setBitfield(b.getBitfield());
+                        // modifica
+                        //conn.setDown(mysock, input, output);
+                        //conn.setSocketDown(mysock);
+                        //conn.setBitfield(b.getBitfield());
 
+                        /* Prova nuovo metodo */
+                        conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
                         System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
                         // aggiungo thread per download
                         peer.addTask(new Downloader(contacted, conn));
