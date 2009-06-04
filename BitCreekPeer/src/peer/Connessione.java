@@ -104,7 +104,7 @@ public class Connessione implements Serializable {
 
     //Virtualizzazione
     public synchronized void sendDown(Messaggio m) {
-        if (down != null) {
+        if (outDown != null) {
             try {
                 outDown.writeObject(m);
             } catch (IOException ex) {
@@ -114,7 +114,7 @@ public class Connessione implements Serializable {
     }
 
     public synchronized void sendUp(Messaggio m) {
-        if (up != null) {
+        if (outUp != null) {
             try {
                 this.outUp.writeObject(m);
             } catch (IOException ex) {
@@ -128,7 +128,9 @@ public class Connessione implements Serializable {
             if (inDown == null) {
                 System.out.println(Thread.currentThread().getName() + " inDown non inizializzata, sei un programmatore BUSTA");
             }
-            return (Messaggio) inDown.readObject();
+            else{
+                return (Messaggio) inDown.readObject();
+            }
         } catch (IOException ex) {
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -141,8 +143,9 @@ public class Connessione implements Serializable {
         try {
             if (inUp == null) {
                 System.out.println(Thread.currentThread().getName() + " inUp non inizializzata, sei un programmatore BUSTA");
+            }else{
+                return (Messaggio) inUp.readObject();
             }
-            return (Messaggio) inUp.readObject();
         } catch (IOException ex) {
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
