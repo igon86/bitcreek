@@ -95,7 +95,7 @@ public class Connessione implements Serializable {
      * @return
      */
     public synchronized boolean confronta(InetAddress ip, int porta) {
-        if (this.ipVicino == ip && this.portaVicino == porta) {
+        if (this.ipVicino.getHostAddress().compareTo(ip.getHostAddress()) == 0  && this.portaVicino == porta) {
             return true;
         } else {
             return false;
