@@ -53,9 +53,9 @@ public class Downloader implements Runnable{
                     this.conn.setBitfield(bitfield);
                     
                     /* ma questo controllo serve ????..non va eseguito in ogni caso il corpo ??*/
-                    //if (this.conn.getInteresseDown() == false){
+                    if (this.conn.getInteresseDown() == false){
                         this.conn.setInteresseDown(this.c.interested(bitfield));
-                    //}
+                    }
                     break;
                 }
                 case Messaggio.CHOKE:{

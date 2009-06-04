@@ -127,8 +127,7 @@ public class Connessione implements Serializable {
         try {
             if (inDown == null) {
                 System.out.println(Thread.currentThread().getName() + " inDown non inizializzata, sei un programmatore BUSTA");
-            }
-            else{
+            }else{
                 return (Messaggio) inDown.readObject();
             }
         } catch (IOException ex) {

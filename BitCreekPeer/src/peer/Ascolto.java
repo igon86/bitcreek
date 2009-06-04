@@ -115,6 +115,7 @@ public class Ascolto implements Runnable {
                         System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
                         
                         Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
+                        
                         SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
                         Socket mysock = new Socket();
                         mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
