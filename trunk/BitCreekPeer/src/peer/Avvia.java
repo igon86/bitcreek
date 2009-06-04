@@ -147,7 +147,12 @@ public class Avvia implements Runnable {
 
                         //aggiungo l'oggetto connessione
                         System.out.println(Thread.currentThread().getName() + " Avvia : Aggiungo connessione in download");
-                        Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
+                        //Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
+                        
+                        Connessione conn = new Connessione();
+                        /* Prova nuovo metodo */
+                        System.out.println("Prova metodo");
+                        conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
                         c.addConnessione(conn);
 
                         System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");

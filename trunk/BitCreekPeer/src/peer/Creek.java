@@ -31,7 +31,6 @@ public class Creek extends Descrittore implements Serializable {
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
-    
     private static final int ENDED = 0;
     private static final int INIT = 1;
     private static final int RAREST = 2;
@@ -114,11 +113,11 @@ public class Creek extends Descrittore implements Serializable {
      */
     public synchronized void scriviChunk(Chunk c) {
         //come prima cosa rendo consistente lo statoDownload
-        if (this.statoDownload == INIT){
+        if (this.statoDownload == INIT) {
             this.statoDownload = RAREST;
             System.out.println("Siamo passati in rarest");
         }
-        if(this.toDo.size() < MINCHUNK && this.statoDownload != ENDGAME){
+        if (this.toDo.size() < MINCHUNK && this.statoDownload != ENDGAME) {
             this.statoDownload = ENDGAME;
             System.out.println("Sono passato in endgame");
         }
@@ -142,8 +141,8 @@ public class Creek extends Descrittore implements Serializable {
     /**
      * Invia i messaggi di Have sulle connessioni in upload
      */
-    public synchronized void inviaHave(){
-        for(Connessione c : connessioni){
+    public synchronized void inviaHave() {
+        for (Connessione c : connessioni) {
             System.out.println("\nSono Creek : invio have\n");
             c.sendUp(new Messaggio(Messaggio.HAVE, this.have));
         }
@@ -190,20 +189,21 @@ public class Creek extends Descrittore implements Serializable {
             System.out.println("E` L'ORIGINALE!! DI LUSSO");
         }
     }
-    
+
     /**
      * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PIO
      * @param bitfield
      */
-    public synchronized void addRarita(boolean[] bitfield){
-        for (PIO p : toDo){
+    public synchronized void addRarita(boolean[] bitfield) {
+        for (PIO p : toDo) {
             int id = p.getId();
-            if(bitfield[id]){
+            if (bitfield[id]) {
                 int rarita = p.getRarita();
                 p.setRarita(++rarita);
             }
         }
     }
+
     /**
      * metodo che controlla se ci sono chunk da scaricare tra quelli presenti
      * in bitfield
@@ -218,7 +218,7 @@ public class Creek extends Descrittore implements Serializable {
         }
         return false;
     }
-    
+
     /**
      * Metodo di supporto della getNext()
      * @param bitfield
@@ -228,48 +228,47 @@ public class Creek extends Descrittore implements Serializable {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
+            System.out.println("Sono nel while con PIO : " + temp.getId() + " e busy" + temp.getBusy());
             if (!temp.getBusy() && bitfield[temp.getId()]) {
                 return temp;
             }
         }
+        System.out.print("NON sono entrato nel while di next");
         return null;
     }
-    
-    public synchronized PIO orderedNext(boolean[] bitfield){
+
+    public synchronized PIO orderedNext(boolean[] bitfield) {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            if(temp.getBusy()){
+            if (temp.getBusy()) {
                 return null;
-            }
-            else if (bitfield[temp.getId()]) {
+            } else if (bitfield[temp.getId()]) {
                 return temp;
             }
         }
         return null;
     }
-    
-    
+
     public synchronized PIO getNext(boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
         //questo controllo e` totalmente inutile
         if (this.statoDownload == INIT || this.statoDownload == ENDGAME) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
-                System.out.println("RITORNO NULL");
+                System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
                 return null;
             } else {
                 System.out.println("RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
-        }
-        else if (this.statoDownload == RAREST){
-           //ordino per rarita
-           Collections.sort(this.toDo);
-           PIO temp = this.next(bitfield);
-           if (temp == null) {
-                System.out.println("RITORNO NULL");
+        } else if (this.statoDownload == RAREST) {
+            //ordino per rarita
+            Collections.sort(this.toDo);
+            PIO temp = this.next(bitfield);
+            if (temp == null) {
+                System.out.println("RITORNO NULL e sono in RAREST");
                 return null;
             } else {
                 System.out.println("RITORNO PIO: " + temp.getId());
@@ -286,9 +285,9 @@ public class Creek extends Descrittore implements Serializable {
         this.situazione = STARTED;
     }
 
-    public Connessione presenzaConnessione(InetAddress ip,int porta) {
+    public Connessione presenzaConnessione(InetAddress ip, int porta) {
         for (Connessione c : this.connessioni) {
-            if (c.confronta(ip,porta)) {
+            if (c.confronta(ip, porta)) {
                 return c;
             }
         }
@@ -312,10 +311,9 @@ public class Creek extends Descrittore implements Serializable {
                 count++;
             }
         }
-        if(this.toDo.size() < MINCHUNK){
+        if (this.toDo.size() < MINCHUNK) {
             this.statoDownload = ENDGAME;
-        }
-        else{
+        } else {
             this.statoDownload = INIT;
         }
         //CONTROLLO SUL NUMERO DI PIO
@@ -432,6 +430,4 @@ public class Creek extends Descrittore implements Serializable {
             this.peer = 0;
         }
     }
-
-    
 }

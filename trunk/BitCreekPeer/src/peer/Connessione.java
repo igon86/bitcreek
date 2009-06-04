@@ -48,9 +48,23 @@ public class Connessione implements Serializable{
     
     boolean[] bitfield;
     int downloaded; /* numero pezzi scaricati su questa connessione */
-    
-    public Connessione(boolean download, Socket s,ObjectInputStream in,ObjectOutputStream out,boolean[] bitfield, int portaVicino){
-        if(download){
+
+    /** Costruttore */
+    public Connessione(){
+        
+    }
+
+    /**
+     * Metodo fico che setta la connessione
+     * @param download
+     * @param s
+     * @param in
+     * @param out
+     * @param bitfield
+     * @param portaVicino
+     */
+    public void set(boolean download, Socket s,ObjectInputStream in,ObjectOutputStream out,boolean[] bitfield, int portaVicino){
+        if( download ){
             //CHIAMATO DA AVVIA
             
             this.bitfield = bitfield;
