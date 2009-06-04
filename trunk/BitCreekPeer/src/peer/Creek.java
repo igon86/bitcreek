@@ -138,7 +138,17 @@ public class Creek extends Descrittore implements Serializable {
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * Invia i messaggi di Have sulle connessioni in upload
+     */
+    public synchronized void inviaHave(){
+        for(Connessione c : connessioni){
+            System.out.println("\nSono Creek : invio have\n");
+            c.sendUp(new Messaggio(Messaggio.HAVE, this.have));
+        }
+    }
+
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * utilizzato dall'uploader

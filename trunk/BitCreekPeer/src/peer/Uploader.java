@@ -40,7 +40,7 @@ public class Uploader implements Runnable {
                     break;
                 }
                 case Messaggio.NOT_INTERESTED: {
-                    System.out.println(Thread.currentThread().getName() + " L'altro peer e` interessato");
+                    System.out.println(Thread.currentThread().getName() + " L'altro peer NON e` interessato");
                     this.conn.setInteresseUp(false);
                     break;
                 }
