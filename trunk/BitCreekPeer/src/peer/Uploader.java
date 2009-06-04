@@ -15,7 +15,7 @@ public class Uploader implements Runnable {
     }
 
     public void run() {
-        System.out.println("UPLOADER AVVIATO");
+        System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER \n");
         int count = 0;
         while (true) {
             Messaggio m = this.conn.receiveUp();
