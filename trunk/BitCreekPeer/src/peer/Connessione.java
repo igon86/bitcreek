@@ -172,8 +172,10 @@ public class Connessione implements Serializable{
                 return (Messaggio) inDown.readObject();
             }
         } catch (IOException ex) {
+            System.out.println("IO Exception nella receiveDown");
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFound Exception nella receiveDown");
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

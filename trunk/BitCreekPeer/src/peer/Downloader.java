@@ -40,6 +40,7 @@ public class Downloader implements Runnable{
         int count=0;
         while(true){
             Messaggio m = this.conn.receiveDown();
+            
             if ( m == null){
                 System.out.println("Continuo perchè il 'canale' è null");
                 continue;
