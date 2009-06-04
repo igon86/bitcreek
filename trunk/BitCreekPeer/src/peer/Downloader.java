@@ -29,28 +29,33 @@ public class Downloader implements Runnable{
         
         if(c.interested(conn.getBitfied())){
             conn.setInteresseDown(true);
-            conn.sendDown(new Messaggio(Messaggio.INTERESTED,null));
+            conn.sendDown(new Messaggio(Messaggio.INTERESTED, null));
             System.out.println(Thread.currentThread().getName() + " Downloader : connessione interessante ");
-        }
-        else{
+        } else {
             conn.setInteresseDown(false);
-            conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED,null));
+            conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED, null));
             System.out.println(Thread.currentThread().getName() + " Downloader : ! connessione interessante");
         }
+
         int count=0;
         while(true){
             Messaggio m = this.conn.receiveDown();
+            if ( m == null){
+                System.out.println("Continuo perchè il 'canale' è null");
+                continue;
+            }
             System.out.print(count+" ");
-            
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE:{
                     System.out.println(Thread.currentThread().getName() + " Downloader : HAVE ricevuto");
                     boolean[] bitfield = (boolean[]) m.getObj();
                     this.conn.setBitfield(bitfield);
-                    if (this.conn.getInteresseDown()==false){
+                    
+                    /* ma questo controllo serve ????..non va eseguito in ogni caso il corpo ??*/
+                    //if (this.conn.getInteresseDown() == false){
                         this.conn.setInteresseDown(this.c.interested(bitfield));
-                    }
+                    //}
                     break;
                 }
                 case Messaggio.CHOKE:{
