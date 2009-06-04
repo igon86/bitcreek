@@ -71,7 +71,8 @@ public class Connessione implements Serializable{
             this.portaVicino = portaVicino;
         }
     }
-
+    
+    @Deprecated
     public Connessione(Socket down, Socket up, boolean[] bitfield, int portaVicino){
         System.out.println(Thread.currentThread().getName()+"COSTRUTTORE CONNESSIONE");
         this.down = down;
