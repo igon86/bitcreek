@@ -84,9 +84,8 @@ public class Ascolto implements Runnable {
                     Connessione conn = null;
                     Connessione toModify = contacted.presenzaConnessione(scambio.getInetAddress(),con.getSS());
                     if (toModify == null ) {
-                        conn = new Connessione();//null, scambio, null, con.getSS());
-                        /*Prova*/
-                        conn.set(false, scambio, in, out, null, con.getSS());
+                        conn = new Connessione();
+                        conn.set(false, scambio, in, out,null, con.getSS());
                         contacted.addConnessione(conn);
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
                     } else {
