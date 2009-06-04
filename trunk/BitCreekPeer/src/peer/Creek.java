@@ -286,9 +286,9 @@ public class Creek extends Descrittore implements Serializable {
         this.situazione = STARTED;
     }
 
-    public Connessione presenzaConnessione(Connessione conn) {
+    public Connessione presenzaConnessione(InetAddress ip,int porta) {
         for (Connessione c : this.connessioni) {
-            if (c.confronta(conn.getIPVicino(), conn.getPortaVicino())) {
+            if (c.confronta(ip,porta)) {
                 return c;
             }
         }
