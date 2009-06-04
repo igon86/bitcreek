@@ -46,7 +46,7 @@ public class Uploader implements Runnable {
                 }
             }
             if (++count % 100 == 0) {
-                System.out.println("/n/n SVUOTATO LO STEAM /n");
+                System.out.println("\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
                 this.conn.ResetUp();
             }
         }
