@@ -81,11 +81,12 @@ public class Ascolto implements Runnable {
                      * EFFETTUO IL CONTROLLO CHE L'OGGETTO NON ESISTA GIA
                      */
                     //System.out.println(Thread.currentThread().getName() + " : Ascolto : con.getSS :: " + con.getSS());
-                    Connessione conn = new Connessione(null, scambio, null, con.getSS());
-                    Connessione temp = null;
-                    if ((temp = contacted.presenzaConnessione(conn)) == null) {
-                        System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
+                    Connessione conn;
+                    Connessione toModify = contacted.presenzaConnessione(scambio.getInetAddress(),con.getSS());
+                    if (toModify == null ) {
+                        conn = new Connessione(null, scambio, null, con.getSS());
                         contacted.addConnessione(conn);
+                        System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
                     } else {
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE GIA PRESENTE");
                         /* in teoria se esiste già una connessione in upload non dovrei fare niente
@@ -93,8 +94,10 @@ public class Ascolto implements Runnable {
                         peer se ho già una connessione in down quindi vado avanti creando thread
                         di upload ------------> controllare che sia così anche (e se) quando
                         ci occuperemo dei download stoppati e ripartiti !!!*/
-                        temp.setSocketUp(scambio);
-                        conn = temp;
+                        //DA RIFARE/!!
+                        toModify.setUp(scambio,in,out);
+                        conn = toModify;
+                        
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
                     peer.addTask(new Uploader(conn, contacted));
