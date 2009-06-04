@@ -62,7 +62,6 @@ public class Ascolto implements Runnable {
                     continue;
                 }
                 try {
-                    /* li ho invertiti per vedere se ora vanno : ma non vanno PORCA TROIA!!!*/
                     in = new ObjectInputStream(scambio.getInputStream());
                     out = new ObjectOutputStream(scambio.getOutputStream());
                 } catch (IOException ex) {
@@ -72,22 +71,23 @@ public class Ascolto implements Runnable {
                 try {
                     //RICEVO UN CONTATTO
                     Contact con = (Contact) in.readObject();
-                    System.out.println(Thread.currentThread().getName() + " : Ascolto : contatto ricevuto : " + con.getIp() + "," + con.getSS() + "," + con.getId());
+                    System.out.println("\n\n"+Thread.currentThread().getName() + " : ASCOLTO : contatto ricevuto : " + con.getIp() + "," + con.getSS() + "," + con.getId());
                     int swarmId = con.getId();
                     Creek contacted = peer.getCreek(swarmId);
                     //INVIO IL BITFILED RELATIVO
                     out.writeObject(new Bitfield(contacted.getHave()));
+                    System.out.println("INVIO BITFIELD\n");
                     /*
                      * EFFETTUO IL CONTROLLO CHE L'OGGETTO NON ESISTA GIA
                      */
-                    System.out.println(Thread.currentThread().getName() + " : Ascolto : con.getSS :: " + con.getSS());
+                    //System.out.println(Thread.currentThread().getName() + " : Ascolto : con.getSS :: " + con.getSS());
                     Connessione conn = new Connessione(null, scambio, null, con.getSS());
                     Connessione temp = null;
                     if ((temp = contacted.presenzaConnessione(conn)) == null) {
-                        System.out.println(Thread.currentThread().getName() + " UPLOADER - SONO STATO CONTATTATO, connessione aggiunta");
+                        System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
                         contacted.addConnessione(conn);
                     } else {
-                        System.out.println(Thread.currentThread().getName() + " UPLOADER - SONO STATO CONTATTATO, connessione gia presente");
+                        System.out.println(Thread.currentThread().getName() + "CONNESSIONE GIA PRESENTE");
                         /* in teoria se esiste già una connessione in upload non dovrei fare niente
                         Non c'è il controllo perchè per come è fatto sotto non ricontatto l'altro
                         peer se ho già una connessione in down quindi vado avanti creando thread
@@ -102,6 +102,7 @@ public class Ascolto implements Runnable {
                     //in.close();
                     //out.close();
                     /* incremento numero di connessioni */
+                    System.out.println("ASCOLTO: AGGIUNGO CONNESSIONE NEL MONITOR");
                     peer.incrConnessioni();
                     /* incremento nuemro peer in upload se sono seeder */
                     if (!contacted.getStato()) {
@@ -111,14 +112,17 @@ public class Ascolto implements Runnable {
                     Lo devo fare solo se non ho già una connessione in down, non sono
                     seeder e posso creare connessioni !!!! */
                     if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
-                        System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO\n\n");
+                        System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
                         
                         Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
                         SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
                         Socket mysock = new Socket();
                         mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                        ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
+                        System.out.println("HO FATTO LA CONNECT");
                         ObjectOutputStream output = new ObjectOutputStream(mysock.getOutputStream());
+                        System.out.println("HO FATTO L'OUTPUT");
+                        ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
+                        System.out.println("HO FATTO L'INPUT");
                         output.writeObject(mycon);
                         Bitfield b = (Bitfield) input.readObject();
                         conn.setSocketDown(mysock);
@@ -128,6 +132,7 @@ public class Ascolto implements Runnable {
                         // aggiungo thread per download
                         peer.addTask(new Downloader(contacted, conn));
                         // incremento numero connessioni 
+                        System.out.println("ASCOLTO CALLBACK: AGGIUNGO CONNESSIONE");
                         peer.incrConnessioni();
                         // incremento numero peer in download 
                         contacted.incrPeer();

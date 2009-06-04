@@ -47,17 +47,22 @@ public class Connessione implements Serializable{
     boolean interesseUp;
     
     boolean[] bitfield;
-    int downloaded; /* niìumero pezzi scaricati su questa connessione */
+    int downloaded; /* numero pezzi scaricati su questa connessione */
     
+
     public Connessione(Socket down, Socket up, boolean[] bitfield, int portaVicino){
+        System.out.println(Thread.currentThread().getName()+"COSTRUTTORE CONNESSIONE");
         this.down = down;
         this.up = up;
         this.bitfield = bitfield;
         if (down != null){
+                System.out.println(Thread.currentThread().getName()+"CONNESSIONE IN DOWNLOAD");
             this.ipVicino = down.getInetAddress();
             try {
                 this.outDown = new ObjectOutputStream(down.getOutputStream());
+                System.out.println(Thread.currentThread().getName()+"WRAPPATO L'OUTPUTSTREAM");
                 this.inDown = new ObjectInputStream(down.getInputStream());
+                System.out.println(Thread.currentThread().getName()+"WRAPPATO L'INPUTSTREAM");
             } catch (IOException ex) {
                 System.out.println(Thread.currentThread().getName()+" NON MI SI WRAPPANO LE SOCKET IN DOWNLOAD");
                 Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,10 +70,13 @@ public class Connessione implements Serializable{
             
         }
         else{
+            System.out.println(Thread.currentThread().getName()+"CONNESSIONE IN UPLOAD");
             this.ipVicino = up.getInetAddress();
             try {
                 this.outUp = new ObjectOutputStream(up.getOutputStream());
+                System.out.println(Thread.currentThread().getName()+"WRAPPATO L'OUTPUTSTREAM");
                 this.inUp = new ObjectInputStream(up.getInputStream());
+                System.out.println(Thread.currentThread().getName()+"WRAPPATO L'INPUTSTREAM");
             } catch (IOException ex) {
                 System.out.println(Thread.currentThread().getName()+" NON MI SI WRAPPANO LE SOCKET IN UPLOAD");
                 Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,6 +86,7 @@ public class Connessione implements Serializable{
         this.downloaded = 0;
         //Il binding degli stream alle socket viene effettuato solo al momento opportuno
         //dai thread
+        System.out.println(Thread.currentThread().getName()+"TERMINATO COSTRUTTORE CONNESSIONE");
     }
 
     /**
