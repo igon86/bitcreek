@@ -108,8 +108,15 @@ public class Avvia implements Runnable {
                             break;
                         }
                         
+                       
+                        
                         if(n.getPorta() == peer.getPortaRichieste() && n.getIp().getHostAddress().compareTo(peer.getMioIp().getHostAddress()) == 0) {
                             System.out.println("MI STAVO AUTOCONTATTANDO PERCHE SONO IMBECILLE");
+                            continue;
+                        }
+                        
+                        if(c.presenzaConnessione(n.getIp(), n.getPorta())!=null){
+                            System.out.println("STAVO RICONTATTANDO UNO STESSO PEER PERCHE LA LISTAPEER E` BUGGATA");
                             continue;
                         }
                         
