@@ -99,7 +99,10 @@ public class Avvia implements Runnable {
                 
                 //devo contattare i peer nella lista
                 for (NetRecord n : lista) {
+                    
                     try {
+                        
+                        
                         if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                             //INSERIRE MONITOR
                             break;
@@ -125,7 +128,13 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + "fatto OUT");
                         ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
                         System.out.println(Thread.currentThread().getName() + "fatto IN");
-
+                        
+                        //QUI LA CREO COSI SONO SICURO CHE QUANDO VERRO RICONTATTATO LA CONNESSIONE C'E GIA
+                        Connessione conn = new Connessione();
+                        /* Prova nuovo metodo */
+                        System.out.println("Prova metodo");
+                        conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
+                        c.addConnessione(conn);
                         
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
                         System.out.print("\n\n Avvia : " + c.getId());
@@ -133,9 +142,12 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress());
                         
                         
+                        
                         try {
                             //lui mi risponde con il suo bitfield
                             b = (Bitfield) contactIN.readObject();
+                            //lo scrivo nella connessione 
+                            conn.setBitfield(b.getBitfield());
                             //AGGIORNA RARITA!! l'altra parte e` gestita dall'upload manager _>se avremo voglia
                             c.addRarita(b.getBitfield());
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
@@ -149,11 +161,7 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + " Avvia : Aggiungo connessione in download");
                         //Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
                         
-                        Connessione conn = new Connessione();
-                        /* Prova nuovo metodo */
-                        System.out.println("Prova metodo");
-                        conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
-                        c.addConnessione(conn);
+                        
 
                         System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");
                         //creo il thread per il download e lo aggiungo al ThreadPool
