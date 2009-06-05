@@ -53,6 +53,7 @@ public class PIO implements Serializable, Comparable<PIO>{
      * @param arg0
      * @return
      */
+    @SuppressWarnings("empty-statement")
     public int compareTo(PIO arg0) {
         int ret;
         if(this.busy && ! arg0.busy){

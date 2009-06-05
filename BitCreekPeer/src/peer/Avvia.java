@@ -144,7 +144,7 @@ public class Avvia implements Runnable {
                         c.addConnessione(conn);
                         
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
-                        System.out.print("\n\n Avvia : " + c.getId());
+                        //System.out.print("\n\n Avvia : " + c.getId());
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
                         System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress());
                         
@@ -153,10 +153,17 @@ public class Avvia implements Runnable {
                         try {
                             //lui mi risponde con il suo bitfield
                             b = (Bitfield) contactIN.readObject();
-                            //lo scrivo nella connessione 
+                            //lo scrivo nella connessione
                             conn.setBitfield(b.getBitfield());
                             //AGGIORNA RARITA!! l'altra parte e` gestita dall'upload manager _>se avremo voglia
                             c.addRarita(b.getBitfield());
+                            /* PROVA */
+                            for(int i = 0; i < b.getBitfield().length;i++){
+                                if(b.getBitfield()[i])System.out.println(i + " : true");
+                                else System.out.println(i + " : false");
+                            }
+
+
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
                         //aggiungo l'oggetto connessione
                         } catch (ClassNotFoundException ex) {
@@ -168,8 +175,7 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + " Avvia : Aggiungo connessione in download");
                         //Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
                         
-                        
-
+                       
                         System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");
                         //creo il thread per il download e lo aggiungo al ThreadPool
                         peer.addTask(new Downloader(c, conn));
