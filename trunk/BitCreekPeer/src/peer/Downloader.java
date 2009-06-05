@@ -91,8 +91,9 @@ public class Downloader implements Runnable{
             if(! pendingRequest){
                 PIO p = c.getNext(this.conn.getBitfied());
                 if(p != null){
+                    System.out.println("Downloader : Sto per fare sendDown per chè p != null");
                     conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
-                    System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato");
+                    System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato for chunk : "+p.getId());
                 }else{
                     System.out.println(Thread.currentThread().getName() + " vediamo se esco dal while");
                     break;
