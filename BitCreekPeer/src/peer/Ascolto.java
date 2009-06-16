@@ -138,6 +138,7 @@ public class Ascolto implements Runnable {
                 System.out.println("HO FATTO L'INPUT");
                 output.writeObject(mycon);
                 Bitfield b = (Bitfield) input.readObject();
+                System.out.println("BITFIELD: "+b.toString());
                 // modifica
                 //conn.setDown(mysock, input, output);
                 //conn.setSocketDown(mysock);

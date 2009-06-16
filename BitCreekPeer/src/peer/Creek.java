@@ -137,6 +137,7 @@ public class Creek extends Descrittore implements Serializable {
             //in questo fortissimo ordine sequenziale mi arraccomando bande
             this.scaricatiId[this.scaricati] = offset;
             this.scaricati++;
+            System.out.println("scaricati vale: "+this.scaricati);
             //la lunghezza serve perché il buffer passato ha sempre la dimensione
             //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
             int length = c.getDim();
