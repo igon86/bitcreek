@@ -1,0 +1,8059 @@
+%!PS-Adobe-3.0
+%%Title: Apri.java, Ascolto.java, Avvia.java, BitCreekPeer.java, Bitfield.java, Cerca.java, Chunk.java, Connessione.java, Contact.java, Crea.java
+%%For: Andrea Lottarini
+%%Creator: a2ps version 4.14
+%%CreationDate: Thu Jun  4 13:15:46 2009
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Portrait
+%%Pages: 15
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontType get 0 eq {
+    currentfont /FontMatrix get 3 get
+  }{
+    currentfont /FontMatrix get 3 get 1000 mul
+  } ifelse
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% composite fonts for ASCII-EUC mixed strings
+% Version 1.2 1/31/1990
+% Original Ken'ichi HANDA (handa@etl.go.jp)
+% Modified Norio Katayama (katayama@rd.nacsis.ac.jp),1998
+% Extend & Fix Koji Nakamaru (maru@on.cs.keio.ac.jp), 1999
+% Anyone can freely copy, modify, distribute this program.
+
+/copyfont {	% font-dic extra-entry-count  copyfont  font-dic
+	1 index maxlength add dict begin
+	{	1 index /FID ne 2 index /UniqueID ne and
+		{def} {pop pop} ifelse
+	} forall
+	currentdict
+	end
+} bind def
+
+/compositefont { % ASCIIFontName EUCFontName RomanScale RomanOffset Rot(T/F) compositefont font
+    /RomanRotation exch def
+    /RomanOffset exch def
+    /RomanScale exch def
+    userdict /fixeucfont_dict known not {
+	userdict begin
+	    /fixeucfont_dict 2 dict begin
+		/UpperByteEncoding [
+		    16#00 1 16#20 { pop 0 } for
+		    16#21 1 16#28 { 16#20 sub } for
+		    16#29 1 16#2F { pop 0 } for
+		    16#30 1 16#74 { 16#27 sub } for
+		    16#75 1 16#FF { pop 0 } for
+		] def
+	        /LowerByteEncoding [
+		    16#00 1 16#A0 { pop /.notdef } for
+		    16#A1 1 16#FE { 16#80 sub 16 2 string cvrs
+				    (cXX) dup 1 4 -1 roll
+				    putinterval cvn } for
+		    /.notdef
+		] def
+		currentdict
+	    end def
+	end
+    } if
+    findfont dup /FontType get 0 eq {
+	14 dict begin
+	    %
+	    % 7+8 bit EUC font
+	    %
+	    12 dict begin
+		/EUCFont exch def
+		/FontInfo (7+8 bit EUC font) readonly def
+		/PaintType 0 def
+		/FontType 0 def
+		/FontMatrix matrix def
+		% /FontName
+		/Encoding fixeucfont_dict /UpperByteEncoding get def
+		/FMapType 2 def
+		EUCFont /WMode known
+		{ EUCFont /WMode get /WMode exch def }
+		{ /WMode 0 def } ifelse
+		/FDepVector [
+		    EUCFont /FDepVector get 0 get
+		    [ 16#21 1 16#28 {} for 16#30 1 16#74 {} for ]
+		    {
+			13 dict begin
+			    /EUCFont EUCFont def
+			    /UpperByte exch 16#80 add def	
+			    % /FontName
+			    /FontInfo (EUC lower byte font) readonly def
+			    /PaintType 0 def
+			    /FontType 3 def
+			    /FontMatrix matrix def
+			    /FontBBox {0 0 0 0} def
+			    /Encoding
+				fixeucfont_dict /LowerByteEncoding get def
+			    % /UniqueID
+			    % /WMode
+			    /BuildChar {
+				gsave
+				exch dup /EUCFont get setfont
+				/UpperByte get
+				2 string
+				dup 0 4 -1 roll put
+				dup 1 4 -1 roll put
+				dup stringwidth setcharwidth
+				0 0 moveto show
+				grestore
+			    } bind def
+			    currentdict
+			end
+			/lowerbytefont exch definefont
+		    } forall
+		] def
+		currentdict
+	    end
+	    /eucfont exch definefont
+	    exch
+	    findfont 1 copyfont dup begin
+		RomanRotation {
+			/FontMatrix FontMatrix
+			[ 0 RomanScale neg RomanScale 0 RomanOffset neg 0 ]
+			matrix concatmatrix def
+		}{
+			/FontMatrix FontMatrix
+			[ RomanScale 0 0 RomanScale 0 RomanOffset ] matrix concatmatrix
+			def
+			/CDevProc
+			    {pop pop pop pop 0 exch -1000 exch 2 div 880} def
+		} ifelse
+	    end
+	    /asciifont exch definefont
+	    exch
+	    /FDepVector [ 4 2 roll ] def
+	    /FontType 0 def
+	    /WMode 0 def
+	    /FMapType 4 def
+	    /FontMatrix matrix def
+	    /Encoding [0 1] def
+	    /FontBBox {0 0 0 0} def
+%	    /FontHeight 1.0 def % XXXX
+	    /FontHeight RomanScale 1.0 ge { RomanScale }{ 1.0 } ifelse def
+	    /Descent -0.3 def   % XXXX
+	    currentdict
+	end
+	/tmpfont exch definefont
+	pop
+	/tmpfont findfont
+    }{
+	pop findfont 0 copyfont
+    } ifelse
+} def	
+
+/slantfont {	% FontName slant-degree  slantfont  font'
+    exch findfont 1 copyfont begin
+    [ 1 0 4 -1 roll 1 0 0 ] FontMatrix exch matrix concatmatrix
+    /FontMatrix exch def
+    currentdict
+    end
+} def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 792 def
+/sw 612 def
+/llx 24 def
+/urx 588 def
+/ury 768 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 5.651106 def
+/cw 3.390664 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   337.371021 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh ury lly sub ph 2 mul sub 24 sub 1 div def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 1 mul ph add
+  dup
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2,1-2) 1
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( gui.BitCreekGui;) p n
+(import) K
+( java.awt.Cursor;) p n
+(import) K
+( java.io.File;) p n
+(import) K
+( java.io.FileInputStream;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.io.ObjectInputStream;) p n
+() N
+(/**) C n
+( * Task che si occupa di aprire un .creek dal disco) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Apri) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(/* Variabili d'istanza */) c n
+(    File creek;) p n
+(    BitCreekPeer peer;) N
+(    BitCreekGui gui;) N
+() N
+(    ) S
+(/**) C n
+(     * Costruttore) N
+(     */) N
+(    ) p
+(public) K
+( Apri\(File creek, BitCreekPeer peer, BitCreekGui gui\) ) p
+(throws) K
+( ErrorExce) p n
+(ption {) N
+(        ) S
+(if) K
+( \(creek == ) p
+(null) k
+( || peer == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        this.creek = creek;) N
+(        this.peer = peer;) N
+(        this.gui = gui;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Corpo del task) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+() N
+(        ) S
+(/* cambio il cursore */) c n
+(        gui.getRootPane\(\).setCursor\() p
+(new) K
+( Cursor\(Cursor.WAIT_CURSOR\)\);) p n
+() N
+(        String nome = creek.getName\(\);) N
+(        ObjectInputStream in = ) S
+(null) k
+(;) p n
+(        Creek c = ) S
+(null) k
+(;) p n
+() N
+(        ) S
+(boolean) k
+( problema = ) p
+(false) k
+(;) p n
+() N
+(        ) S
+(/* controllo che sia un .creek */) c n
+() p n
+(        ) S
+(if) K
+( \(nome.length\(\) > 6 && nome.substring\(nome.length\(\) - 6, nome.length\(\)) p n
+(\).compareTo\(") S
+(.creek) str
+("\) == 0\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                in = ) S
+(new) K
+( ObjectInputStream\() p
+(new) K
+( FileInputStream\(creek\)\);) p n
+(                c = \(Creek\) in.readObject\(\);) N
+(                in.close\(\);) N
+(            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            } ) S
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(Apri.java) (Page 1/2) (Jun 01, 09 12:30) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                problema = ) p
+(true) k
+(;) p n
+(            }) N
+() N
+(            ) S
+(/* se il file non \303\250 gi\303\240 presente ed \303\250 da downlodare lo aggiungo *) c n
+(/) N
+() p n
+(            ) S
+(if) K
+( \(!problema && c.getStato\(\)\) {) p n
+(                ) S
+(try) K
+( {) p n
+(                    ) S
+(if) K
+( \( ! peer.addCreek\(c\) \) {) p n
+(                        problema = ) S
+(true) k
+(;) p n
+(                    }) N
+(                } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                }) N
+(            } ) S
+(else) K
+( {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            }) N
+(        } ) S
+(else) K
+( {) p n
+(            problema = ) S
+(true) k
+(;) p n
+(        }) N
+() N
+(        ) S
+(if) K
+( \(problema\) {) p n
+(            gui.PrintInformation\(") S
+(Non si pu\303\262 aprire creek) str
+(", gui.ERRORE\);) p n
+(        }) N
+(        ) S
+(/* cambio il cursore */) c n
+(        gui.getRootPane\(\).setCursor\() p
+(new) K
+( Cursor\(Cursor.DEFAULT_CURSOR\)\);) p n
+() N
+(    }) N
+(}) N
+(Apri.java) (Page 2/2) (Jun 01, 09 12:30) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.io.ObjectInputStream;) p n
+(import) K
+( java.io.ObjectOutputStream;) p n
+(import) K
+( java.net.InetSocketAddress;) p n
+(import) K
+( java.net.Socket;) p n
+(import) K
+( java.net.SocketAddress;) p n
+(import) K
+( java.net.SocketTimeoutException;) p n
+(import) K
+( java.util.logging.Level;) p n
+(import) K
+( java.util.logging.Logger;) p n
+() N
+(/**) C n
+( * Task che si occupa di ascoltare richieste sulla porta di ricezione) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Ascolto) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(/* Costanti */) c n
+(    ) p
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( ATTESA = 3000;) p n
+() N
+(    ) S
+(/* Variabili d'istanza */) c n
+(    ) p
+(private) K
+( BitCreekPeer peer;) p n
+() N
+(    ) S
+(/**) C n
+(     * Costruttore) N
+(     */) N
+(    ) p
+(public) K
+( Ascolto\(BitCreekPeer peer\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(peer == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        this.peer = peer;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Corpo del task) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        ) S
+(while) K
+( \() p
+(true) k
+(\) {) p n
+(            ) S
+(try) K
+( {) p n
+() N
+(                ) S
+(/* GESTIONE ERRORE + RISCRIVERE STE MILLE ECCEZZIONI */) c n
+() p n
+(                ObjectInputStream in = ) S
+(null) k
+(;) p n
+(                ObjectOutputStream out = ) S
+(null) k
+(;) p n
+(                Socket scambio = ) S
+(null) k
+(;) p n
+(                peer.getIpServer\(\).getHostAddress\(\);) N
+() N
+(                ) S
+(/* se non posso accettare connessioni vado in sleep come se foss) c n
+(i disconnesso */) N
+(                ) p
+(if) K
+( \(peer.getConnessioni\(\) >= BitCreekPeer.MAXCONNESSIONI\) {) p n
+(                    ) S
+(throw) K
+( ) p
+(new) K
+( NullPointerException\(\);) p n
+(                }) N
+(                ) S
+(try) K
+( {) p n
+(                    scambio = ) S
+(new) K
+( Socket\(\); ) p
+(/* da questo si vede che sono disper) c n
+(ato*/) N
+(                    scambio = peer.getSS\(\).accept\(\);) p n
+(                } ) S
+(catch) K
+( \(SocketTimeoutException e\) {) p n
+(Ascolto.java) (Page 1/4) (Jun 04, 09 13:02) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                    ) p
+(// timeout scaduto : continuo a ciclare) c n
+(                    ) p
+(continue) K
+(;) p n
+(                } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                    System.err.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Sono s) str n
+(tato disconnesso : la socket di benvenuto \303\250 stata chiusa) S
+("\);) p n
+(                    ) S
+(continue) K
+(;) p n
+(                }) N
+(                ) S
+(try) K
+( {) p n
+(                    in = ) S
+(new) K
+( ObjectInputStream\(scambio.getInputStream\(\)\);) p n
+(                    out = ) S
+(new) K
+( ObjectOutputStream\(scambio.getOutputStream\(\)\);) p n
+(                } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                    System.out.println\(") S
+(Ascolto : IOExcpetion dopo out =  e in =) str
+("\);) p n
+(                    Logger.getLogger\(Ascolto.class.getName\(\)\).log\(Level.SEVERE, ) S
+() k n
+(null) S
+(, ex\);) p n
+(                }) N
+(                ) S
+(try) K
+( {) p n
+(                    ) S
+(//RICEVO UN CONTATTO) c n
+(                    Contact con = \(Contact\) in.readObject\(\);) p n
+(                    System.out.println\(") S
+(\\n\\n) str
+("+Thread.currentThread\(\).getName\(\) + ) p n
+(") S
+( : ASCOLTO : contatto ricevuto : ) str
+(" + con.getIp\(\) + ") p
+(,) str
+(" + con.getSS\(\) + ") p
+(,) str
+(" + con.getId\(\)\);) p n
+(                    ) S
+(int) k
+( swarmId = con.getId\(\);) p n
+(                    Creek contacted = peer.getCreek\(swarmId\);) N
+(                    ) S
+(//INVIO IL BITFILED RELATIVO) c n
+(                    out.writeObject\() p
+(new) K
+( Bitfield\(contacted.getHave\(\)\)\);) p n
+(                    System.out.println\(") S
+(INVIO BITFIELD\\n) str
+("\);) p n
+(                    ) S
+(/*) c n
+(                     * EFFETTUO IL CONTROLLO CHE L'OGGETTO NON ESISTA GIA) N
+(                     */) N
+(                    ) p
+(//System.out.println\(Thread.currentThread\(\).getName\(\) + " : ) c n
+(Ascolto : con.getSS :: " + con.getSS\(\)\);) N
+(                    Connessione conn = ) p
+(new) K
+( Connessione\() p
+(null) k
+(, scambio, ) p
+(null) k
+(, con.) p n
+(getSS\(\)\);) N
+(                    Connessione temp = ) S
+(null) k
+(;) p n
+(                    ) S
+(if) K
+( \(\(temp = contacted.presenzaConnessione\(conn\)\) == ) p
+(null) k
+(\) {) p n
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+() str n
+(CONNESSIONE AGGIUNTA) S
+("\);) p n
+(                        contacted.addConnessione\(conn\);) N
+(                    } ) S
+(else) K
+( {) p n
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+() str n
+(CONNESSIONE GIA PRESENTE) S
+("\);) p n
+(                        ) S
+(/* in teoria se esiste gi\303\240 una connessione in upload no) c n
+(n dovrei fare niente) N
+(                        Non c'\303\250 il controllo perch\303\250 per come \303\250 fatto sotto no) N
+(n ricontatto l'altro) N
+(                        peer se ho gi\303\240 una connessione in down quindi vado avan) N
+(ti creando thread) N
+(                        di upload ------------> controllare che sia cos\303\254 anche ) N
+(\(e se\) quando) N
+(                        ci occuperemo dei download stoppati e ripartiti !!!*/) N
+(                        temp.setSocketUp\(scambio\);) p n
+(                        conn = temp;) N
+(                    }) N
+(                    ) S
+(//CREO IL THREAD RELATIVO IN UPLOAD) c n
+(                    peer.addTask\() p
+(new) K
+( Uploader\(conn, contacted\)\);) p n
+(                    ) S
+(/* chiudo i file : NO */) c n
+(                    ) p
+(//in.close\(\);) c n
+(                    ) p
+(//out.close\(\);) c n
+(                    ) p
+(/* incremento numero di connessioni */) c n
+(                    System.out.println\(") p
+(ASCOLTO: AGGIUNGO CONNESSIONE NEL MONIT) str n
+(Ascolto.java) (Page 2/4) (Jun 04, 09 13:02) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (1/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4,1-2) 2
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(OR) str
+("\);) p n
+(                    peer.incrConnessioni\(\);) N
+(                    ) S
+(/* incremento nuemro peer in upload se sono seeder */) c n
+(                    ) p
+(if) K
+( \(!contacted.getStato\(\)\) {) p n
+(                        contacted.incrPeer\(\);) N
+(                    }) N
+(                    ) S
+(/* operazioni ulteriori se sono leecher : creo connessione i) c n
+(n down) N
+(                    Lo devo fare solo se non ho gi\303\240 una connessione in down, no) N
+(n sono) N
+(                    seeder e posso creare connessioni !!!! */) N
+(                    ) p
+(if) K
+( \(contacted.getStato\(\) && conn.DownNull\(\) && peer.getConne) p n
+(ssioni\(\) < BitCreekPeer.MAXCONNESSIONI\) {) N
+(                        System.out.println\(") S
+(\\n\\n) str
+(" + Thread.currentThread\(\).getNam) p n
+(e\(\) + ") S
+(SONO ENTRATO PERCHE` SONO LEECHER\\n\\n) str
+("\);) p n
+(                        ) N
+(                        Contact mycon = ) S
+(new) K
+( Contact\(peer.getMioIp\(\), peer.getPor) p n
+(taRichieste\(\), swarmId\);) N
+(                        SocketAddress sa = ) S
+(new) K
+( InetSocketAddress\(con.getIp\(\), co) p n
+(n.getSS\(\)\);) N
+(                        Socket mysock = ) S
+(new) K
+( Socket\(\);) p n
+(                        mysock.connect\(sa, BitCreekPeer.TIMEOUTCONNESSIONE\);) N
+(                        System.out.println\(") S
+(HO FATTO LA CONNECT) str
+("\);) p n
+(                        ObjectOutputStream output = ) S
+(new) K
+( ObjectOutputStream\(mysoc) p n
+(k.getOutputStream\(\)\);) N
+(                        System.out.println\(") S
+(HO FATTO L'OUTPUT) str
+("\);) p n
+(                        ObjectInputStream input = ) S
+(new) K
+( ObjectInputStream\(mysock.g) p n
+(etInputStream\(\)\);) N
+(                        System.out.println\(") S
+(HO FATTO L'INPUT) str
+("\);) p n
+(                        output.writeObject\(mycon\);) N
+(                        Bitfield b = \(Bitfield\) input.readObject\(\);) N
+(                        conn.setSocketDown\(mysock\);) N
+(                        conn.setBitfield\(b.getBitfield\(\)\);) N
+() N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+() str n
+(Creo thread downloader perch\303\250 ho inviato mie credenzioali) S
+("\);) p n
+(                        ) S
+(// aggiungo thread per download) c n
+(                        peer.addTask\() p
+(new) K
+( Downloader\(contacted, conn\)\);) p n
+(                        ) S
+(// incremento numero connessioni ) c n
+(                        System.out.println\(") p
+(ASCOLTO CALLBACK: AGGIUNGO CONNESSI) str n
+(ONE) S
+("\);) p n
+(                        peer.incrConnessioni\(\);) N
+(                        ) S
+(// incremento numero peer in download ) c n
+(                        contacted.incrPeer\(\);) p n
+(                    }) N
+(                } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                    System.out.println\(") S
+(IOException in Ascolto) str
+("\);) p n
+(                    Logger.getLogger\(Ascolto.class.getName\(\)\).log\(Level.SEVERE, ) S
+() k n
+(null) S
+(, ex\);) p n
+(                } ) S
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(                    System.out.println\(") S
+(ClassNotFoundException in Ascolto) str
+("\);) p n
+(                    Logger.getLogger\(Ascolto.class.getName\(\)\).log\(Level.SEVERE, ) S
+() k n
+(null) S
+(, ex\);) p n
+(                }) N
+() N
+() N
+(            } ) S
+(catch) K
+( \(NullPointerException e\) {) p n
+(                ) S
+(/* ipServer \303\250 null --> sono disconnesso quindi aspetto */) c n
+(                ) p
+(try) K
+( {) p n
+(Ascolto.java) (Page 3/4) (Jun 04, 09 13:02) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                    Thread.sleep\(ATTESA\);) p n
+(                } ) S
+(catch) K
+( \(InterruptedException ex\) {) p n
+(                    System.err.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Interro) str n
+(tto thread Ascolto) S
+("\);) p n
+(                }) N
+(            }) N
+(        }) N
+(    }) N
+(}) N
+(Ascolto.java) (Page 4/4) (Jun 04, 09 13:02) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.Descrittore;) p n
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( condivisi.NetRecord;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.io.ObjectInputStream;) p n
+(import) K
+( java.io.ObjectOutputStream;) p n
+(import) K
+( java.net.InetSocketAddress;) p n
+(import) K
+( java.net.Socket;) p n
+(import) K
+( java.net.SocketAddress;) p n
+(import) K
+( java.util.ArrayList;) p n
+(import) K
+( java.util.logging.Level;) p n
+(import) K
+( java.util.logging.Logger;) p n
+(import) K
+( javax.net.ssl.SSLSocket;) p n
+(import) K
+( javax.net.ssl.SSLSocketFactory;) p n
+() N
+(/**) C n
+( *) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Avvia) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(private) K
+( BitCreekPeer peer;) p n
+(    ) S
+(private) K
+( ) p
+(int) k
+([] array;) p n
+() N
+(    ) S
+(//array e` l'array di indici dei descrittori da avviare) c n
+(    ) p
+(public) K
+( Avvia\(BitCreekPeer peer, ) p
+(int) k
+([] array\) {) p n
+(        this.peer = peer;) N
+(        this.array = array;) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        ) S
+(//System.out.println\(Thread.currentThread\(\).getName\(\) + " AVVIA"\);) c n
+() p n
+(        ArrayList<NetRecord> lista = ) S
+(new) K
+( ArrayList<NetRecord>\(\);) p n
+(        Creek c = ) S
+(null) k
+(;) p n
+(        Descrittore d = ) S
+(null) k
+(;) p n
+(        ) S
+(boolean) k
+( presenza = ) p
+(false) k
+(;) p n
+() N
+(        ) S
+(for) K
+( \() p
+(int) k
+( index : this.array\) {) p n
+() N
+(            SSLSocket s = ) S
+(null) k
+(;) p n
+(            ObjectInputStream oin = ) S
+(null) k
+(;) p n
+() N
+(            ) S
+(//questa provoca l'aggiornamento dell' interfaccia grafica aggiungen) c n
+(do il creek a arraydescr) N
+(            ) p
+(try) K
+( {) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( : Avvia : Av) str n
+(vio descr ) S
+(" + index + ") p
+( su una lista lunga ) str
+(" + peer.getCercati\(\).size\(\)\);) p n
+(                d = peer.getCercati\(\).get\(index\);) N
+(                System.out.println\(") S
+(\\n\\n Avvia : descr in cercati ha id : ) str
+(" + d.getId\(\)\);) p n
+(                c = ) S
+(new) K
+( Creek\(d, ) p
+(true) k
+(, ) p
+(false) k
+(\);) p n
+(                System.out.println\(") S
+(\\n\\n Avvia : creek ha id : ) str
+(" + c.getId\(\)\);) p n
+() N
+(                ) S
+(//introduce una serie di problemi tragici! fortunosamente risolt) c n
+(i....) N
+(                c.setToDo\(\);) p n
+() N
+(Avvia.java) (Page 1/4) (Jun 04, 09 11:41) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                ) p
+(if) K
+( \(c == ) p
+(null) k
+(\) {) p n
+(                    System.out.println\(") S
+(NON E POSSIBILE!!!) str
+("\);) p n
+(                }) N
+(                presenza = peer.addCreek\(c\);) N
+(            } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                Logger.getLogger\(Avvia.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+(, ) p n
+(ex\);) N
+(            }) N
+() N
+(            ) S
+(/* contatto gli altri e creo i thread solo se non ho gi\303\240 in downloa) c n
+(d quel file */) N
+(            ) p
+(//NON DOVREMMO CONTROLLARLO PRIMA???) c n
+(            ) p
+(if) K
+( \(presenza\) {) p n
+(                ) S
+(//recupero della lista Peer dal tracker) c n
+(                ) p
+(int) k
+( portatracker = d.getTCP\(\);) p n
+(                ) N
+(                ) N
+(                ) S
+(//CONTATTO SSL) c n
+(                System.out.println\(Thread.currentThread\(\).getName\(\) + ") p
+( : Avvia : !pr) str n
+(esenza --> Contatto tracker sulla porta : ) S
+(" + portatracker\);) p n
+(                ) S
+(try) K
+( {) p n
+(                    s = \(SSLSocket\) SSLSocketFactory.getDefault\(\).createSocket\(p) N
+(eer.getIpServer\(\), portatracker\);) N
+(                    oin = ) S
+(new) K
+( ObjectInputStream\(s.getInputStream\(\)\);) p n
+() N
+(                    ) S
+(// leggo la dimensione della lista) c n
+(                    ) p
+(int) k
+( dimlista = oin.readInt\(\);) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( : Avvi) str n
+(a : dimlista : ) S
+(" + dimlista\);) p n
+(                    ) S
+(// faccio un for per leggere i netrecord) c n
+(                    ) p
+(for) K
+( \() p
+(int) k
+( j = 0; j < dimlista; j++\) {) p n
+(                        lista.add\(\(NetRecord\) oin.readObject\(\)\);) N
+(                        NetRecord toPrint = lista.get\(j\);) N
+(                        System.out.print\(") S
+(indirizzo : ) str
+("+toPrint.getIp\(\).getHostAddre) p n
+(ss\(\)\);) N
+(                        System.out.println\(") S
+( porta : ) str
+("+toPrint.getPorta\(\)\);) p n
+(                    }) N
+(                    s.close\(\);) N
+(                } ) S
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Avvia ) str n
+(: Classnotfound) S
+("\);) p n
+(                    Logger.getLogger\(BitCreekPeer.class.getName\(\)\).log\(Level.SEV) N
+(ERE, ) S
+(null) k
+(, ex\);) p n
+(                } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Avvia ) str n
+(: IOIO) S
+("\);) p n
+(                    Logger.getLogger\(BitCreekPeer.class.getName\(\)\).log\(Level.SEV) N
+(ERE, ) S
+(null) k
+(, ex\);) p n
+(                }) N
+() N
+(                ) N
+(                ) N
+(                ) N
+(                ) S
+(//devo contattare i peer nella lista) c n
+(                ) p
+(for) K
+( \(NetRecord n : lista\) {) p n
+(                    ) S
+(try) K
+( {) p n
+(                        ) S
+(if) K
+( \(peer.getConnessioni\(\) >= BitCreekPeer.MAXCONNESSIONI) p n
+(\) {) N
+(                            ) S
+(//INSERIRE MONITOR) c n
+(Avvia.java) (Page 2/4) (Jun 04, 09 11:41) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (2/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4,1-2) 3
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                            ) p
+(break) K
+(;) p n
+(                        }) N
+(                        ) N
+(                        ) S
+(if) K
+(\(n.getPorta\(\) == peer.getPortaRichieste\(\) && n.getIp\(\)) p n
+(.getHostAddress\(\).compareTo\(peer.getMioIp\(\).getHostAddress\(\)\) == 0\) {) N
+(                            System.out.println\(") S
+(MI STAVO AUTOCONTATTANDO PERCH) str n
+(E SONO IMBECILLE) S
+("\);) p n
+(                            ) S
+(continue) K
+(;) p n
+(                        }) N
+(                        ) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( ) str n
+(Avvia : Contatto peer con porta ) S
+(" + n.getPorta\(\)\);) p n
+(                        ) S
+(//contatto il peer n) c n
+(                        SocketAddress sa = ) p
+(new) K
+( InetSocketAddress\(n.getIp\(\), n.ge) p n
+(tPorta\(\)\);) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+(f) str n
+(atto inetsocketaddress) S
+("\);) p n
+(                        ) N
+(                        Socket sock = ) S
+(new) K
+( Socket\(\);) p n
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+(a) str n
+(ftta socket) S
+("\);) p n
+(                        ) N
+(                        sock.connect\(sa, BitCreekPeer.TIMEOUTCONNESSIONE\);) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+(f) str n
+(atto connect) S
+("\);) p n
+(                        Bitfield b = ) S
+(new) K
+( Bitfield\() p
+(null) k
+(\);) p n
+(                        ObjectOutputStream contactOUT = ) S
+(new) K
+( ObjectOutputStream\(s) p n
+(ock.getOutputStream\(\)\);) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+(f) str n
+(atto OUT) S
+("\);) p n
+(                        ObjectInputStream contactIN = ) S
+(new) K
+( ObjectInputStream\(sock) p n
+(.getInputStream\(\)\);) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+(f) str n
+(atto IN) S
+("\);) p n
+() N
+(                        ) N
+(                        ) S
+(//lo contatto dandogli le informazioni per contattarmi i) c n
+(n seguito \(la mia server socket\)) N
+(                        System.out.print\(") p
+(\\n\\n Avvia : ) str
+(" + c.getId\(\)\);) p n
+(                        contactOUT.writeObject\() S
+(new) K
+( Contact\(peer.getMioIp\(\), peer) p n
+(.getPortaRichieste\(\), c.getId\(\)\)\);) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+(f) str n
+(atto write delle info verso ) S
+("+sock.getInetAddress\(\).getHostAddress\(\)\);) p n
+(                        ) N
+(                        ) N
+(                        ) S
+(try) K
+( {) p n
+(                            ) S
+(//lui mi risponde con il suo bitfield) c n
+(                            b = \(Bitfield\) contactIN.readObject\(\);) p n
+(                            ) S
+(//AGGIORNA RARITA!! l'altra parte e` gestita dall'up) c n
+(load manager _>se avremo voglia) N
+(                            c.addRarita\(b.getBitfield\(\)\);) p n
+(                            System.out.println\(Thread.currentThread\(\).getName\(\) ) N
+(+ ") S
+( Ricevuto Bitfield) str
+("\);) p n
+(                        ) S
+(//aggiungo l'oggetto connessione) c n
+(                        } ) p
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(                            System.out.println\(Thread.currentThread\(\).getName\(\) ) N
+(+ ") S
+( Avvia : Classnotfound) str
+("\);) p n
+(                            Logger.getLogger\(Avvia.class.getName\(\)\).log\(Level.SE) N
+(VERE, ) S
+(null) k
+(, ex\);) p n
+(Avvia.java) (Page 3/4) (Jun 04, 09 11:41) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                        }) p n
+() N
+(                        ) S
+(//aggiungo l'oggetto connessione) c n
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") p
+( ) str n
+(Avvia : Aggiungo connessione in download) S
+("\);) p n
+(                        Connessione conn = ) S
+(new) K
+( Connessione\(sock, ) p
+(null) k
+(, b.getBitf) p n
+(ield\(\), n.getPorta\(\)\);) N
+(                        c.addConnessione\(conn\);) N
+() N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( ) str n
+(Avvia : Creo Downloader) S
+("\);) p n
+(                        ) S
+(//creo il thread per il download e lo aggiungo al Thread) c n
+(Pool) N
+(                        peer.addTask\() p
+(new) K
+( Downloader\(c, conn\)\);) p n
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( ) str n
+(Avvia : Incrconnessioni) S
+("\);) p n
+(                        ) S
+(/* incremento  il numero di connessioni */) c n
+(                        peer.incrConnessioni\(\);) p n
+(                        ) S
+(/* incremento numero peer */) c n
+(                        c.incrPeer\(\);) p n
+() N
+(                    } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                        ) S
+(/* passo al prossimo netrecord perch\303\250 nessuno mi ha ris) c n
+(posto */) N
+(                        System.out.println\(Thread.currentThread\(\).getName\(\) + ") p
+( ) str n
+(Avvia : Passo al prossimo netrecord) S
+("\);) p n
+(                        ) S
+(continue) K
+(;) p n
+(                    }) N
+() N
+() N
+(                }) N
+() N
+(                System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Avvia : CR) str n
+(EO UPLOADER MANAGER !!!!!) S
+("\);) p n
+(                peer.addTask\() S
+(new) K
+( UploadManager\(peer, c\)\);) p n
+(                ) S
+(/* inutile continuare a ciclare se non posso creare connessioni ) c n
+(*/) N
+(                ) p
+(if) K
+( \(peer.getConnessioni\(\) >= BitCreekPeer.MAXCONNESSIONI\) {) p n
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(            }) S
+(else) K n
+(                System.out.println\(Thread.currentThread\(\).getName\(\) + ") p
+( Avvia : non ) str n
+(aggiunto) S
+("\);) p n
+() N
+(        }) N
+(    }) N
+(}) N
+(Avvia.java) (Page 4/4) (Jun 04, 09 11:41) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.Descrittore;) p n
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( condivisi.InterfacciaCallback;) p n
+(import) K
+( condivisi.InterfacciaRMI;) p n
+(import) K
+( gui.BitCreekGui;) p n
+(import) K
+( java.io.DataOutputStream;) p n
+(import) K
+( java.io.File;) p n
+(import) K
+( java.io.FileInputStream;) p n
+(import) K
+( java.io.FileNotFoundException;) p n
+(import) K
+( java.io.FileOutputStream;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.io.ObjectInputStream;) p n
+(import) K
+( java.io.ObjectOutputStream;) p n
+(import) K
+( java.net.BindException;) p n
+(import) K
+( java.net.DatagramSocket;) p n
+(import) K
+( java.net.InetAddress;) p n
+(import) K
+( java.net.InetSocketAddress;) p n
+(import) K
+( java.net.ServerSocket;) p n
+(import) K
+( java.net.Socket;) p n
+(import) K
+( java.net.SocketAddress;) p n
+(import) K
+( java.net.SocketException;) p n
+(import) K
+( java.net.SocketTimeoutException;) p n
+(import) K
+( java.net.UnknownHostException;) p n
+(import) K
+( java.rmi.NotBoundException;) p n
+(import) K
+( java.rmi.RemoteException;) p n
+(import) K
+( java.rmi.registry.LocateRegistry;) p n
+(import) K
+( java.rmi.registry.Registry;) p n
+(import) K
+( java.rmi.server.UnicastRemoteObject;) p n
+(import) K
+( java.util.ArrayList;) p n
+(import) K
+( java.util.concurrent.ExecutorService;) p n
+(import) K
+( java.util.concurrent.Executors;) p n
+() N
+(/**) C n
+( * Parte client del protocollo BitCreek) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(BitCreekPeer) L
+( {) p n
+() N
+(    ) S
+(/* Costanti */) c n
+(    ) p
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( NULL = -1;) p n
+(    ) S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( ATTESARISPSERVER = 3000;) p n
+(    ) S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( PORTASERVER = 9999;) p n
+(    ) S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( PORTARMI = 10000;) p n
+(    ) S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( FINITO = 100;) p n
+(    ) S
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( NUMTHREAD = 100;) p n
+(    ) S
+(/*dimensione del blocco*/) c n
+(    ) p
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( DIMBLOCCO = 4096;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( MAXCONNESSIONI = 100;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( TIMEOUTCONNESSIONE = 500;) p n
+(    ) S
+(/* Variabili d'istanza */) c n
+(    ) p
+(/** Mio ip */) C n
+(    ) p
+(private) K
+( InetAddress mioip;) p n
+(    ) S
+(/** Ip del server, null se peer disconnesso */) C n
+(    ) p
+(private) K
+( InetAddress ipServer;) p n
+(    ) S
+(/** Socket di benvenuto */) C n
+(    ) p
+(private) K
+( ServerSocket welcome;) p n
+(    ) S
+(/** Porta della socket di benvenuto */) C n
+(BitCreekPeer.java) (Page 1/14) (Jun 03, 09 9:59) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    ) p
+(private) K
+( ) p
+(int) k
+( portarichieste;) p n
+(    ) S
+(/** Array di creek */) C n
+(    ) p
+(private) K
+( ArrayList<Creek> arraydescr;) p n
+(    ) S
+(/** Array di descrittori risultanti dall'ultima ricerca */) C n
+(    ) p
+(private) K
+( ArrayList<Descrittore> cercati;) p n
+(    ) S
+(/** booleano per sapere se il thread per i keepalive \303\250 avviato */) C n
+(    ) p
+(private) K
+( ) p
+(boolean) k
+( keepalive;) p n
+(    ) S
+(/** booleano per sapere se il thread per in ascolto su welcome e \303\250 avviato ) C n
+(*/) N
+(    ) p
+(private) K
+( ) p
+(boolean) k
+( ascolto;) p n
+(    ) S
+(/** booleano per sapere se il peer \303\250 dietro NAT o firewall */) C n
+(    ) p
+(private) K
+( ) p
+(boolean) k
+( bloccato;) p n
+(    ) S
+(/* dichiarazione delle interfacce del client */) c n
+(    ) p
+(/** Interfaccia RMI */) C n
+(    ) p
+(private) K
+( InterfacciaRMI stub;) p n
+(    ) S
+(/** Interfaccia per le callback */) C n
+(    ) p
+(private) K
+( InterfacciaCallback stubcb;) p n
+(    ) S
+(/** Implementazione delle callback */) C n
+(    ) p
+(private) K
+( ImplementazioneCallback callback;) p n
+(    ) S
+(/** ThreadPool per il p2p*/) C n
+(    ) p
+(private) K
+( ExecutorService TP;) p n
+(    ) S
+(/** Numero di connessioni aperte */) C n
+(    ) p
+(private) K
+( ) p
+(int) k
+( connessioni;) p n
+(    ) N
+() N
+(    ) S
+(/**) C n
+(     * Costruttore vuoto) N
+(     * @exception ErrorException) N
+(     */) N
+(    ) p
+(public) K
+( BitCreekPeer\(\) ) p
+(throws) K
+( ErrorException {) p n
+() N
+(        ) S
+(/* inizializzazione variabili istanza */) c n
+() p n
+(        mioip = ) S
+(null) k
+(;) p n
+(        portarichieste = NULL;) N
+(        ipServer = ) S
+(null) k
+(;) p n
+(        welcome = ) S
+(null) k
+(;) p n
+(        arraydescr = ) S
+(new) K
+( ArrayList<Creek>\(\);) p n
+(        cercati = ) S
+(null) k
+(;) p n
+(        keepalive = ) S
+(false) k
+(;) p n
+(        ascolto = ) S
+(false) k
+(;) p n
+(        bloccato = ) S
+(true) k
+(;) p n
+(        stub = ) S
+(null) k
+(;) p n
+(        stubcb = ) S
+(null) k
+(;) p n
+(        callback = ) S
+(null) k
+(;) p n
+(        connessioni = 0;) N
+(        ) S
+(/* Avvio del thread Pool */) c n
+(        TP = Executors.newFixedThreadPool\(NUMTHREAD\);) p n
+() N
+(        ) S
+(/* Creazione cartelle se non esistenti*/) c n
+() p n
+(        File dir = ) S
+(new) K
+( File\(") p
+(./FileCondivisi) str
+("\);) p n
+(        dir.mkdir\(\);) N
+(        dir = ) S
+(new) K
+( File\(") p
+(./MetaInfo) str
+("\);) p n
+(        dir.mkdir\(\);) N
+() N
+(        ) S
+(/* scandisco le metainfo e aggiorno arraydescr */) c n
+() p n
+(        File[] array = dir.listFiles\(\);) N
+(BitCreekPeer.java) (Page 2/14) (Jun 03, 09 9:59) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (3/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-6) 4
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ObjectInputStream in = ) p
+(null) k
+(;) p n
+(        Creek c = ) S
+(null) k
+(;) p n
+(        ) S
+(for) K
+( \(File f : array\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                in = ) S
+(new) K
+( ObjectInputStream\() p
+(new) K
+( FileInputStream\(f\)\);) p n
+(                c = \(Creek\) in.readObject\(\);) N
+(                ) S
+(/* inserisco i descrittori nel vettore : non importa mutua esclu) c n
+(sione) N
+(                perch\303\250 non ci sono ancora altri thread che accedono a questa st) N
+(ruttura */) N
+(                arraydescr.add\(c\);) p n
+(                in.close\(\);) N
+(            } ) S
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(File not found) str
+("\);) p n
+(            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(IO Problem) str
+("\);) p n
+(            } ) S
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Class not found) str
+("\);) p n
+(            }) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(//METODI GETTER) c n
+(    ) p
+(/**) C n
+(     * Restituisce il numero di connessioni) N
+(     * @return) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(int) k
+( getConnessioni\(\){) p n
+(        ) S
+(return) K
+( this.connessioni;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Incrementa il numero di connessioni) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( incrConnessioni\(\){) p n
+(        this.connessioni++;) N
+(    }) N
+(    ) S
+(/**) C n
+(     * Incrementa il numero di connessioni) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( decrConnessioni\(\){) p n
+(        this.connessioni--;) N
+(    }) N
+(    ) S
+(/**) C n
+(     * Restituisce l' ip del client) N
+(     * @return mioip) N
+(     */) N
+(    ) p
+(public) K
+( InetAddress getMioIp\(\) {) p n
+(        ) S
+(return) K
+( this.mioip;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Aggiunge un task al pool) N
+(     * @param r) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( addTask\(Runnable r\){) p n
+(        this.TP.execute\(r\);) N
+(    }) N
+(    ) S
+(/**) C n
+(BitCreekPeer.java) (Page 3/14) (Jun 03, 09 9:59) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * Restituisce il numero della porta in ascolto) C n
+(     * @return portarichieste) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(int) k
+( getPortaRichieste\(\) {) p n
+(        ) S
+(return) K
+( this.portarichieste;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Restituisce l'ip del server) N
+(     * @return ipServer) N
+(     */) N
+(    ) p
+(public) K
+( InetAddress getIpServer\(\) {) p n
+(        ) S
+(return) K
+( this.ipServer;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Restituisce true se il peer \303\250 sotto firewall o nat, false altrimenti) N
+(     * @return bloccato) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(boolean) k
+( getBloccato\(\) {) p n
+(        ) S
+(return) K
+( this.bloccato;) p n
+(    }) N
+(    ) N
+(    ) S
+(/**) C n
+(     * Restituisce lo stub per le callback) N
+(     * @return stubcb) N
+(     */) N
+(    ) p
+(public) K
+( InterfacciaCallback getStubCb\(\) {) p n
+(        ) S
+(return) K
+( this.stubcb;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Restituisce la socket in ascolto) N
+(     * @return welcome) N
+(     */) N
+(    ) p
+(public) K
+( ServerSocket getSS\(\) {) p n
+(        ) S
+(return) K
+( this.welcome;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Restituisce lo stub) N
+(     * @return stubcb) N
+(     */) N
+(    ) p
+(public) K
+( InterfacciaRMI getStub\(\) {) p n
+(        ) S
+(return) K
+( this.stub;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ArrayList<Descrittore> getCercati\(\) ) p
+(throws) K
+( ErrorExceptio) p n
+(n {) N
+(        ArrayList<Descrittore> ris = ) S
+(new) K
+( ArrayList<Descrittore>\(\);) p n
+(        ) S
+(for) K
+( \(Descrittore d : cercati\) {) p n
+(            Descrittore nuovo = d.copia\(\);) N
+(            ris.add\(nuovo\);) N
+(        }) N
+(        ) S
+(return) K
+( ris;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Restituisce tutti i creek in un array di copia TOLTA LA COPIA) N
+(BitCreekPeer.java) (Page 4/14) (Jun 03, 09 9:59) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * @return arraydescr) C n
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ArrayList<Creek> getDescr\(\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(//System.out.println\("GETDESCR"\);) c n
+(        ) p
+(//ArrayList<Creek> ris = new ArrayList<Creek>\(\);) c n
+(        ) p
+(//for \(Creek c : arraydescr\) {) c n
+(        ) p
+(//    Creek nuovo = c.copia\(\);) c n
+(        ) p
+(//    ris.add\(nuovo\);) c n
+(        ) p
+(//}) c n
+(        ) p
+(return) K
+( this.arraydescr; ) p
+(// -----------> da fare ammodo !!!!!!!!!!!!) c n
+(        ) p
+(//return ris;) c n
+(    }) p n
+() N
+(    ) S
+(//SETTER) c n
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setCercati\(ArrayList<Descrittore> results\) {) p n
+(        this.cercati = results;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Controllas se la porta speceficata \303\250 libera) N
+(     * @param porta) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(boolean) k
+( settaporta\() p
+(int) k
+( porta\) {) p n
+(        ) S
+(boolean) k
+( ris = ) p
+(true) k
+(;) p n
+(        ) S
+(try) K
+( {) p n
+(            DatagramSocket s = ) S
+(new) K
+( DatagramSocket\(porta\);) p n
+(        } ) S
+(catch) K
+( \(BindException e\) {) p n
+(            ris = ) S
+(false) k
+(;) p n
+(        } ) S
+(catch) K
+( \(SocketException e\) {) p n
+(            ris = ) S
+(false) k
+(;) p n
+(        }) N
+(        ) S
+(if) K
+( \(ris\) {) p n
+(            File f = ) S
+(new) K
+( File\(") p
+(./porta.conf) str
+("\);) p n
+(            FileOutputStream out = ) S
+(null) k
+(;) p n
+(            ) S
+(try) K
+( {) p n
+(                out = ) S
+(new) K
+( FileOutputStream\(f\);) p n
+(                out.write\() S
+(new) K
+( ) p
+(byte) k
+([]{\() p
+(byte) k
+(\) \(porta >>> 24\), \() p
+(byte) k
+(\) \(porta >>> 16) p n
+(\), \() S
+(byte) k
+(\) \(porta >>> 8\), \() p
+(byte) k
+(\) porta}\);) p n
+(                out.close\(\);) N
+(            } ) S
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(                f.delete\(\);) N
+(                ris = ) S
+(false) k
+(;) p n
+(            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                f.delete\(\);) N
+(                ris = ) S
+(false) k
+(;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( ris;) p n
+(    }) N
+() N
+(    ) S
+(//METODI OPERANTI SU ARRAYDESCR) c n
+(    ) p
+(/**) C n
+(     * Controlla se esiste un creek con il nome nome) N
+(     * @param nome) N
+(     * @return true se esiste gi\303\240, false altrimenti) N
+(     * @throws condivisi.ErrorException se nome \303\250 null) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(boolean) k
+( presenza\() p
+(/*int id*/) c
+(String nome\) ) p
+(throws) K
+( ErrorExce) p n
+(ption {) N
+(BitCreekPeer.java) (Page 5/14) (Jun 03, 09 9:59) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ) p
+(boolean) k
+( presenza = ) p
+(false) k
+(;) p n
+(        ) S
+(for) K
+( \(Creek c : arraydescr\) {) p n
+(            ) S
+(//if \(c.getId\(\) == id\) {) c n
+(            ) p
+(if) K
+(\(c.getName\(\).compareTo\(nome\) == 0\){) p n
+(                presenza = ) S
+(true) k
+(;) p n
+(                ) S
+(break) K
+(;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( presenza;) p n
+(    }) N
+(    ) N
+(    ) S
+(/**) C n
+(     * ricerca e ritorna un creek in base all'id univoco passato come parametro) N
+(     * se non lo trova ritorna null) N
+(     * @param id) N
+(     * @return il Creek cercato) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( Creek getCreek\() p
+(int) k
+( id\){) p n
+(        Creek ret = ) S
+(null) k
+(;) p n
+(        ) S
+(for) K
+(\(Creek c : arraydescr\){) p n
+(            ) S
+(if) K
+(\(c.getId\(\) == id\){) p n
+(                ) S
+(return) K
+( c;) p n
+(            }) N
+(        }) N
+(        ) S
+(//creek non trovato) c n
+(        ) p
+(return) K
+( ret;) p n
+(    }) N
+(    ) S
+(/**) C n
+(     * Avvia il download dei file selezionati nella ricerca per lo scaricamento) N
+(     * @param array indici dei file da scaricare) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( avviaDescr\() p
+(int) k
+([] array\) ) p
+(throws) K
+( ErrorException {) p n
+(        Thread t = ) S
+(new) K
+( Thread\() p
+(new) K
+( Avvia\() p
+(this) k
+(,array\)\);) p n
+(        t.start\(\);) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Aggiunge ad arraydescr un creek se non \303\250 gi\303\240 presente) N
+(     * @param c creek da aggiungere) N
+(     * @return true se tutto ok, false se \303\250 gi\303\240 presente) N
+(     * @throws condivisi.ErrorException se c \303\250 null) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(boolean) k
+( addCreek\(Creek creek\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(creek == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        ) S
+(/* controllo se il creek \303\250 presente */) c n
+(        ) p
+(boolean) k
+( trovato = this.presenza\(creek.getName\(\)\);) p n
+(        System.out.println\(") S
+(Sono in addCrek) str
+("\);) p n
+(        ) S
+(if) K
+( \(!trovato\) {) p n
+(            System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(CREEK NON PRESE) str n
+(NTE IN ARRAYDESCR) S
+("\);) p n
+(            FileOutputStream c = ) S
+(null) k
+(;) p n
+(            ObjectOutputStream o = ) S
+(null) k
+(;) p n
+(            ) S
+(try) K
+( {) p n
+(                System.out.println\(") S
+(INIZIO PEZZO TRAGICO) str
+("\);) p n
+(                ) N
+(                c = ) S
+(new) K
+( FileOutputStream\() p
+(new) K
+( File\(") p
+(./MetaInfo/) str
+(" + creek.getName\(\) +) p n
+( ") S
+(.creek) str
+("\)\);) p n
+(BitCreekPeer.java) (Page 6/14) (Jun 03, 09 9:59) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (4/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-10) 5
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                ) p
+(//PROBLEMONE!!! non posso serializzare su file system file e ran) c n
+(domAccessFile) N
+(                Creek toBeWritten = creek.copia\(\);) p n
+(                toBeWritten.setClean\(\);) N
+(                creek.testFile\(\);) N
+(                o = ) S
+(new) K
+( ObjectOutputStream\(c\);) p n
+(                System.out.println\(") S
+(CREATO LO STREAM) str
+("\);) p n
+(                o.writeObject\(toBeWritten\);) N
+(                c.close\(\);) N
+(                o.close\(\); ) S
+(/* AGGIUNTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/) c n
+(                System.out.println\(") p
+(FINE PEZZO TRAGICO) str
+("\);) p n
+(            } ) S
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(                File f = ) S
+(new) K
+( File\(") p
+(./MetaInfo/) str
+(" + creek.getName\(\) + ") p
+(.creek) str
+("\);) p n
+(                f.delete\(\);) N
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Impossibile aggiungere il file: FILE NOT FOUND) str
+("\);) p n
+(            } ) S
+(catch) K
+( \(IOException e\) {) p n
+(                File f = ) S
+(new) K
+( File\(") p
+(./MetaInfo/) str
+(" + creek.getName\(\) + ") p
+(.creek) str
+("\);) p n
+(                f.delete\(\);) N
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Impossibile aggiungere il file: IOEXCEPTION) str
+("\);) p n
+(            }) N
+(            arraydescr.add\(creek\);) N
+(        }) S
+(else) K n
+(            System.out.println\(") p
+(Trovato creek in arraydescr) str
+("\);) p n
+(        ) S
+(return) K
+( !trovato;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Aggiunge ad arraydescr un creek se non \303\250 gi\303\240 presente) N
+(     * @param c creek da aggiungere) N
+(     * @return true se tutto ok, false se \303\250 gi\303\240 presente) N
+(     * @throws condivisi.ErrorException se c \303\250 null) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(boolean) k
+( deleteCreek\(String nome\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(nome == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        ) S
+(int) k
+( pos = 0;) p n
+(        ) S
+(boolean) k
+( rimosso = ) p
+(false) k
+(;) p n
+(        File f = ) S
+(null) k
+(;) p n
+() N
+(        ) S
+(for) K
+( \(Creek c : arraydescr\) {) p n
+(            ) S
+(if) K
+( \(c.getName\(\).compareTo\(nome\) == 0\) {) p n
+(                arraydescr.remove\(pos\);) N
+(                ) S
+(if) K
+( \(\(c.getStato\(\) && c.getPercentuale\(\) != FINITO\) || !c.getStat) p n
+(o\(\)\) {) N
+(                    f = ) S
+(new) K
+( File\(") p
+(./FileCondivisi/) str
+(" + nome\);) p n
+(                    f.delete\(\);) N
+(                }) N
+(                rimosso = ) S
+(true) k
+(;) p n
+(                ) S
+(break) K
+(;) p n
+(            }) N
+(            pos++;) N
+(        }) N
+(        ) S
+(return) K
+( rimosso;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Metodo che viene invocato dall'implementazione callback per) N
+(     * aggiornare lo stato) N
+(BitCreekPeer.java) (Page 7/14) (Jun 03, 09 9:59) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * ) C n
+(     * @param ind) N
+(     * @param nome) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( notifica\(InetAddress ind, String nome\) {) p n
+(        ) S
+(for) K
+( \(Creek c : arraydescr\) {) p n
+(            ) S
+(if) K
+( \(c.getName\(\).compareTo\(nome\) == 0\) {) p n
+(                c.settaPeerCerca\(\);) N
+(                c.settaIdentita\(ind\);) N
+(                ) S
+(break) K
+(;) p n
+(            }) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Handler di chiusura del protocollo) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( close\(\) {) p n
+() N
+(        ) S
+(/* chiusura connessioni */) c n
+() p n
+(        disconnetti\(\);) N
+() N
+(        ) S
+(/* chiusura threads */) c n
+() p n
+(        ) S
+(// vedere se necessario visto che appl termina) c n
+() p n
+(        ) S
+(/* eventuale salvataggio  */) c n
+() p n
+(        ) S
+(// gi\303\240 fatto durante la creazione ddel creek, vedere per file in downlo) c n
+(ad) N
+() p n
+(        ) S
+(/* cancellazione del file di avvio del programma */) c n
+() p n
+(        File conf = ) S
+(new) K
+( File\(") p
+(./avviato.on) str
+("\);) p n
+(        conf.delete\(\);) N
+() N
+(        ) S
+(/* termino il processo */) c n
+() p n
+(        System.exit\(0\);) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Disconnette il peer) N
+(     * @throws condivisi.ErrorException) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( disconnetti\(\) {) p n
+() N
+(        ) S
+(/* chiusura socket con altri peer */) c n
+() p n
+(        ) S
+(// --------> da fare ->basta uccidere il thread pool!!! se mai ci sara`) c n
+() p n
+(        ) S
+(/* chiusura "connessione" con il server */) c n
+() p n
+(        ipServer = ) S
+(null) k
+(;) p n
+(        portarichieste = NULL;) N
+(        stub = ) S
+(null) k
+(;) p n
+(        stubcb = ) S
+(null) k
+(;) p n
+(        callback = ) S
+(null) k
+(;) p n
+(BitCreekPeer.java) (Page 8/14) (Jun 03, 09 9:59) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ) p
+(try) K
+( {) p n
+(            ) S
+(if) K
+( \(welcome != ) p
+(null) k
+(\) {) p n
+(                ) S
+(/* chiudo la socket solo se \303\250 inizializzata */) c n
+(                welcome.close\(\);) p n
+(            }) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(        }) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( cerca\(String nome, BitCreekGui gui\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(nome == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        Thread t = ) S
+(new) K
+( Thread\() p
+(new) K
+( Cerca\(nome, ) p
+(this) k
+(, gui\)\);) p n
+(        t.start\(\);) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Fa partire un task che si occupa di creare e pubblicare un creek) N
+(     * @param sorgente file da pubblicare) N
+(     * @exception condivisi.ErrorException se sorgente \303\250 null) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( crea\(File sorgente, BitCreekGui gui\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(sorgente == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        Thread t = ) S
+(new) K
+( Thread\() p
+(new) K
+( Crea\(sorgente, ) p
+(this) k
+(, gui\)\);) p n
+(        t.start\(\);) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Fa partire un task che si occupa ci aprire un .creek su disco) N
+(     * @param creek file .creek) N
+(     * @throws condivisi.ErrorException se creek \303\250 null) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( apri\(File creek, BitCreekGui gui\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(creek == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        Thread t = ) S
+(new) K
+( Thread\() p
+(new) K
+( Apri\(creek, ) p
+(this) k
+(, gui\)\);) p n
+(        t.start\(\);) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Fa partit\303\254re un task che si occupa di eliminare il file con nome nome) N
+(     * @param nome) N
+(     * @throws condivisi.ErrorException) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( elimina\(String nome\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(nome == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        Thread t = ) S
+(new) K
+( Thread\() p
+(new) K
+( Elimina\(nome, ) p
+(this) k
+(\)\);) p n
+(        t.start\(\);) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Tenta di stabilire una connessione con il server) N
+(     * @param server ip del server) N
+(BitCreekPeer.java) (Page 9/14) (Jun 03, 09 9:59) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * @throws condivisi.ErrorException se server \303\250 null) C n
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( connetti\(InetAddress server, BitCreekGui gui\) ) p
+(throws) K
+( ErrorExcept) p n
+(ion {) N
+(        ) S
+(if) K
+( \(server == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        File f = ) S
+(new) K
+( File\(") p
+(./porta.conf) str
+("\);) p n
+(        ) S
+(byte) k
+([] b = ) p
+(new) K
+( ) p
+(byte) k
+([20];) p n
+(        ) S
+(try) K
+( {) p n
+(            FileInputStream in = ) S
+(new) K
+( FileInputStream\(f\);) p n
+(            in.read\(b\);) N
+(        } ) S
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(File porta.conf non trovato) str
+("\);) p n
+(        } ) S
+(catch) K
+( \(IOException e\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(IO Problem) str
+("\);) p n
+(        }) N
+(        ) S
+(int) k
+( porta = \(b[0] << 24\) + \(\(b[1] & 0xFF\) << 16\) + \(\(b[2] & 0xFF\) << 8\) ) p n
+(+ \(b[3] & 0xFF\);) N
+(        ) S
+(if) K
+( \(porta == 0\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Porta non valida. Settarla dal menu Aiuto) str
+("\);) p n
+(        }) N
+(        ) S
+(try) K
+( {) p n
+(            ) S
+(/* attivazione socket di ascolto per le query di altri peer */) c n
+(            welcome = ) p
+(new) K
+( ServerSocket\(porta\);) p n
+(            welcome.setSoTimeout\(ATTESARISPSERVER\);) N
+(            portarichieste = welcome.getLocalPort\(\);) N
+(            ipServer = server;) N
+(        } ) S
+(catch) K
+( \(UnknownHostException ex\) {) p n
+(            ipServer = ) S
+(null) k
+(;) p n
+(        } ) S
+(catch) K
+( \(IOException e\) {) p n
+(            ipServer = ) S
+(null) k
+(;) p n
+(        }) N
+() N
+(        ) S
+(if) K
+( \(ipServer != ) p
+(null) k
+(\) {) p n
+() N
+(            ) S
+(try) K
+( {) p n
+() N
+(                ) S
+(/* attivazione rmi parte client e attivazione callback */) c n
+() p n
+(                Registry reg = LocateRegistry.getRegistry\(ipServer.getHostAddres) N
+(s\(\), PORTARMI\);) N
+(                stub = \(InterfacciaRMI\) reg.lookup\(") S
+(MetodiRMI) str
+("\);) p n
+(                callback = ) S
+(new) K
+( ImplementazioneCallback\() p
+(this) k
+(\);) p n
+(                stubcb = \(InterfacciaCallback\) UnicastRemoteObject.exportObject\() N
+(callback, 0\);) N
+(            } ) S
+(catch) K
+( \(NullPointerException e\) {) p n
+(                ipServer = ) S
+(null) k
+(;) p n
+(            } ) S
+(catch) K
+( \(RemoteException e\) {) p n
+(                ipServer = ) S
+(null) k
+(;) p n
+(            } ) S
+(catch) K
+( \(NotBoundException e\) {) p n
+(                ipServer = ) S
+(null) k
+(;) p n
+(            }) N
+(            ) S
+(/* Se non esiste faccio partire il thread per i keep alive */) c n
+() p n
+(            ) S
+(if) K
+( \(!keepalive\) {) p n
+(                Thread t = ) S
+(null) k
+(;) p n
+(                ) S
+(try) K
+( {) p n
+(                    t = ) S
+(new) K
+( Thread\() p
+(new) K
+( KeepAlive\() p
+(this) k
+(\)\);) p n
+(BitCreekPeer.java) (Page 10/14) (Jun 03, 09 9:59) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (5/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11-14) 6
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                } ) p
+(catch) K
+( \(ErrorException ex\) {) p n
+(                    ipServer = ) S
+(null) k
+(;) p n
+(                }) N
+(                ) S
+(if) K
+( \(ipServer != ) p
+(null) k
+(\) {) p n
+(                    t.start\(\);) N
+(                    keepalive = ) S
+(true) k
+(;) p n
+(                }) N
+(            }) N
+(        }) N
+() N
+(        ) S
+(/* controllo l'esito dell'operazione */) c n
+(        ) p
+(if) K
+( \(ipServer == ) p
+(null) k
+(\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                ) S
+(if) K
+( \(welcome != ) p
+(null) k
+(\) {) p n
+(                    welcome.close\(\);) N
+(                }) N
+(            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            }) N
+(            portarichieste = NULL;) N
+(            stub = ) S
+(null) k
+(;) p n
+(            stubcb = ) S
+(null) k
+(;) p n
+(            callback = ) S
+(null) k
+(;) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Porta non valida. Settarla dal menu Aiuto) str
+("\);) p n
+(        } ) S
+(else) K
+( {) p n
+(            ) S
+(/* avviso l'interfaccia che la connetti \303\250 stata effettuata con succ) c n
+(esso */) N
+(            gui.connettiDone\(\);) p n
+(        }) N
+() N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( salva\(String path, String file, ) p
+(boolean) k
+( cerca\) ) p
+(throws) K
+( ErrorExcep) p n
+(tion {) N
+(        ) S
+(if) K
+( \(path == ) p
+(null) k
+( || file == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        File percorso = ) S
+(new) K
+( File\(path + file + ") p
+(.creek) str
+("\);) p n
+(        ObjectOutputStream output = ) S
+(null) k
+(;) p n
+(        ) S
+(try) K
+( {) p n
+(            output = ) S
+(new) K
+( ObjectOutputStream\() p
+(new) K
+( FileOutputStream\(percorso\)\);) p n
+(        } ) S
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(            percorso.delete\(\);) N
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Percorso non trovato) str
+("\);) p n
+(        } ) S
+(catch) K
+( \(IOException e\) {) p n
+(            percorso.delete\(\);) N
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Impossibile creare creek) str
+("\);) p n
+(        }) N
+(        ) S
+(if) K
+( \(cerca\) {) p n
+(            Descrittore d = getFileCerca\(file\);) N
+(            ) S
+(if) K
+( \(d == ) p
+(null) k
+(\) {) p n
+(                percorso.delete\(\);) N
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(File non trovato) str
+("\);) p n
+(            } ) S
+(else) K
+( {) p n
+(                Creek c = ) S
+(new) K
+( Creek\(d, ) p
+(true) k
+(, ) p
+(false) k
+(\);) p n
+(                ) S
+(try) K
+( {) p n
+(                    output.writeObject\(c\);) N
+(                    output.close\(\);) N
+(                } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                    percorso.delete\(\);) N
+(BitCreekPeer.java) (Page 11/14) (Jun 03, 09 9:59) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                    ) p
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Impossibile leggere metainfo) str
+("\);) p n
+(                }) N
+(            }) N
+(        } ) S
+(else) K
+( {) p n
+(            ObjectInputStream in = ) S
+(null) k
+(;) p n
+(            Creek copia = ) S
+(null) k
+(;) p n
+(            ) S
+(try) K
+( {) p n
+(                in = ) S
+(new) K
+( ObjectInputStream\() p
+(new) K
+( FileInputStream\() p
+(new) K
+( File\(") p
+(./MetaInf) str n
+(o/) S
+(" + file + ") p
+(.creek) str
+("\)\)\);) p n
+(                Creek c = \(Creek\) in.readObject\(\);) N
+(                copia = c.esporta\(\);) N
+(                output.writeObject\(copia\);) N
+(                output.close\(\);) N
+(                in.close\(\);) N
+(            } ) S
+(catch) K
+( \(IOException e\) {) p n
+(                percorso.delete\(\);) N
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Impossibile leggere metainfo) str
+("\);) p n
+(            } ) S
+(catch) K
+( \(ClassNotFoundException e\) {) p n
+(                percorso.delete\(\);) N
+(                ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Impossibile leggere metainfo) str
+("\);) p n
+(            }) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * effettua una copia di un descrittore presente nell'array cercati) N
+(     * @param nome) N
+(     * @return la copia del descrittore) N
+(     * @throws condivisi.ErrorException) N
+(     */) N
+(    ) p
+(private) K
+( ) p
+(synchronized) K
+( Descrittore getFileCerca\(String nome\) ) p
+(throws) K
+( ErrorExcep) p n
+(tion {) N
+(        ) S
+(if) K
+( \(nome == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        Descrittore d = ) S
+(new) K
+( Descrittore\(\);) p n
+(        ) S
+(for) K
+( \(Descrittore temp : cercati\) {) p n
+(            ) S
+(if) K
+( \(temp.getName\(\).compareTo\(nome\) == 0\) {) p n
+(                d = temp.copia\(\);) N
+(                ) S
+(break) K
+(;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( d;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Effettua il test NAT - Firewall) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( test\(BitCreekGui gui\) ) p
+(throws) K
+( ErrorException {) p n
+() N
+(        Socket s = ) S
+(null) k
+(;) p n
+(        ) S
+(boolean) k
+( problema = ) p
+(false) k
+(;) p n
+() N
+(        ) S
+(/* contatto il server specificando la porta su cui sono in ascolto */) c n
+(        ) p
+(if) K
+( \(ipServer != ) p
+(null) k
+(\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                SocketAddress sa = ) S
+(new) K
+( InetSocketAddress\(ipServer, PORTASERVER\);) p n
+(                s = ) S
+(new) K
+( Socket\(\);) p n
+(                s.connect\(sa, ATTESARISPSERVER\);) N
+(BitCreekPeer.java) (Page 12/14) (Jun 03, 09 9:59) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(            } ) p
+(catch) K
+( \(IOException e\) {) p n
+(                ) S
+(/* il  server non risponde */) c n
+(                disconnetti\(\);) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            }) N
+(        }) N
+() N
+(        ) S
+(if) K
+( \(ipServer != ) p
+(null) k
+( && !problema\) {) p n
+(            mioip = s.getLocalAddress\(\);) N
+(            ) S
+(try) K
+( {) p n
+(                DataOutputStream out = ) S
+(new) K
+( DataOutputStream\(s.getOutputStream\(\)\)) p n
+(;) N
+(                out.writeInt\(portarichieste\);) N
+(                s.close\(\);) N
+(            } ) S
+(catch) K
+( \(IOException e\) {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            }) N
+() N
+(            ) S
+(if) K
+( \(!problema\) {) p n
+(                bloccato = ) S
+(false) k
+(;) p n
+() N
+(                ) S
+(/* controllo se sono nattato o firewallato facendomi contattare ) c n
+(dal server */) N
+(                ) p
+(try) K
+( {) p n
+(                    Socket prova = welcome.accept\(\);) N
+(                    prova.close\(\);) N
+(                } ) S
+(catch) K
+( \(SocketTimeoutException ex\) {) p n
+(                    ) S
+(/* sono nattato o firewallato */) c n
+(                    bloccato = ) p
+(true) k
+(;) p n
+(                } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                    bloccato = ) S
+(true) k
+(;) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                }) N
+(            }) N
+(        }) N
+() N
+(        ) S
+(/* controllo l'esito delle operazioni*/) c n
+(        ) p
+(if) K
+( \(ipServer != ) p
+(null) k
+( && !problema\) {) p n
+(            ) S
+(if) K
+( \(!bloccato\) {) p n
+(                ) S
+(/* Se non esiste faccio partire il thread in ascolto sulla socke) c n
+(t di benvenuto */) N
+(                ) p
+(if) K
+( \(!ascolto\) {) p n
+(                    Thread t = ) S
+(null) k
+(;) p n
+(                    ) S
+(try) K
+( {) p n
+(                        t = ) S
+(new) K
+( Thread\() p
+(new) K
+( Ascolto\() p
+(this) k
+(\)\);) p n
+(                    } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                        bloccato = ) S
+(true) k
+(;) p n
+(                        problema = ) S
+(true) k
+(;) p n
+(                    }) N
+(                    t.start\(\);) N
+(                    ascolto = ) S
+(true) k
+(;) p n
+(                }) N
+(            }) N
+(        }) N
+() N
+(        ) S
+(if) K
+( \(problema\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Test fallito) str
+("\);) p n
+(        } ) S
+(else) K
+( {) p n
+(            gui.testDone\(bloccato, portarichieste\);) N
+(BitCreekPeer.java) (Page 13/14) (Jun 03, 09 9:59) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        }) p n
+() N
+(    }) N
+(}) N
+(BitCreekPeer.java) (Page 14/14) (Jun 03, 09 9:59) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (6/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1-2,1) 7
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.io.Serializable;) p n
+() N
+(/**) C n
+( * Messaggio di risposta ad una contact) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Bitfield) L
+( ) p
+(implements) K
+( Serializable{) p n
+(    ) N
+(    ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 45;) p n
+(    ) N
+(    ) S
+(private) K
+( ) p
+(boolean) k
+([] bitfield;) p n
+(        ) N
+(    ) S
+(public) K
+( Bitfield\() p
+(boolean) k
+([] bitfield\){) p n
+(        this.bitfield = bitfield;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+([] getBitfield\(\){) p n
+(        ) S
+(return) K
+( this.bitfield;) p n
+(    }) N
+(}) N
+(Bitfield.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.Descrittore;) p n
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( gui.BitCreekGui;) p n
+(import) K
+( java.rmi.RemoteException;) p n
+(import) K
+( java.util.ArrayList;) p n
+() N
+(/**) C n
+( * Task che si occupa di cercare un file contattando il server) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Cerca) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(/* Costanti */) c n
+(    ) p
+(private) K
+( ) p
+(final) K
+( ) p
+(char) k
+( ERRORE = 1;) p n
+(    ) S
+(private) K
+( ) p
+(final) K
+( ) p
+(char) k
+( INFORMATION = 2;) p n
+() N
+(    ) S
+(/* Variabili d'istanza */) c n
+(    String nome; ) p
+(/* nome da cercare */) c n
+() p n
+(    BitCreekPeer peer;) N
+(    BitCreekGui gui;) N
+() N
+(    ) S
+(/**) C n
+(     * Costruttore) N
+(     */) N
+(    ) p
+(public) K
+( Cerca\(String nome, BitCreekPeer peer, BitCreekGui gui\) ) p
+(throws) K
+( ErrorEx) p n
+(ception {) N
+(        ) S
+(if) K
+( \(nome == ) p
+(null) k
+( || peer == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        this.nome = nome;) N
+(        this.peer = peer;) N
+(        this.gui = gui;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Corpo del task) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        ArrayList<Descrittore> array = ) S
+(null) k
+(;) p n
+(        ) S
+(try) K
+( {) p n
+(            array = peer.getStub\(\).ricerca\(nome, peer.getMioIp\(\)\);) N
+(        } ) S
+(catch) K
+( \(RemoteException ex\) {) p n
+(            gui.PrintInformation\(") S
+(Impossibile avviare metodo importato dal server per la ricerca) str
+(", E) p n
+(RRORE\);) N
+(        }) N
+(        peer.setCercati\(array\);) N
+(        ) S
+(if) K
+( \(array.size\(\) == 0\) {) p n
+(            gui.PrintInformation\(") S
+(Nessun Elemento trovato) str
+(", INFORMATION\);) p n
+(        } ) S
+(else) K
+( {) p n
+(            ) S
+(try) K
+( {) p n
+(                gui.ricercaDone\(peer.getCercati\(\)\);) N
+(            } ) S
+(catch) K
+( \(ErrorException e\) {) p n
+(                gui.PrintInformation\(") S
+(Problema incapibile al momento per l' eccessiva strutturazione) str n
+( del codice : ) S
+(" + e.getMessage\(\), ERRORE\);) p n
+(            }) N
+(        }) N
+(Cerca.java) (Page 1/2) (Jun 01, 09 12:30) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(    }) N
+(}) N
+(Cerca.java) (Page 2/2) (Jun 01, 09 12:30) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.io.Serializable;) p n
+() N
+(/**) C n
+( * Classe che rappresenta un chunk di un file) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Chunk) L
+( ) p
+(implements) K
+( Serializable{) p n
+() N
+(    ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 45;) p n
+() N
+(    ) S
+(private) K
+( ) p
+(byte) k
+([] data;) p n
+(    ) S
+(//spero non si voglia  trasferire gighi di roba!!) c n
+(    ) p
+(private) K
+( ) p
+(int) k
+( offset;) p n
+(    ) S
+(private) K
+( ) p
+(int) k
+( dim;) p n
+() N
+(    ) S
+(public) K
+( Chunk\() p
+(byte) k
+([] data,) p
+(int) k
+( offset,) p
+(int) k
+( dim\){) p n
+(        this.data=data;) N
+(        this.offset=offset;) N
+(        this.dim=dim;) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getOffset\(\){) p n
+(        ) S
+(return) K
+( this.offset;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getDim\(\){) p n
+(        ) S
+(return) K
+( this.dim;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(byte) k
+([] getData\(\){) p n
+(        ) S
+(return) K
+( this.data;) p n
+(    }) N
+(}) N
+(Chunk.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (7/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-4) 8
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.io.ObjectInputStream;) p n
+(import) K
+( java.io.ObjectOutputStream;) p n
+(import) K
+( java.io.Serializable;) p n
+(import) K
+( java.net.InetAddress;) p n
+(import) K
+( java.net.Socket;) p n
+(import) K
+( java.util.logging.Level;) p n
+(import) K
+( java.util.logging.Logger;) p n
+() N
+(/**) C n
+( * Classe che virtualizza la Connessione tra 2 peer facenti parte di uno swarm) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Connessione) L
+( ) p
+(implements) K
+( Serializable{) p n
+(    ) N
+(     ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 45;) p n
+(    ) N
+(    ) S
+(//codici mnemonici per lo stato) c n
+(    ) p
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(boolean) k
+( CHOKED = ) p
+(false) k
+(;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(boolean) k
+( UNCHOKED = ) p
+(true) k
+(;) p n
+(    ) N
+(    ) S
+(//l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socke) c n
+(t) N
+(    Socket down;) p n
+(    Socket up;) N
+(    ) N
+(    ) S
+(//identificativo unico dell'altro peer sulla connessione) c n
+(    ) p
+(int) k
+( portaVicino;) p n
+(    InetAddress ipVicino;) N
+(    ) N
+(    ObjectInputStream inDown;) N
+(    ObjectOutputStream outDown;) N
+(    ObjectInputStream inUp;) N
+(    ObjectOutputStream outUp;) N
+(           ) N
+(    ) S
+(//CHOKED o UNCHOKED) c n
+(    ) p
+(boolean) k
+( statoDown;) p n
+(    ) S
+(boolean) k
+( statoUp;) p n
+(    ) N
+(    ) S
+(/**interesseDown viene inizializzato all'avvio del thread Downloader) C n
+(     * interesseUp invece viene inizializzato a NOT_INTERESTED) N
+(     */) N
+(    ) p n
+(    ) S
+(//INTERESTED o NOT_INTERESTED) c n
+(    ) p
+(boolean) k
+( interesseDown;) p n
+(    ) S
+(boolean) k
+( interesseUp;) p n
+(    ) N
+(    ) S
+(boolean) k
+([] bitfield;) p n
+(    ) S
+(int) k
+( downloaded; ) p
+(/* numero pezzi scaricati su questa connessione */) c n
+(    ) p n
+() N
+(    ) S
+(public) K
+( Connessione\(Socket down, Socket up, ) p
+(boolean) k
+([] bitfield, ) p
+(int) k
+( portaVici) p n
+(no\){) N
+(        System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(COSTRUTTORE CONNE) str n
+(SSIONE) S
+("\);) p n
+(        this.down = down;) N
+(        this.up = up;) N
+(Connessione.java) (Page 1/5) (Jun 04, 09 13:06) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        this.bitfield = bitfield;) p n
+(        ) S
+(if) K
+( \(down != ) p
+(null) k
+(\){) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(CONNESSION) str n
+(E IN DOWNLOAD) S
+("\);) p n
+(            this.ipVicino = down.getInetAddress\(\);) N
+(            ) S
+(try) K
+( {) p n
+(                this.outDown = ) S
+(new) K
+( ObjectOutputStream\(down.getOutputStream\(\)\);) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(WRAPPATO L) str n
+('OUTPUTSTREAM) S
+("\);) p n
+(                this.inDown = ) S
+(new) K
+( ObjectInputStream\(down.getInputStream\(\)\);) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(WRAPPATO L) str n
+('INPUTSTREAM) S
+("\);) p n
+(            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+( NON MI SI W) str n
+(RAPPANO LE SOCKET IN DOWNLOAD) S
+("\);) p n
+(                Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+() k n
+(null) S
+(, ex\);) p n
+(            }) N
+(            ) N
+(        }) N
+(        ) S
+(else) K
+({) p n
+(            System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(CONNESSIONE IN ) str n
+(UPLOAD) S
+("\);) p n
+(            this.ipVicino = up.getInetAddress\(\);) N
+(            ) S
+(try) K
+( {) p n
+(                this.outUp = ) S
+(new) K
+( ObjectOutputStream\(up.getOutputStream\(\)\);) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(WRAPPATO L) str n
+('OUTPUTSTREAM) S
+("\);) p n
+(                this.inUp = ) S
+(new) K
+( ObjectInputStream\(up.getInputStream\(\)\);) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+(WRAPPATO L) str n
+('INPUTSTREAM) S
+("\);) p n
+(            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+( NON MI SI W) str n
+(RAPPANO LE SOCKET IN UPLOAD) S
+("\);) p n
+(                Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+() k n
+(null) S
+(, ex\);) p n
+(            }) N
+(        }) N
+(        this.portaVicino = portaVicino;) N
+(        this.downloaded = 0;) N
+(        ) S
+(//Il binding degli stream alle socket viene effettuato solo al momento o) c n
+(pportuno) N
+(        ) p
+(//dai thread) c n
+(        System.out.println\(Thread.currentThread\(\).getName\(\)+") p
+(TERMINATO COSTRUTT) str n
+(ORE CONNESSIONE) S
+("\);) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Restituisce true se la socket in download \303\250 null) N
+(     * @return) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(boolean) k
+( DownNull\(\){) p n
+(        ) S
+(return) K
+( down == ) p
+(null) k
+(;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Metodo utilizzato per controllare se una connessione e` gia presente) N
+(     * @param ip) N
+(     * @param porta) N
+(Connessione.java) (Page 2/5) (Jun 04, 09 13:06) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * @return) C n
+(     */) N
+(    ) p
+(public) K
+( ) p
+(boolean) k
+( confronta\(InetAddress ip, ) p
+(int) k
+( porta\){) p n
+(        ) S
+(if) K
+( \(this.ipVicino == ip && this.portaVicino == porta\)) p n
+(            ) S
+(return) K
+( ) p
+(true) k
+(;) p n
+(        ) S
+(else) K n
+(            ) p
+(return) K
+( ) p
+(false) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(//Virtualizzazione) c n
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( sendDown\(Messaggio m\){) p n
+(        ) S
+(try) K
+( {) p n
+(            outDown.writeObject\(m\);) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        }) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( sendUp\(Messaggio m\){) p n
+(        ) S
+(try) K
+( {) p n
+(            this.outUp.writeObject\(m\);) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        }) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( Messaggio receiveDown\(\){) p n
+(        ) S
+(try) K
+( {) p n
+(            ) S
+(if) K
+(\(inDown == ) p
+(null) k
+(\) System.out.println\(Thread.currentThread\(\).getName) p n
+(\(\)+") S
+( inDown non inizializzata, sei un programmatore BUSTA) str
+("\);) p n
+(            ) S
+(return) K
+( \(Messaggio\) inDown.readObject\(\);) p n
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        } ) S
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        }) N
+(        ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( Messaggio receiveUp\(\){) p n
+(        ) S
+(try) K
+( {) p n
+(            ) S
+(if) K
+(\(inUp == ) p
+(null) k
+(\) System.out.println\(Thread.currentThread\(\).getName\(\)) p n
+(+") S
+( inUp non inizializzata, sei un programmatore BUSTA) str
+("\);) p n
+(            ) S
+(return) K
+( \(Messaggio\) inUp.readObject\(\);) p n
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        } ) S
+(catch) K
+( \(ClassNotFoundException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        }) N
+(        ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( ResetDown\(\){) p n
+(Connessione.java) (Page 3/5) (Jun 04, 09 13:06) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ) p
+(try) K
+( {) p n
+(            outDown.reset\(\);) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        }) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( ResetUp\(\){) p n
+(        ) S
+(try) K
+( {) p n
+(            outUp.reset\(\);) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Connessione.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+() p n
+(, ex\);) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(//chiamato in seguito ad un messaggio di have) c n
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setBitfield\() p
+(boolean) k
+([] b\){) p n
+(        this.bitfield = b;) N
+(    }) N
+(    ) N
+(    ) S
+(//GETTER) c n
+(    ) p n
+(    ) S
+(public) K
+( ) p
+(boolean) k
+([] getBitfied\(\){) p n
+(        ) S
+(return) K
+( this.bitfield;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getPortaVicino\(\){) p n
+(        ) S
+(return) K
+( this.portaVicino;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( InetAddress getIPVicino\(\){) p n
+(        ) S
+(return) K
+( this.ipVicino;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getStatoDown\(\){) p n
+(        ) S
+(return) K
+( this.statoDown;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getStatoUp\(\){) p n
+(        ) S
+(return) K
+( this.statoUp;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getInteresseDown\(\){) p n
+(        ) S
+(return) K
+( this.interesseDown;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getInteresseUp\(\){) p n
+(        ) S
+(return) K
+( this.interesseUp;) p n
+(    }) N
+(    ) N
+(    ) S
+(//SETTER) c n
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setStatoDown\() p
+(boolean) k
+( stato\){) p n
+(        this.statoDown = stato;) N
+(    } ) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setStatoUp\() p
+(boolean) k
+( stato\){) p n
+(        this.statoUp = stato;) N
+(Connessione.java) (Page 4/5) (Jun 04, 09 13:06) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (8/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5,1,1-2) 9
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(    }) p n
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setSocketUp\(Socket up\){) p n
+(        this.up = up;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setSocketDown\(Socket down\){) p n
+(        this.down = down;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setInteresseDown\() p
+(boolean) k
+( b\){) p n
+(        this.interesseDown = b;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setInteresseUp\() p
+(boolean) k
+( b\){) p n
+(        this.interesseUp = b;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(int) k
+( incrDown\(\){) p n
+(        ) S
+(return) K
+( ++this.downloaded;) p n
+(    }) N
+(}) N
+(Connessione.java) (Page 5/5) (Jun 04, 09 13:06) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.io.Serializable;) p n
+(import) K
+( java.net.InetAddress;) p n
+() N
+(/**) C n
+( * Classe che rappresenta il primo messaggio di Handshake inviato tra peer) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Contact) L
+( ) p
+(implements) K
+( Serializable{) p n
+(    ) N
+(    ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 45;) p n
+(    ) N
+(    ) S
+(//Informazioni del peer) c n
+(    ) p
+(private) K
+( ) p
+(int) k
+( ss;) p n
+(    ) S
+(private) K
+( InetAddress ip;) p n
+(    ) S
+(//id dello swarm a cui sono interessato) c n
+(    ) p
+(private) K
+( ) p
+(int) k
+( id;) p n
+(    ) N
+(   ) S
+(public) K
+( Contact\(InetAddress ip,) p
+(int) k
+( ss,) p
+(int) k
+( id\){) p n
+(       this.id = id;) N
+(       this.ip = ip;) N
+(       this.ss = ss;) N
+(   }) N
+(   ) N
+(   ) S
+(//GETTER) c n
+(   ) p n
+(   ) S
+(public) K
+( InetAddress getIp\(\){) p n
+(       ) S
+(return) K
+( this.ip;) p n
+(   }) N
+(   ) N
+(   ) S
+(public) K
+( ) p
+(int) k
+( getId\(\){) p n
+(       ) S
+(return) K
+( this.id;) p n
+(   }) N
+(   ) N
+(   ) S
+(public) K
+( ) p
+(int) k
+( getSS\(\){) p n
+(       ) S
+(return) K
+( this.ss;) p n
+(   }) N
+(}) N
+(Contact.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.Descrittore;) p n
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( condivisi.InterfacciaRMI;) p n
+(import) K
+( condivisi.Porte;) p n
+(import) K
+( gui.BitCreekGui;) p n
+(import) K
+( java.awt.Cursor;) p n
+(import) K
+( java.io.File;) p n
+(import) K
+( java.io.FileInputStream;) p n
+(import) K
+( java.io.FileNotFoundException;) p n
+(import) K
+( java.io.FileOutputStream;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.nio.channels.FileChannel;) p n
+(import) K
+( java.rmi.RemoteException;) p n
+(import) K
+( java.security.MessageDigest;) p n
+(import) K
+( java.security.NoSuchAlgorithmException;) p n
+(import) K
+( java.util.ArrayList;) p n
+() N
+(/**) C n
+( * Task che si occupa di creare e pubblicare un creek) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Crea) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(/* Variabili d'istanza */) c n
+(    File sorgente;) p n
+(    BitCreekPeer peer;) N
+(    BitCreekGui gui;) N
+() N
+(    ) S
+(/**) C n
+(     * Costruttore) N
+(     * @param sorgente file da pubblicare) N
+(     */) N
+(    ) p
+(public) K
+( Crea\(File sorgente, BitCreekPeer peer, BitCreekGui gui\) ) p
+(throws) K
+( ErrorE) p n
+(xception {) N
+(        ) S
+(if) K
+( \(sorgente == ) p
+(null) k
+( || peer == ) p
+(null) k
+( || gui == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        ) S
+(if) K
+( \(sorgente.length\(\) == 0\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Empty File) str
+("\);) p n
+(        }) N
+(        this.sorgente = sorgente;) N
+(        this.peer = peer;) N
+(        this.gui = gui;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Corpo del task) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+() N
+(        ) S
+(/* cambio il cursore */) c n
+(        gui.getRootPane\(\).setCursor\() p
+(new) K
+( Cursor\(Cursor.WAIT_CURSOR\)\);) p n
+() N
+(        FileInputStream input = ) S
+(null) k
+(;) p n
+(        FileOutputStream output = ) S
+(null) k
+(;) p n
+() N
+(        ) S
+(long) k
+( dimensione = sorgente.length\(\);) p n
+(Crea.java) (Page 1/5) (Jun 04, 09 11:41) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        String nomefilesorgente = sorgente.getName\(\);) p n
+() N
+(        ) S
+(/* controllo che non sia presente */) c n
+() p n
+(        ) S
+(boolean) k
+( problema = ) p
+(false) k
+(;) p n
+(        ) S
+(boolean) k
+( presenza = ) p
+(false) k
+(;) p n
+() N
+(        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( INIZIO CREA) str
+("\);) p n
+(        ) S
+(//QUESTO CONTROLLO LO DEVE FARE IL SERVER ... E A REGOLA ERA IMPLEMENTAT) c n
+(O) N
+(        ) p
+(try) K
+( {) p n
+(            presenza = peer.presenza\(nomefilesorgente\);) N
+(        } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(            problema = ) S
+(true) k
+(;) p n
+(        }) N
+() N
+(        Creek c = ) S
+(null) k
+(;) p n
+() N
+(        ) S
+(/* se non presente lo copio, aggiorno arraydescr e poi pubblico*/) c n
+() p n
+(        ) S
+(if) K
+( \(!presenza\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                input = ) S
+(new) K
+( FileInputStream\(sorgente\);) p n
+(                output = ) S
+(new) K
+( FileOutputStream\() p
+(new) K
+( File\(") p
+(./FileCondivisi/) str
+(" + nomefiles) p n
+(orgente\)\);) N
+(                ) S
+(try) K
+( {) p n
+(                    copia\(input, output\);) N
+(                } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                }) N
+(                input.close\(\);) N
+(                output.close\(\);) N
+(            } ) S
+(catch) K
+( \(FileNotFoundException e\) {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            } ) S
+(catch) K
+( \(IOException e\) {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            }) N
+() N
+(            Descrittore descr = ) S
+(null) k
+(;) p n
+() N
+(            ) S
+(if) K
+( \(problema\) {) p n
+(                System.out.println\(") S
+(AIA1) str
+("\);) p n
+(            }) N
+() N
+(            ) S
+(if) K
+( \(!problema\) {) p n
+(                ) S
+(try) K
+( {) p n
+(                    System.out.println\(") S
+(CREA - NEW DESCRITTORE) str
+("\);) p n
+(                    descr = ) S
+(new) K
+( Descrittore\(nomefilesorgente, dimensione, hash\(\)) p n
+(, peer.getStubCb\(\)\);) N
+(                } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                }) N
+(            }) N
+() N
+(            ) S
+(if) K
+( \(problema\) {) p n
+(                System.out.println\(") S
+(AIA2) str
+("\);) p n
+(            }) N
+(            ) S
+(/* invio al server il descrittore e contestualmente mi registro per ) c n
+(la callback */) N
+(Crea.java) (Page 2/5) (Jun 04, 09 11:41) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (9/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-5,1) 10
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(            Porte p = ) S
+(null) k
+(;) p n
+(            InterfacciaRMI stub = peer.getStub\(\);) N
+() N
+(            ) S
+(if) K
+( \(!problema && stub != ) p
+(null) k
+(\) {) p n
+(                ) S
+(try) K
+( {) p n
+(                    p = stub.inviaDescr\(descr, peer.getMioIp\(\), peer.getPortaRic) N
+(hieste\(\)\);) N
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( INVI) str n
+(ATO AL SERVER!) S
+("\);) p n
+(                } ) S
+(catch) K
+( \(RemoteException ex\) {) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                    System.out.println\(") S
+(TRAGGEDIA RMI) str
+("\);) p n
+(                }) N
+(            } ) S
+(else) K
+( {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            }) N
+() N
+(            ) S
+(if) K
+( \(problema\) {) p n
+(                System.out.println\(") S
+(AIA3) str
+("\);) p n
+(            }) N
+() N
+(            ) S
+(if) K
+( \(!problema && p != ) p
+(null) k
+(\) {) p n
+(                descr.setPortaTCP\(p.getPortaTCP\(\)\);) N
+(                descr.setPortaUDP\(p.getPortaUDP\(\)\);) N
+(                System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Crea : getId\() str n
+(\) = ) S
+(" + p.getId\(\)\);) p n
+(                ) S
+(try) K
+( {) p n
+(                    c = ) S
+(new) K
+( Creek\(descr, ) p
+(false) k
+(, p.getPubblicato\(\)\);) p n
+(                } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                }) N
+(                c.setId\(p.getId\(\)\);) N
+(                System.out.println\(") S
+(\\n\\n Creek ha id : ) str
+(" + c.getId\(\)\);) p n
+(            } ) S
+(else) K
+( {) p n
+(                problema = ) S
+(true) k
+(;) p n
+(            }) N
+() N
+(            ) S
+(if) K
+( \(!problema\) {) p n
+(                ) S
+(try) K
+( {) p n
+(                    System.out.println\(") S
+(Entro in addcreek) str
+("\);) p n
+(                    peer.addCreek\(c\);) N
+(                } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                    problema = ) S
+(true) k
+(;) p n
+(                }) N
+(            }) N
+(        }) N
+(        ) S
+(if) K
+( \(problema\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                ) S
+(if) K
+( \(peer == ) p
+(null) k
+(\) {) p n
+(                    System.out.println\(") S
+(il peer e` null) str
+("\);) p n
+(                }) N
+(                peer.deleteCreek\(c.getName\(\)\);) N
+(            } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(            }) N
+(            File f = ) S
+(new) K
+( File\(") p
+(./FileCondivisi/) str
+(" + nomefilesorgente\);) p n
+(            f.delete\(\);) N
+(            gui.PrintInformation\(") S
+(Errore Server) str
+(", gui.ERRORE\);) p n
+(        }) N
+(Crea.java) (Page 3/5) (Jun 04, 09 11:41) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ) p
+(/* ricambio il cursore */) c n
+(        gui.getRootPane\(\).setCursor\() p
+(new) K
+( Cursor\(Cursor.DEFAULT_CURSOR\)\);) p n
+(        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( MUORO ) str
+("\);) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Copia il  file input in output) N
+(     * @param input) N
+(     * @param output) N
+(     */) N
+(    ) p
+(private) K
+( ) p
+(void) k
+( copia\(FileInputStream input, FileOutputStream output\) ) p
+(throws) K
+( Er) p n
+(rorException {) N
+() N
+(        ) S
+(if) K
+( \(input == ) p
+(null) k
+( || output == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+() N
+(        FileChannel inChannel = input.getChannel\(\);) N
+(        FileChannel outChannel = output.getChannel\(\);) N
+(        ) S
+(try) K
+( {) p n
+(            inChannel.transferTo\(0, inChannel.size\(\), outChannel\);) N
+(            inChannel.close\(\);) N
+(            outChannel.close\(\);) N
+(        } ) S
+(catch) K
+( \(IOException e\) {) p n
+(            System.out.println\(") S
+(Casino nella copia del file) str
+("\);) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Casino nella copia del file) str
+("\);) p n
+(        }) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Crea la stringa hash) N
+(     * @return hash) N
+(     * @throws condivisi.ErrorException) N
+(     */) N
+(    ) p
+(private) K
+( ) p
+(byte) k
+([] hash\(\) ) p
+(throws) K
+( ErrorException {) p n
+(        MessageDigest md;) N
+(        ) S
+(try) K
+( {) p n
+(            md = MessageDigest.getInstance\(") S
+(SHA-1) str
+("\);) p n
+(        } ) S
+(catch) K
+( \(NoSuchAlgorithmException ex\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(No such Algorithm) str
+("\);) p n
+(        }) N
+() N
+(        ) S
+(byte) k
+([] arraybyte = ) p
+(null) k
+(; ) p
+(/* bytes letti dal file */) c n
+(        ) p
+(long) k
+( dim = sorgente.length\(\);) p n
+() N
+(        ) S
+(if) K
+( \(dim < BitCreekPeer.DIMBLOCCO\) {) p n
+(            arraybyte = ) S
+(new) K
+( ) p
+(byte) k
+([\() p
+(int) k
+(\) dim];) p n
+(        } ) S
+(else) K
+( {) p n
+(            arraybyte = ) S
+(new) K
+( ) p
+(byte) k
+([BitCreekPeer.DIMBLOCCO];) p n
+(        }) N
+() N
+(        ) S
+(for) K
+( \() p
+(int) k
+( i = 0; i <) p n
+(                arraybyte.length; i++\) {) N
+(            arraybyte[i] = 0;) N
+(        }) N
+() N
+(        FileInputStream input = ) S
+(null) k
+(;) p n
+(        ) S
+(try) K
+( {) p n
+(            input = ) S
+(new) K
+( FileInputStream\(sorgente\);) p n
+(Crea.java) (Page 4/5) (Jun 04, 09 11:41) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        } ) p
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(File not Found) str
+("\);) p n
+(        }) N
+() N
+(        ) S
+(byte) k
+([] arrayris = ) p
+(null) k
+(;) p n
+(        ) S
+(int) k
+( dimhash = 0; ) p
+(/* dimensione della stringa risultante */) c n
+() p n
+(        ) S
+(/* leggo a blocchi e applico SHA-1 */) c n
+() p n
+(        ArrayList<) S
+(byte) k
+([]> array = ) p
+(new) K
+( ArrayList<) p
+(byte) k
+([]>\(\);) p n
+() N
+(        ) S
+(try) K
+( {) p n
+(            ) S
+(while) K
+( \(input.read\(arraybyte\) != -1\) {) p n
+(                dim -= arraybyte.length;) N
+(                md.update\(arraybyte\);) N
+(                arrayris = md.digest\(\);) N
+(                dimhash += arrayris.length;) N
+(                array.add\(arrayris\);) N
+(                ) S
+(if) K
+( \(dim != 0\) {) p n
+(                    ) S
+(if) K
+( \(dim < BitCreekPeer.DIMBLOCCO\) {) p n
+(                        arraybyte = ) S
+(new) K
+( ) p
+(byte) k
+([\() p
+(int) k
+(\) dim];) p n
+(                    } ) S
+(else) K
+( {) p n
+(                        arraybyte = ) S
+(new) K
+( ) p
+(byte) k
+([BitCreekPeer.DIMBLOCCO];) p n
+(                    }) N
+() N
+(                    ) S
+(for) K
+( \() p
+(int) k
+( i = 0; i <) p n
+(                            arraybyte.length; i++\) {) N
+(                        arraybyte[i] = 0;) N
+(                    }) N
+() N
+(                }) N
+(            }) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(IO Problem) str
+("\);) p n
+(        }) N
+() N
+(        ) S
+(/* creo la stringa di dimensione dimhash e ci copio i byte */) c n
+(        ) p
+(byte) k
+([] hash = ) p
+(new) K
+( ) p
+(byte) k
+([dimhash];) p n
+(        ) S
+(int) k
+( k = 0;) p n
+(        ) S
+(for) K
+( \() p
+(int) k
+( i = 0; i < array.size\(\); i++\) {) p n
+(            arrayris = array.get\(i\);) N
+(            ) S
+(for) K
+( \() p
+(int) k
+( j = 0; j < arrayris.length; j++\) {) p n
+(                hash[k] = arrayris[j];) N
+(            }) N
+(            k++;) N
+(        }) N
+(        ) S
+(return) K
+( hash;) p n
+(    }) N
+(}) N
+(Crea.java) (Page 5/5) (Jun 04, 09 11:41) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.Descrittore;) p n
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( java.io.File;) p n
+(import) K
+( java.io.FileNotFoundException;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.io.RandomAccessFile;) p n
+(import) K
+( java.io.Serializable;) p n
+(import) K
+( java.net.InetAddress;) p n
+(import) K
+( java.util.ArrayList;) p n
+(import) K
+( java.util.Collections;) p n
+(import) K
+( java.util.Iterator;) p n
+(import) K
+( java.util.logging.Level;) p n
+(import) K
+( java.util.logging.Logger;) p n
+() N
+(/**) C n
+( * Classe che definisce la struttura dati del client di supporto al ) N
+( * download/upload in uno swarm) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Creek) L
+( ) p
+(extends) K
+( Descrittore ) p
+(implements) K
+( Serializable {) p n
+() N
+(    ) S
+(/* Costanti */) c n
+(    ) p
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( NONATTIVO = -1;) p n
+(    ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 45;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(boolean) k
+( LEECHER = ) p
+(true) k
+(;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(boolean) k
+( SEEDER = ) p
+(false) k
+(;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(boolean) k
+( NOTSTARTED = ) p
+(false) k
+(;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(boolean) k
+( STARTED = ) p
+(true) k
+(;) p n
+(    ) S
+(/* Variabili d'istanza */) c n
+(    ) p
+(private) K
+( ) p
+(boolean) k
+( stato; ) p
+(// true leecher,false seeder) c n
+(    ) p
+(private) K
+( ) p
+(boolean) k
+( situazione; ) p
+(// true se attivo, false altrimenti) c n
+(    ) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( ENDED = 0;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( INIT = 1;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( RAREST = 2;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( ENDGAME = 3;) p n
+(    ) S
+(private) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( MINCHUNK = 5;) p n
+(    ) S
+(//FONDAMENTALE determina la politica adottata per la scelta e scaricamento d) c n
+(ei chunk) N
+(    ) p
+(private) K
+( ) p
+(int) k
+( statoDownload;) p n
+(    ) S
+(private) K
+( ) p
+(int) k
+( percentuale;) p n
+(    ) S
+(private) K
+( ) p
+(boolean) k
+( pubblicato;) p n
+(    ) S
+(private) K
+( ) p
+(int) k
+( peer;) p n
+(    ) S
+(private) K
+( ) p
+(int) k
+( peercercano;) p n
+(    ) S
+(private) K
+( InetAddress ind;) p n
+(    ) S
+(private) K
+( ) p
+(boolean) k
+([] have; ) p
+(//false se non posseduto true se posseduto) c n
+(    ) p
+(private) K
+( ArrayList<PIO> toDo;) p n
+(    ) S
+(private) K
+( ArrayList<Connessione> connessioni;) p n
+(    ) S
+(//Strutture per la gestione del file) c n
+(    ) p
+(protected) K
+( File file;) p n
+(    ) S
+(private) K
+( RandomAccessFile raf;) p n
+(    ) S
+(//ma che roba e`) c n
+(    ) p
+(private) K
+( ) p
+(int) k
+( scaricati;) p n
+() N
+(    ) S
+(/**) C n
+(     * Costruttore) N
+(     * @param d descrittore file) N
+(Creek.java) (Page 1/8) (Jun 04, 09 11:41) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (10/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2-5) 11
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * @param stato del file) C n
+(     * @param pubblicato : true se il peer ha pubblicato il file, false altrimen) N
+(ti) N
+(     */) N
+(    ) p
+(public) K
+( Creek\(Descrittore d, ) p
+(boolean) k
+( stato, ) p
+(boolean) k
+( pubblicato\) ) p
+(throws) K
+( ErrorE) p n
+(xception {) N
+(        ) S
+(super) K
+(\(d.getName\(\), d.getDimensione\(\), d.getHash\(\), d.getCallback\(\)\);) p n
+(        this.setPortaTCP\(d.getTCP\(\)\);) N
+(        this.setPortaUDP\(d.getUDP\(\)\);) N
+(        this.setId\(d.getId\(\)\);) N
+(        this.stato = stato;) N
+(        this.situazione = NOTSTARTED;) N
+(        this.percentuale = 0;) N
+(        this.pubblicato = pubblicato;) N
+(        this.peer = 0;) N
+(        this.ind = ) S
+(null) k
+(;) p n
+(        ) S
+(if) K
+( \(pubblicato\) {) p n
+(            this.peercercano = 0;) N
+(        } ) S
+(else) K
+( {) p n
+(            this.peercercano = NONATTIVO;) N
+(        }) N
+(        ) S
+(//aggiunte per il p2p) c n
+(        ) p
+(float) k
+( temp = \() p
+(float) k
+(\) d.getDimensione\(\) / \() p
+(float) k
+(\) BitCreekPeer.DIMBLOCCO;) p n
+(        System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( NUMERO DI BLOCCH) str n
+(I: ) S
+(" + temp\);) p n
+(        ) S
+(int) k
+( dimArray = \() p
+(int) k
+(\) Math.ceil\(temp\);) p n
+(        System.out.println\(") S
+(FILE HA DIMENSIONE: ) str
+(" + d.getDimensione\(\) + ") p
+(\\nL'ARRAY) str n
+( HAVE HA DIMENSIONE: ) S
+(" + dimArray\);) p n
+(        have = ) S
+(new) K
+( ) p
+(boolean) k
+([dimArray];) p n
+(        ) S
+(if) K
+( \(this.getStato\(\) == LEECHER\) {) p n
+(            ) S
+(//System.out.println\(Thread.currentThread\(\).getName\(\)+" SONO LEECHER) c n
+("\);) N
+(            ) p
+(//SONO LEECHER) c n
+(            ) p
+(for) K
+( \() p
+(int) k
+( i = 0; i < dimArray; i++\) {) p n
+(                have[i] = ) S
+(false) k
+(;) p n
+(            }) N
+(            this.scaricati = 0;) N
+(        } ) S
+(else) K
+( {) p n
+(            ) S
+(for) K
+( \() p
+(int) k
+( i = 0; i < dimArray; i++\) {) p n
+(                have[i] = ) S
+(true) k
+(;) p n
+(            }) N
+(        }) N
+(        this.toDo = ) S
+(new) K
+( ArrayList<PIO>\(\);) p n
+(        this.connessioni = ) S
+(new) K
+( ArrayList<Connessione>\(\);) p n
+() N
+() N
+(        file = ) S
+(new) K
+( File\(") p
+(./FileCondivisi/) str
+(" + this.getName\(\)\);) p n
+(        ) S
+(try) K
+( {) p n
+(            raf = ) S
+(new) K
+( RandomAccessFile\(file, ") p
+(rw) str
+("\);) p n
+(        } ) S
+(catch) K
+( \(FileNotFoundException ex\) {) p n
+(            Logger.getLogger\(Creek.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+(, ex\);) p n
+(        }) N
+(        System.out.println\(") S
+(CREEK COSTRUITO) str
+("\);) p n
+(    }) N
+() N
+(    ) S
+(//METODI PER IL P2P) c n
+(    ) p
+(/**) C n
+(     * Ci vuole questo metodo in quanto in alcune piattaforme puo` esistere un s) N
+(olo) N
+(Creek.java) (Page 2/8) (Jun 04, 09 11:41) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(     * FileOutputStream per file.... la file channel pero` pare essere thread sa) C n
+(fe...) N
+(     * @param c) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( scriviChunk\(Chunk c\) {) p n
+(        ) S
+(//come prima cosa rendo consistente lo statoDownload) c n
+(        ) p
+(if) K
+( \(this.statoDownload == INIT\){) p n
+(            this.statoDownload = RAREST;) N
+(            System.out.println\(") S
+(Siamo passati in rarest) str
+("\);) p n
+(        }) N
+(        ) S
+(if) K
+(\(this.toDo.size\(\) < MINCHUNK && this.statoDownload != ENDGAME\){) p n
+(            this.statoDownload = ENDGAME;) N
+(            System.out.println\(") S
+(Sono passato in endgame) str
+("\);) p n
+(        }) N
+(        ) S
+(//come prima cosa cancello dalla lista toDO il PIO relativo al chunk scr) c n
+(itto) N
+(        ) p
+(int) k
+( offset = c.getOffset\(\);) p n
+(        this.removePIO\(offset\);) N
+(        ) S
+(//poi modifico anche l'array have) c n
+(        this.have[offset] = ) p
+(true) k
+(;) p n
+(        ) S
+(//la lunghezza serve perch\303\251 il buffer passato ha sempre la dimensione) c n
+(        ) p
+(//di 4K ma l'ultimo \303\250 zero-padded quindi non lo devo scrivere) c n
+(        ) p
+(int) k
+( length = c.getDim\(\);) p n
+(        System.out.println\(") S
+(Sto per scrivere un chunk di dimensione: ) str
+(" + length\);) p n
+(        ) S
+(try) K
+( {) p n
+(            raf.seek\(offset * BitCreekPeer.DIMBLOCCO\);) N
+(            raf.write\(c.getData\(\), 0, length\);) N
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            Logger.getLogger\(Creek.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+(, ex\);) p n
+(        }) N
+(    }) N
+(    ) N
+(    ) S
+(/**) C n
+(     * ritorna un chunk bello caldo per l'offset specificato --> da fare per ben) N
+(e !!!!) N
+(     * utilizzato dall'uploader) N
+(     * @param id) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( Chunk getChunk\() p
+(int) k
+( offset\) {) p n
+(        ) S
+(int) k
+( ridden = 0;) p n
+(        ) S
+(byte) k
+([] buffer = ) p
+(new) K
+( ) p
+(byte) k
+([BitCreekPeer.DIMBLOCCO];) p n
+(        ) S
+(for) K
+( \() p
+(int) k
+( i = 0; i < buffer.length; i++\) {) p n
+(            buffer[i] = 0;) N
+(        }) N
+(        ) S
+(try) K
+( {) p n
+(            ) S
+(if) K
+( \(raf == ) p
+(null) k
+(\) {) p n
+(                System.out.println\(") S
+(E` successa una tragedia al RAF) str
+("\);) p n
+(            }) N
+(            ) S
+(long) k
+( indice = offset * BitCreekPeer.DIMBLOCCO;) p n
+(            raf.seek\(indice\);) N
+(            System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( MI SONO SPOST) str n
+(ATO AL BYTE : ) S
+(" + indice\);) p n
+(            ridden = raf.read\(buffer, 0, buffer.length\);) N
+(            System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( HO LETTO ) str
+(" + ) p n
+(ridden + ") S
+( BYTE) str
+("\);) p n
+(        } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(            System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( ERRORE IN LET) str n
+(TURA) S
+("\);) p n
+(            Logger.getLogger\(Creek.class.getName\(\)\).log\(Level.SEVERE, ) S
+(null) k
+(, ex\);) p n
+(Creek.java) (Page 3/8) (Jun 04, 09 11:41) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        }) p n
+(        ) S
+(return) K
+( ) p
+(new) K
+( Chunk\(buffer, offset, ridden\);) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Ripulisce il creek dalla roba non serializzabile;) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setClean\(\) {) p n
+(        this.raf = ) S
+(null) k
+(;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( testFile\(\) {) p n
+(        ) S
+(if) K
+( \(this.raf == ) p
+(null) k
+(\) {) p n
+(            System.out.println\(") S
+(E` PURGATO ERRORE) str
+("\);) p n
+(        } ) S
+(else) K
+( {) p n
+(            System.out.println\(") S
+(E` L'ORIGINALE!! DI LUSSO) str
+("\);) p n
+(        }) N
+(    }) N
+(    ) N
+(    ) S
+(/**) C n
+(     * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PI) N
+(O) N
+(     * @param bitfield) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( addRarita\() p
+(boolean) k
+([] bitfield\){) p n
+(        ) S
+(for) K
+( \(PIO p : toDo\){) p n
+(            ) S
+(int) k
+( id = p.getId\(\);) p n
+(            ) S
+(if) K
+(\(bitfield[id]\){) p n
+(                ) S
+(int) k
+( rarita = p.getRarita\(\);) p n
+(                p.setRarita\(++rarita\);) N
+(            }) N
+(        }) N
+(    }) N
+(    ) S
+(/**) C n
+(     * metodo che controlla se ci sono chunk da scaricare tra quelli presenti) N
+(     * in bitfield) N
+(     * @param bitfield) N
+(     * @return) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(boolean) k
+( interested\() p
+(boolean) k
+([] bitfield\) {) p n
+(        ) S
+(for) K
+( \(PIO p : toDo\) {) p n
+(            ) S
+(if) K
+( \(bitfield[p.getId\(\)] == ) p
+(true) k
+(\) {) p n
+(                ) S
+(return) K
+( ) p
+(true) k
+(;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( ) p
+(false) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(/**) C n
+(     * Metodo di supporto della getNext\(\)) N
+(     * @param bitfield) N
+(     * @return il primo oggetto PIO libero nel bitfield) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( PIO next\() p
+(boolean) k
+([] bitfield\) {) p n
+(        Iterator h = this.toDo.iterator\(\);) N
+(        ) S
+(while) K
+( \(h.hasNext\(\)\) {) p n
+(            PIO temp = \(PIO\) h.next\(\);) N
+(            ) S
+(if) K
+( \(!temp.getBusy\(\) && bitfield[temp.getId\(\)]\) {) p n
+(                ) S
+(return) K
+( temp;) p n
+(Creek.java) (Page 4/8) (Jun 04, 09 11:41) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(            }) p n
+(        }) N
+(        ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( PIO orderedNext\() p
+(boolean) k
+([] bitfield\){) p n
+(        Iterator h = this.toDo.iterator\(\);) N
+(        ) S
+(while) K
+( \(h.hasNext\(\)\) {) p n
+(            PIO temp = \(PIO\) h.next\(\);) N
+(            ) S
+(if) K
+(\(temp.getBusy\(\)\){) p n
+(                ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(            }) N
+(            ) S
+(else) K
+( ) p
+(if) K
+( \(bitfield[temp.getId\(\)]\) {) p n
+(                ) S
+(return) K
+( temp;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(    }) N
+(    ) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( PIO getNext\() p
+(boolean) k
+([] bitfield\) {) p n
+(        System.out.print\(Thread.currentThread\(\).getName\(\) + ") S
+( getNext: La lista toDO cont) str n
+(iene ) S
+(" + this.toDo.size\(\) + ") p
+( elementi ->) str
+("\);) p n
+(        ) S
+(//questo controllo e` totalmente inutile) c n
+(        ) p
+(if) K
+( \(this.statoDownload == INIT || this.statoDownload == ENDGAME\) {) p n
+(            PIO temp = this.next\(bitfield\);) N
+(            ) S
+(if) K
+( \(temp == ) p
+(null) k
+(\) {) p n
+(                System.out.println\(") S
+(RITORNO NULL) str
+("\);) p n
+(                ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(            } ) S
+(else) K
+( {) p n
+(                System.out.println\(") S
+(RITORNO PIO: ) str
+(" + temp.getId\(\)\);) p n
+(                temp.setBusy\(\);) N
+(                ) S
+(return) K
+( temp;) p n
+(            }) N
+(        }) N
+(        ) S
+(else) K
+( ) p
+(if) K
+( \(this.statoDownload == RAREST\){) p n
+(           ) S
+(//ordino per rarita) c n
+(           Collections.sort\(this.toDo\);) p n
+(           PIO temp = this.next\(bitfield\);) N
+(           ) S
+(if) K
+( \(temp == ) p
+(null) k
+(\) {) p n
+(                System.out.println\(") S
+(RITORNO NULL) str
+("\);) p n
+(                ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(            } ) S
+(else) K
+( {) p n
+(                System.out.println\(") S
+(RITORNO PIO: ) str
+(" + temp.getId\(\)\);) p n
+(                temp.setBusy\(\);) N
+(                ) S
+(return) K
+( temp;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( addConnessione\(Connessione conn\) {) p n
+(        this.connessioni.add\(conn\);) N
+(        ) S
+(//ma perche`???) c n
+(        this.situazione = STARTED;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( Connessione presenzaConnessione\(Connessione conn\) {) p n
+(        ) S
+(for) K
+( \(Connessione c : this.connessioni\) {) p n
+(Creek.java) (Page 5/8) (Jun 04, 09 11:41) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (11/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6-8,1) 12
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(            ) p
+(if) K
+( \(c.confronta\(conn.getIPVicino\(\), conn.getPortaVicino\(\)\)\) {) p n
+(                ) S
+(return) K
+( c;) p n
+(            }) N
+(        }) N
+(        ) S
+(return) K
+( ) p
+(null) k
+(;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( closeFile\(\) {) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( closeAndDeleteFile\(\) {) p n
+(    }) N
+() N
+(    ) S
+(//metodo chiamato al momento della creazione del creek \(in Download\)) c n
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( setToDo\(\) {) p n
+(        ) S
+(int) k
+( count = 0;) p n
+(        ) S
+(if) K
+( \(stato == LEECHER\) {) p n
+(            ) S
+(for) K
+( \() p
+(boolean) k
+( b : this.have\) {) p n
+(                ) S
+(if) K
+( \(!b\) {) p n
+(                    this.toDo.add\() S
+(new) K
+( PIO\(count\)\);) p n
+(                }) N
+(                count++;) N
+(            }) N
+(        }) N
+(        ) S
+(if) K
+(\(this.toDo.size\(\) < MINCHUNK\){) p n
+(            this.statoDownload = ENDGAME;) N
+(        }) N
+(        ) S
+(else) K
+({) p n
+(            this.statoDownload = INIT;) N
+(        }) N
+(        ) S
+(//CONTROLLO SUL NUMERO DI PIO) c n
+(        System.out.println\(Thread.currentThread\(\).getName\(\) + ") p
+( ToDo ha dimensione: ) str
+(") p n
+( + this.toDo.size\(\)\);) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( removePIO\() p
+(int) k
+( p\) {) p n
+(        PIO temp = ) S
+(null) k
+(;) p n
+(        Iterator h = this.toDo.iterator\(\);) N
+(        ) S
+(while) K
+( \(h.hasNext\(\)\) {) p n
+(            temp = \(PIO\) h.next\(\);) N
+(            ) S
+(if) K
+( \(temp.getId\(\) == p\) {) p n
+(                h.remove\(\);) N
+(                ) S
+(break) K
+(;) p n
+(            }) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(//GETTER) c n
+(    ) p
+(public) K
+( ) p
+(boolean) k
+( getStato\(\) {) p n
+(        ) S
+(return) K
+( this.stato;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getPercentuale\(\) {) p n
+(        ) S
+(return) K
+( this.percentuale;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getPubblicato\(\) {) p n
+(        ) S
+(return) K
+( this.pubblicato;) p n
+(    }) N
+(Creek.java) (Page 6/8) (Jun 04, 09 11:41) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getSituazione\(\) {) p n
+(        ) S
+(return) K
+( this.situazione;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getPeer\(\) {) p n
+(        ) S
+(return) K
+( this.peer;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getPeerCerca\(\) {) p n
+(        ) S
+(return) K
+( this.peercercano;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+([] getHave\(\) {) p n
+(        ) S
+(return) K
+( this.have;) p n
+(    }) N
+(    ) S
+(//SETTER) c n
+() p n
+(    ) S
+(public) K
+( ) p
+(void) k
+( settaPeerCerca\(\) {) p n
+(        ) S
+(if) K
+( \(this.peercercano != NONATTIVO\) {) p n
+(            this.peercercano++;) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( settaIdentita\(InetAddress ind\) {) p n
+(        ) S
+(if) K
+( \(this.peercercano != NONATTIVO && ind != ) p
+(null) k
+(\) {) p n
+(            this.ind = ind;) N
+(        }) N
+(    }) N
+() N
+(    ) S
+(public) K
+( InetAddress getIdentita\(\) {) p n
+(        ) S
+(return) K
+( this.ind;) p n
+(    }) N
+() N
+(    @Override) N
+(    ) S
+(public) K
+( ) p
+(synchronized) K
+( Creek copia\(\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(//System.out.println\("COPIA CREEK"\);) c n
+(        Descrittore temp = super.copia\(\);) p n
+(        Creek c = ) S
+(new) K
+( Creek\(temp, this.stato, this.pubblicato\);) p n
+(        c.peer = peer;) N
+(        c.percentuale = 0;) N
+(        c.situazione = situazione;) N
+(        c.peercercano = peercercano;) N
+(        c.ind = ind;) N
+(        ) S
+(return) K
+( c;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Crea un creek da esportare) N
+(     * @return) N
+(     * @throws condivisi.ErrorException) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( Creek esporta\(\) ) p
+(throws) K
+( ErrorException {) p n
+(        System.out.println\(") S
+(ESPORTA - CREEK) str
+("\);) p n
+(        Descrittore temp = super.copia\(\);) N
+(        Creek c = ) S
+(new) K
+( Creek\(temp, this.stato, this.pubblicato\);) p n
+(        c.peer = 0;) N
+(        c.percentuale = percentuale;) N
+(        c.situazione = NOTSTARTED;) N
+(Creek.java) (Page 7/8) (Jun 04, 09 11:41) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ) p
+(/* controllare se va bene */) c n
+(        c.peercercano = this.peercercano;) p n
+(        c.ind = this.ind;) N
+(        ) S
+(return) K
+( c;) p n
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Incrementa il numero di peer) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( incrPeer\(\) {) p n
+(        this.peer++;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Setta la percentuale in base al parametro passato) N
+(     * @param np) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(synchronized) K
+( ) p
+(void) k
+( settaPerc\(\) {) p n
+(        this.scaricati++;) N
+(        this.percentuale = \(this.scaricati * 100\) / have.length;) N
+(        ) S
+(/* se percentuale = 100 ho finito di scaricare quindi il file pu\303\262 andar) c n
+(e in upload */) N
+(        ) p
+(if) K
+( \(this.percentuale == 100\) {) p n
+(            this.stato = SEEDER;) N
+(            this.situazione = NOTSTARTED;) N
+(            this.peer = 0;) N
+(        }) N
+(    }) N
+() N
+(    ) N
+(}) N
+(Creek.java) (Page 8/8) (Jun 04, 09 11:41) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.net.Socket;) p n
+(import) K
+( java.util.logging.Level;) p n
+(import) K
+( java.util.logging.Logger;) p n
+() N
+(/**) C n
+( *) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Downloader) L
+( ) p
+(implements) K
+( Runnable{) p n
+(    ) N
+(    ) S
+(private) K
+( Creek c;) p n
+(    ) S
+(private) K
+( Socket s;) p n
+(    ) S
+(private) K
+( Connessione conn;) p n
+(    ) S
+(private) K
+( ) p
+(boolean) k
+( pendingRequest;) p n
+(    ) N
+(    ) S
+(public) K
+( Downloader\(Creek c,Connessione conn\){) p n
+(        this.c = c;) N
+(        this.conn = conn;) N
+(        this.pendingRequest = ) S
+(false) k
+(;) p n
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        ) N
+(        System.out.println\(") S
+(\\n\\n) str
+("+Thread.currentThread\(\).getName\(\) +") p
+( SONO UN NUO) str n
+(VO THREAD DOWNLOADER \\n) S
+("\);) p n
+(        ) S
+(//come prima cosa il thread verifica l'effettivo stato di interesse alla) c n
+( connessione) N
+(        ) p n
+(        ) S
+(if) K
+(\(c.interested\(conn.getBitfied\(\)\)\){) p n
+(            conn.setInteresseDown\() S
+(true) k
+(\);) p n
+(            conn.sendDown\() S
+(new) K
+( Messaggio\(Messaggio.INTERESTED,) p
+(null) k
+(\)\);) p n
+(            System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Downloader : con) str n
+(nessione interessante ) S
+("\);) p n
+(        }) N
+(        ) S
+(else) K
+({) p n
+(            conn.setInteresseDown\() S
+(false) k
+(\);) p n
+(            conn.sendDown\() S
+(new) K
+( Messaggio\(Messaggio.NOT_INTERESTED,) p
+(null) k
+(\)\);) p n
+(            System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Downloader : ! co) str n
+(nnessione interessante) S
+("\);) p n
+(        }) N
+(        ) S
+(int) k
+( count=0;) p n
+(        ) S
+(while) K
+(\() p
+(true) k
+(\){) p n
+(            Messaggio m = this.conn.receiveDown\(\);) N
+(            System.out.print\(count+") S
+( ) str
+("\);) p n
+(            ) N
+(            ) S
+(int) k
+( tipo = m.getTipo\(\);) p n
+(            ) S
+(switch) K
+( \(tipo\) {) p n
+(                ) S
+(case) K
+( Messaggio.HAVE:{) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Downl) str n
+(oader : HAVE ricevuto) S
+("\);) p n
+(                    ) S
+(boolean) k
+([] bitfield = \() p
+(boolean) k
+([]\) m.getObj\(\);) p n
+(                    this.conn.setBitfield\(bitfield\);) N
+(                    ) S
+(if) K
+( \(this.conn.getInteresseDown\(\)==) p
+(false) k
+(\){) p n
+(                        this.conn.setInteresseDown\(this.c.interested\(bitfield\)\);) N
+(                    }) N
+(                    ) S
+(break) K
+(;) p n
+(Downloader.java) (Page 1/3) (Jun 04, 09 12:11) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (12/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2-3,1,1) 13
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                }) p n
+(                ) S
+(case) K
+( Messaggio.CHOKE:{) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Downl) str n
+(oader : CHOCKE ricevuto) S
+("\);) p n
+(                    this.conn.setStatoDown\(Connessione.CHOKED\);) N
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(                ) S
+(case) K
+( Messaggio.UNCHOKE:{) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Downl) str n
+(oader : UNCHOKE ricevuto) S
+("\);) p n
+(                    this.conn.setStatoDown\(Connessione.UNCHOKED\);) N
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(                ) S
+(case) K
+( Messaggio.CHUNK:{) p n
+(                    count++;) N
+(                    System.out.println\(Thread.currentThread\(\).getName\(\)+") S
+( Ricevuto ) str n
+(Messaggio CHUNK: ) S
+("+\(\(Chunk\) m.getObj\(\)\).getOffset\(\)\);) p n
+(                    Chunk chunk = \(Chunk\) m.getObj\(\);) N
+(                    c.scriviChunk\(chunk\);) N
+(                    ) S
+(/* incremento il numero dei pezzi ricevuti settando la perce) c n
+(ntuale nel creek */) N
+(                    conn.incrDown\(\);) p n
+(                    c.settaPerc\(\);) N
+(                    ) S
+(/* resetto il canale per evitare di impallare tutto -> nel d) c n
+(ownloader e` probabilmente inutile) N
+(                     in ogni caso questo pezzo di codice non viene eseguito semp) N
+(re per qualche motivo */) N
+(                    ) p
+(if) K
+(\( count % 100 == 0\){) p n
+(                        System.out.println\(") S
+(\\n\\n SVUOTO LO STREAM DEL DOWNLOADER) str n
+(\\n) S
+("\);) p n
+(                        conn.ResetDown\(\);) N
+(                    }) N
+(                    ) S
+(/*  controllare lo SHA del pezzo ------> da fare !!!!  */) c n
+() p n
+(                    this.pendingRequest = ) S
+(false) k
+(;) p n
+(                }) N
+(            }) N
+(            ) S
+(if) K
+(\(! pendingRequest\){) p n
+(                PIO p = c.getNext\(this.conn.getBitfied\(\)\);) N
+(                ) S
+(if) K
+(\(p != ) p
+(null) k
+(\){) p n
+(                    conn.sendDown\() S
+(new) K
+( Messaggio\(Messaggio.REQUEST,) p
+(new) K
+( Integer\(p.) p n
+(getId\(\)\)\)\);) N
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( Downl) str n
+(oader : REQUEST inviato) S
+("\);) p n
+(                }) S
+(else) K
+({) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( vedia) str n
+(mo se esco dal while) S
+("\);) p n
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(            }) N
+(            ) S
+(try) K
+( {) p n
+(                ) S
+(//}) c n
+(                ) p
+(//TEMPORANEO!!!) c n
+(                Thread.sleep\(10\);) p n
+(            } ) S
+(catch) K
+( \(InterruptedException ex\) {) p n
+(                Logger.getLogger\(Downloader.class.getName\(\)\).log\(Level.SEVERE, ) S
+(n) k n
+(ull) S
+(, ex\);) p n
+(            }) N
+(        }) N
+(Downloader.java) (Page 2/3) (Jun 04, 09 12:11) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        ) p
+(/**) C n
+(        try {) N
+(            this.c.raf.close\(\);) N
+(        } catch \(IOException ex\) {) N
+(            Logger.getLogger\(Downloader.class.getName\(\)\).log\(Level.SEVERE, null,) N
+( ex\);) N
+(        }) N
+(        */) N
+(        System.out.println\(Thread.currentThread\(\).getName\(\) + ") p
+( Downloader terminato) str
+(") p n
+(\);) N
+(    }) N
+(    ) N
+(}) N
+(Downloader.java) (Page 3/3) (Jun 04, 09 12:11) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( java.io.File;) p n
+() N
+(/**) C n
+( * Task che si occupa di eliminare un creek) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Elimina) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(/* Variabili d' istanza */) c n
+() p n
+(    String nome;) N
+(    BitCreekPeer peer;) N
+() N
+(    ) S
+(public) K
+( Elimina\(String nome, BitCreekPeer peer\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(nome == ) p
+(null) k
+( || peer == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        this.nome = nome;) N
+(        this.peer = peer;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * Corpo del task) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+() N
+(        ) S
+(/* comunico al server che non ci sono pi\303\271,dico ai peer di chiudere */) c n
+() p n
+(        ) S
+(// ---------> da fare !!!!) c n
+() p n
+(        ) S
+(/* rimozione del creek */) c n
+(        File f = ) p
+(null) k
+(;) p n
+(        ) S
+(boolean) k
+( problema = ) p
+(false) k
+(;) p n
+(        ) S
+(boolean) k
+( rimosso = ) p
+(false) k
+(;) p n
+() N
+(        ) S
+(try) K
+( {) p n
+(            rimosso = peer.deleteCreek\(nome\);) N
+(        } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(            problema = ) S
+(true) k
+(;) p n
+(        }) N
+(        ) S
+(if) K
+(\(!problema && rimosso\){) p n
+(            f = ) S
+(new) K
+( File\(") p
+(./MetaInfo/) str
+(" + nome + ") p
+(.creek) str
+("\);) p n
+(            f.delete\(\);) N
+(        }) N
+(    }) N
+(}) N
+(Elimina.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( condivisi.InterfacciaCallback;) p n
+(import) K
+( java.net.InetAddress;) p n
+() N
+(/**) C n
+( *) N
+( * @author Bandettini) N
+( */) N
+() p n
+(public) K
+( ) p
+(class) K
+( ) p
+(ImplementazioneCallback) L
+( ) p
+(implements) K
+( InterfacciaCallback{) p n
+() N
+(    ) S
+(/* Variabili d' istanza */) c n
+(    ) p
+(private) K
+( BitCreekPeer peer;) p n
+(    ) N
+(    ) S
+(public) K
+( ImplementazioneCallback\(BitCreekPeer peer\) ) p
+(throws) K
+( ErrorException{) p n
+(        ) S
+(super) K
+(\(\);) p n
+(        ) S
+(if) K
+(\(peer == ) p
+(null) k
+(\)) p
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        this.peer = peer;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(void) k
+( notifyMe\(InetAddress ind,String nome\) {) p n
+(        peer.notifica\(ind,nome\);) N
+(    }) N
+() N
+(}) S
+(ImplementazioneCallback.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (13/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2,1,1) 14
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(import) K
+( condivisi.ErrorException;) p n
+(import) K
+( java.io.ByteArrayOutputStream;) p n
+(import) K
+( java.io.DataOutputStream;) p n
+(import) K
+( java.io.IOException;) p n
+(import) K
+( java.net.DatagramPacket;) p n
+(import) K
+( java.net.DatagramSocket;) p n
+(import) K
+( java.net.SocketException;) p n
+(import) K
+( java.util.ArrayList;) p n
+() N
+(/**) C n
+( * Task che si occupa di mandare msg di keepalive al server) N
+( * @author Bandettini) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(KeepAlive) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    ) S
+(/* Costanti */) c n
+(    ) p
+(private) K
+( ) p
+(final) K
+( ) p
+(int) k
+( ATTESA = 3000;) p n
+() N
+(    ) S
+(/* Variabili d'istanza */) c n
+(    BitCreekPeer peer;) p n
+() N
+(    ) S
+(/**) C n
+(     * Costruttore) N
+(     */) N
+(    ) p
+(public) K
+( KeepAlive\(BitCreekPeer peer\) ) p
+(throws) K
+( ErrorException {) p n
+(        ) S
+(if) K
+( \(peer == ) p
+(null) k
+(\) {) p n
+(            ) S
+(throw) K
+( ) p
+(new) K
+( ErrorException\(") p
+(Param null) str
+("\);) p n
+(        }) N
+(        this.peer = peer;) N
+(    }) N
+() N
+(    ) S
+(/**) C n
+(     * corpo del task) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        ) S
+(int) k
+( porta = -1;) p n
+(        DatagramSocket s = ) S
+(null) k
+(;) p n
+(        ) S
+(byte) k
+([] mess = ) p
+(new) K
+( ) p
+(byte) k
+([256];) p n
+(        DatagramPacket pk = ) S
+(null) k
+(;) p n
+(        ByteArrayOutputStream bout = ) S
+(new) K
+( ByteArrayOutputStream\(\);) p n
+(        DataOutputStream dout = ) S
+(new) K
+( DataOutputStream\(bout\);) p n
+(        ArrayList<Creek> arraydescr = ) S
+(null) k
+(;) p n
+(        ) S
+(try) K
+( {) p n
+(            s = ) S
+(new) K
+( DatagramSocket\(\);) p n
+(        } ) S
+(catch) K
+( \(SocketException ex\) {) p n
+(            System.err.println\(") S
+(SocketException) str
+("\);) p n
+(        }) N
+(        ) S
+(while) K
+( \() p
+(true) k
+(\) {) p n
+(            ) S
+(try) K
+( {) p n
+(                ) S
+(// se sono connesso) c n
+(                ) p
+(if) K
+( \(peer.getIpServer\(\) != ) p
+(null) k
+(\) {) p n
+(                    ) S
+(try) K
+( {) p n
+(                        arraydescr = peer.getDescr\(\);) N
+(                    } ) S
+(catch) K
+( \(ErrorException ex\) {) p n
+(                        System.err.println\(") S
+(ErrorException) str
+("\);) p n
+(                    }) N
+(                    ) S
+(synchronized) K
+( \(arraydescr\) {) p n
+(KeepAlive.java) (Page 1/2) (Jun 01, 09 12:30) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(                        ) p
+(for) K
+( \(Creek c : arraydescr\) {) p n
+(                            porta = c.getUDP\(\);) N
+() N
+(                            ) S
+(/* invio keep alive x ogni descr */) c n
+() p n
+(                            ) S
+(//System.out.println\("invio alive per creek " + c.ge) c n
+(tName\(\) + ",porta richieste : " + peer.getPortaRichieste\(\)\);) N
+(                            ) p
+(try) K
+( {) p n
+(                                dout.writeInt\(peer.getPortaRichieste\(\)\);) N
+(                                dout.writeBoolean\(c.getStato\(\)\);) N
+(                                mess = bout.toByteArray\(\);) N
+(                                pk = ) S
+(new) K
+( DatagramPacket\(mess, mess.length, peer.) p n
+(getIpServer\(\), porta\);) N
+(                                pk.setData\(mess, 0, mess.length\);) N
+(                                pk.setLength\(mess.length\);) N
+(                                s.send\(pk\);) N
+(                                bout.reset\(\);) N
+(                            } ) S
+(catch) K
+( \(IOException ex\) {) p n
+(                                System.err.println\(") S
+(IOException) str
+("\);) p n
+(                            }) N
+(                        }) N
+(                    }) N
+(                }) N
+(            } ) S
+(catch) K
+( \(NullPointerException e\) {) p n
+(                ) S
+(// ipServer \303\250 null --> sono disconnesso) c n
+(            }) p n
+(            ) S
+(// aspetto) c n
+(            ) p
+(try) K
+( {) p n
+(                Thread.sleep\(ATTESA\);) N
+(            } ) S
+(catch) K
+( \(InterruptedException ex\) {) p n
+(                System.err.println\(") S
+(Interrotto) str
+("\);) p n
+(            }) N
+(        }) N
+(    }) N
+(}) N
+(KeepAlive.java) (Page 2/2) (Jun 01, 09 12:30) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.io.Serializable;) p n
+() N
+(/**) C n
+( *) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Messaggio) L
+( ) p
+(implements) K
+( Serializable{) p n
+(    ) N
+(    ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 67;) p n
+(    ) N
+(    ) S
+(/**codici dei messaggi*/) C n
+(    ) p
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( INTERESTED = 0;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( NOT_INTERESTED = 1;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( CHOKE = 2;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( UNCHOKE = 3;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( HAVE = 4;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( CHUNK = 5;) p n
+(    ) S
+(protected) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(int) k
+( REQUEST = 6;) p n
+() N
+(    ) S
+(private) K
+( ) p
+(int) k
+( tipo;) p n
+(    ) S
+(private) K
+( Object corpo;) p n
+(    ) N
+(    ) S
+(public) K
+( Messaggio\() p
+(int) k
+( tipo, Object corpo\){) p n
+(        this.tipo = tipo;) N
+(        this.corpo = corpo;) N
+(    }) N
+(    ) N
+(    ) S
+(//getter) c n
+(    ) p
+(public) K
+( ) p
+(int) k
+( getTipo\(\){) p n
+(        ) S
+(return) K
+( this.tipo;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( Object getObj\(\){) p n
+(        ) S
+(return) K
+( this.corpo;) p n
+(    }) N
+(    ) N
+(    ) S
+(//non c'e` alcun bisogno dei setter) c n
+(    ) p n
+(}) N
+(Messaggio.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(package) K
+( peer;) p n
+() N
+(import) K
+( java.io.Serializable;) p n
+() N
+(/**) C n
+( * Informazioni relative ad un chunk da scaricare) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(PIO) L
+( ) p
+(implements) K
+( Serializable, Comparable<PIO>{) p n
+(    ) N
+(    ) S
+(public) K
+( ) p
+(static) K
+( ) p
+(final) K
+( ) p
+(long) k
+( serialVersionUID = 45;) p n
+(    ) N
+(    ) S
+(private) K
+( ) p
+(int) k
+( id;) p n
+(    ) S
+(private) K
+( ) p
+(int) k
+( rarita;) p n
+(    ) S
+(private) K
+( ) p
+(boolean) k
+( busy;) p n
+(    ) N
+(    ) S
+(public) K
+( PIO\() p
+(int) k
+( id\){) p n
+(        this.id = id;) N
+(        this.rarita = 0;) N
+(        this.busy = ) S
+(false) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(//getter) c n
+(    ) p
+(public) K
+( ) p
+(int) k
+( getId\(\){) p n
+(        ) S
+(return) K
+( this.id;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(boolean) k
+( getBusy\(\){) p n
+(        ) S
+(return) K
+( this.busy;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(int) k
+( getRarita\(\){) p n
+(        ) S
+(return) K
+( this.rarita;) p n
+(    }) N
+(    ) N
+(    ) S
+(//setter) c n
+(    ) p
+(public) K
+( ) p
+(void) k
+( setRarita\() p
+(int) k
+( rarita\){) p n
+(        this.rarita = rarita;) N
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(void) k
+( setFree\(\){) p n
+(        this.busy = ) S
+(false) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(public) K
+( ) p
+(void) k
+( setBusy\(\){) p n
+(        this.busy = ) S
+(true) k
+(;) p n
+(    }) N
+(    ) N
+(    ) S
+(/**) C n
+(     * il compare tiene conto di 2 fattori: il booleano busy e l'int rarita) N
+(     * un PIO busy deve essere sicuramente posto dopo un PIO non busy) N
+(     * @param arg0) N
+(     * @return) N
+(     */) N
+(    ) p
+(public) K
+( ) p
+(int) k
+( compareTo\(PIO arg0\) {) p n
+(        ) S
+(int) k
+( ret;) p n
+(        ) S
+(if) K
+(\(this.busy && ! arg0.busy\){) p n
+(            ret = 1000+\(this.rarita - arg0.rarita\);) N
+(PIO.java) (Page 1/2) (Jun 03, 09 9:59) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (Thursday June 04, 2009) (14/15) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1-2,1) 15
+%%BeginPageSetup
+/pagesave save def
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        }) p n
+(        ) S
+(else) K
+( ) p
+(if) K
+(\(! this.busy && arg0.busy\){) p n
+(            ret = -1000+\(this.rarita - arg0.rarita\);;) N
+(        }) N
+(        ) S
+(else) K
+({) p n
+(            ret =\(this.rarita - arg0.rarita\);;) N
+(        }) N
+(        ) S
+(return) K
+( ret;) p n
+(    }) N
+(}) N
+() N
+() N
+(PIO.java) (Page 2/2) (Jun 03, 09 9:59) title
+border
+/v 1 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(package) K
+( peer;) p n
+() N
+(/**) C n
+( *) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(Uploader) L
+( ) p
+(implements) K
+( Runnable {) p n
+() N
+(    Connessione conn;) N
+(    Creek c;) N
+() N
+(    ) S
+(public) K
+( Uploader\(Connessione conn, Creek c\) {) p n
+(        this.conn = conn;) N
+(        this.c = c;) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        System.out.println\(") S
+(\\n\\n) str
+("+Thread.currentThread\(\).getName\(\) +") p
+( SONO UN NUO) str n
+(VO THREAD UPLOADER \\n) S
+("\);) p n
+(        ) S
+(int) k
+( count = 0;) p n
+(        ) S
+(while) K
+( \() p
+(true) k
+(\) {) p n
+(            Messaggio m = this.conn.receiveUp\(\);) N
+(            ) S
+(int) k
+( tipo = m.getTipo\(\);) p n
+(            ) S
+(switch) K
+( \(tipo\) {) p n
+(                ) S
+(case) K
+( Messaggio.REQUEST: {) p n
+(                    Integer idPezzo = \(Integer\) m.getObj\(\);) N
+(                    ) S
+(int) k
+( pezzo = idPezzo.intValue\(\);) p n
+(                    System.out.println\(") S
+(THREAD ) str
+(" + Thread.currentThread\(\).getNa) p n
+(me\(\) + ") S
+( Mando chunk con id ) str
+(" + pezzo\);) p n
+(                    ) S
+(//creo il chunk corretto da mandare) c n
+(                    Chunk pezzoRichiesto = c.getChunk\(pezzo\);) p n
+(                    Messaggio nuovo = ) S
+(new) K
+( Messaggio\(Messaggio.CHUNK, pezzoRichie) p n
+(sto\);) N
+(                    ) S
+(//riempio il buffer) c n
+(                    this.conn.sendUp\(nuovo\);) p n
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(                ) S
+(case) K
+( Messaggio.INTERESTED: {) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( L'altr) str n
+(o peer e` interessato) S
+("\);) p n
+(                    this.conn.setInteresseUp\() S
+(true) k
+(\);) p n
+(                    ) S
+(//FAKE A BESTIA) c n
+(                    this.conn.sendUp\() p
+(new) K
+( Messaggio\(Messaggio.UNCHOKE, ) p
+(null) k
+(\)\);) p n
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(                ) S
+(case) K
+( Messaggio.NOT_INTERESTED: {) p n
+(                    System.out.println\(Thread.currentThread\(\).getName\(\) + ") S
+( L'altr) str n
+(o peer e` interessato) S
+("\);) p n
+(                    this.conn.setInteresseUp\() S
+(false) k
+(\);) p n
+(                    ) S
+(break) K
+(;) p n
+(                }) N
+(            }) N
+(            ) S
+(if) K
+( \(++count % 100 == 0\) {) p n
+(                System.out.println\(") S
+(\\n\\n SVUOTO LO STEAM DELL'UPLOADER \\n) str
+("\);) p n
+(                this.conn.ResetUp\(\);) N
+(            }) N
+(        }) N
+() N
+(    }) N
+(Uploader.java) (Page 1/2) (Jun 04, 09 12:21) title
+border
+/v 2 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(}) p n
+(Uploader.java) (Page 2/2) (Jun 04, 09 12:21) title
+border
+/v 3 store
+/x0 x v get 2.373464 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(package) K
+( peer;) p n
+() N
+(/**) C n
+( * Thread per l'implementazione delle politiche di CHOKE/UNCHOKE delle) N
+( * connessioni in upload di uno swarm) N
+( * @author andrea) N
+( */) N
+(public) K
+( ) p
+(class) K
+( ) p
+(UploadManager) L
+( ) p
+(implements) K
+( Runnable{) p n
+(    ) N
+(    BitCreekPeer peer;) N
+(    Creek c;) N
+(    ) N
+(    ) S
+(public) K
+( UploadManager\(BitCreekPeer peer, Creek c\){) p n
+(        this.peer = peer;) N
+(        this.c= c;) N
+(    }) N
+() N
+(    ) S
+(public) K
+( ) p
+(void) k
+( run\(\) {) p n
+(        System.out.println\(") S
+(UploadManager del creek ) str
+("+c.getName\(\)+") p
+( avviato) str
+("\);) p n
+(    }) N
+() N
+(}) N
+(UploadManager.java) (Page 1/1) (Jun 01, 09 12:30) title
+border
+grestore
+(Printed by Andrea Lottarini) rhead
+() (15/15) (Thursday June 04, 2009) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF
