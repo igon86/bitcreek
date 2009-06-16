@@ -53,6 +53,7 @@ public class Uploader implements Runnable {
                 this.conn.ResetUp();
             }
             //CONTROLLO/INVIO MESSAGGI DI HAVE
+            System.out.println(Thread.currentThread().getName()+"this.c.getScaricati: "+this.c.getScaricati() +" VS this.puntatoreHave: "+ this.puntatoreHave);
             while (this.c.getScaricati() > this.puntatoreHave){
                 int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
                 //ennino il wrapper automatico

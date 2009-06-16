@@ -45,7 +45,8 @@ public class Downloader implements Runnable{
                 System.out.println("Continuo perchè il 'canale' è null");
                 continue;
             }
-            System.out.print(count+" ");
+            //ma a che doveva servire?
+            //System.out.print(count+" ");
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE:{

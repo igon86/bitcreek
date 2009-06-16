@@ -146,7 +146,7 @@ public class Avvia implements Runnable {
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
                         //System.out.print("\n\n Avvia : " + c.getId());
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
-                        System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress());
+                        System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress()+", "+sock.getPort());
                         
                         
                         
