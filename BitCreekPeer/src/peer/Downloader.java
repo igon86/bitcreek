@@ -50,12 +50,12 @@ public class Downloader implements Runnable{
             switch (tipo) {
                 case Messaggio.HAVE:{
                     System.out.println(Thread.currentThread().getName() + " Downloader : HAVE ricevuto");
-                    boolean[] bitfield = (boolean[]) m.getObj();
-                    this.conn.setBitfield(bitfield);
+                    int piece = (Integer) m.getObj();
+                    this.conn.bitfield[piece] = true;
                     
                     /* ma questo controllo serve ????..non va eseguito in ogni caso il corpo ??*/
                     if (this.conn.getInteresseDown() == false){
-                        this.conn.setInteresseDown(this.c.interested(bitfield));
+                        this.conn.setInteresseDown(this.c.interested(this.conn.bitfield));
                     }
                     break;
                 }

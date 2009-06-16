@@ -80,6 +80,7 @@ public class Ascolto implements Runnable {
                         continue;
                     }
                     //INVIO IL BITFILED RELATIVO
+                    int alreadyDownloaded = contacted.getScaricati();
                     out.writeObject(new Bitfield(contacted.getHave()));
                     System.out.println("INVIO BITFIELD\n");
                     /*
@@ -94,7 +95,7 @@ public class Ascolto implements Runnable {
                         contacted.addConnessione(conn);
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
                         //CREO IL THREAD RELATIVO IN UPLOAD
-                        peer.addTask(new Uploader(conn, contacted));
+                        peer.addTask(new Uploader(conn, contacted, alreadyDownloaded));
                     } else {
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE GIA PRESENTE");
                         /* in teoria se esiste già una connessione in upload non dovrei fare niente
@@ -107,7 +108,7 @@ public class Ascolto implements Runnable {
                         //conn = toModify;
                         toModify.set(false, scambio, in, out, null, con.getSS());
                         //CREO IL THREAD RELATIVO IN UPLOAD
-                        peer.addTask(new Uploader(toModify, contacted));
+                        peer.addTask(new Uploader(toModify, contacted,alreadyDownloaded));
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
                     //peer.addTask(new Uploader(conn, contacted));

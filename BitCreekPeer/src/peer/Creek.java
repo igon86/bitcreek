@@ -51,6 +51,7 @@ public class Creek extends Descrittore implements Serializable {
     private RandomAccessFile raf;
     //ma che roba e`
     private int scaricati;
+    private int[] scaricatiId;
 
     /**
      * Costruttore
@@ -74,12 +75,17 @@ public class Creek extends Descrittore implements Serializable {
         } else {
             this.peercercano = NONATTIVO;
         }
+        
         //aggiunte per il p2p
         float temp = (float) d.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
         System.out.println(Thread.currentThread().getName() + " NUMERO DI BLOCCHI: " + temp);
         int dimArray = (int) Math.ceil(temp);
         System.out.println("FILE HA DIMENSIONE: " + d.getDimensione() + "\nL'ARRAY HAVE HA DIMENSIONE: " + dimArray);
+        
+        //Array di supportos
         have = new boolean[dimArray];
+        scaricatiId = new int[dimArray];
+        
         if (this.getStato() == LEECHER) {
             //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
             //SONO LEECHER
@@ -124,17 +130,23 @@ public class Creek extends Descrittore implements Serializable {
         //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
         this.removePIO(offset);
-        //poi modifico anche l'array have
-        this.have[offset] = true;
-        //la lunghezza serve perché il buffer passato ha sempre la dimensione
-        //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
-        int length = c.getDim();
-        System.out.println("Sto per scrivere un chunk di dimensione: " + length);
-        try {
-            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
-            raf.write(c.getData(), 0, length);
-        } catch (IOException ex) {
-            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+        if (this.have[offset] == false) {
+            //poi modifico anche l'array have
+            this.have[offset] = true;
+            
+            //in questo fortissimo ordine sequenziale mi arraccomando bande
+            this.scaricatiId[this.scaricati] = offset;
+            this.scaricati++;
+            //la lunghezza serve perché il buffer passato ha sempre la dimensione
+            //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
+            int length = c.getDim();
+            System.out.println("Sto per scrivere un chunk di dimensione: " + length);
+            try {
+                raf.seek(offset * BitCreekPeer.DIMBLOCCO);
+                raf.write(c.getData(), 0, length);
+            } catch (IOException ex) {
+                Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -360,8 +372,14 @@ public class Creek extends Descrittore implements Serializable {
     public boolean[] getHave() {
         return this.have;
     }
+    
+    public int getScaricati(){
+        return this.scaricati;
+    }
+    public int getScaricatiIndex(int index){
+        return this.scaricatiId[index];        
+    }
     //SETTER
-
     public void settaPeerCerca() {
         if (this.peercercano != NONATTIVO) {
             this.peercercano++;
@@ -421,7 +439,7 @@ public class Creek extends Descrittore implements Serializable {
      * @param np
      */
     public synchronized void settaPerc() {
-        this.scaricati++;
+        //QUI per motivi incapibili al genere umano si aumentava il contatore dei chunk scaricati
         this.percentuale = (this.scaricati * 100) / have.length;
         /* se percentuale = 100 ho finito di scaricare quindi il file può andare in upload */
         if (this.percentuale == 100) {
