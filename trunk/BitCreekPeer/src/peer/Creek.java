@@ -121,11 +121,11 @@ public class Creek extends Descrittore implements Serializable {
         //come prima cosa rendo consistente lo statoDownload
         if (this.statoDownload == INIT) {
             this.statoDownload = RAREST;
-            System.out.println("Siamo passati in rarest");
+            System.out.println(Thread.currentThread().getName()+" Siamo passati in rarest");
         }
         if (this.toDo.size() < MINCHUNK && this.statoDownload != ENDGAME) {
             this.statoDownload = ENDGAME;
-            System.out.println("Sono passato in endgame");
+            System.out.println(Thread.currentThread().getName()+" Sono passato in endgame");
         }
         //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
@@ -137,11 +137,11 @@ public class Creek extends Descrittore implements Serializable {
             //in questo fortissimo ordine sequenziale mi arraccomando bande
             this.scaricatiId[this.scaricati] = offset;
             this.scaricati++;
-            System.out.println("scaricati vale: "+this.scaricati);
+            System.out.println(Thread.currentThread().getName()+" scaricati vale: "+this.scaricati);
             //la lunghezza serve perché il buffer passato ha sempre la dimensione
             //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
             int length = c.getDim();
-            System.out.println("Sto per scrivere un chunk di dimensione: " + length);
+            System.out.println(Thread.currentThread().getName()+" Sto per scrivere un chunk di dimensione: " + length);
             try {
                 raf.seek(offset * BitCreekPeer.DIMBLOCCO);
                 raf.write(c.getData(), 0, length);
@@ -269,10 +269,10 @@ public class Creek extends Descrittore implements Serializable {
         if (this.statoDownload == INIT || this.statoDownload == ENDGAME) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
-                System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
+                System.out.println(Thread.currentThread().getName()+" RITORNO NULL e sono in INIT o in ENDGAME");
                 return null;
             } else {
-                System.out.println("RITORNO PIO: " + temp.getId());
+                System.out.println(Thread.currentThread().getName()+" RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
@@ -281,10 +281,10 @@ public class Creek extends Descrittore implements Serializable {
             Collections.sort(this.toDo);
             PIO temp = this.next(bitfield);
             if (temp == null) {
-                System.out.println("RITORNO NULL e sono in RAREST");
+                System.out.println(Thread.currentThread().getName()+" RITORNO NULL e sono in RAREST");
                 return null;
             } else {
-                System.out.println("RITORNO PIO: " + temp.getId());
+                System.out.println(Thread.currentThread().getName()+" RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
