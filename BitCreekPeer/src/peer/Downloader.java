@@ -42,7 +42,7 @@ public class Downloader implements Runnable{
             Messaggio m = this.conn.receiveDown();
             
             if ( m == null){
-                System.out.println("Continuo perchè il 'canale' è null");
+                System.out.println(Thread.currentThread().getName()+"Ho ricevuto null!! -> e` scattato il timeout??");
                 continue;
             }
             //ma a che doveva servire?
@@ -81,7 +81,7 @@ public class Downloader implements Runnable{
                     /* resetto il canale per evitare di impallare tutto -> nel downloader e` probabilmente inutile
                      in ogni caso questo pezzo di codice non viene eseguito sempre per qualche motivo */
                     if( count % 100 == 0){
-                        System.out.println("\n\n SVUOTO LO STREAM DEL DOWNLOADER\n");
+                        System.out.println(Thread.currentThread().getName()+"\n\n SVUOTO LO STREAM DEL DOWNLOADER\n");
                         conn.ResetDown();
                     }
                     /*  controllare lo SHA del pezzo ------> da fare !!!!  */
@@ -92,7 +92,7 @@ public class Downloader implements Runnable{
             if(! pendingRequest){
                 PIO p = c.getNext(this.conn.getBitfied());
                 if(p != null){
-                    System.out.println("Downloader : Sto per fare sendDown per chè p != null");
+                    //System.out.println(Thread.currentThread().getName()+"Downloader : Sto per fare sendDown per chè p != null");
                     conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
                     System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato for chunk : "+p.getId());
                 }else{
