@@ -34,8 +34,8 @@ public class UploadManager implements Runnable{
                 System.out.println("UploadManager : sono stato interrotto");
             }
             /* invio i msg di HAVE*/
-            //System.out.println("UploadManager : Invio msg di HAVE su tutte le connessioni");
-            //c.inviaHave();
+            System.out.println("UploadManager : Invio msg di HAVE su tutte le connessioni");
+            c.inviaHave();
         }
     }
 

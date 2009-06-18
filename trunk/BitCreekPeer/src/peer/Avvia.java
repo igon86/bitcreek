@@ -146,7 +146,7 @@ public class Avvia implements Runnable {
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
                         //System.out.print("\n\n Avvia : " + c.getId());
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
-                        System.out.println(Thread.currentThread().getName() + "INVIATO CONTACT verso "+sock.getInetAddress().getHostAddress()+", "+sock.getPort());
+                        System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress());
                         
                         
                         
@@ -158,10 +158,10 @@ public class Avvia implements Runnable {
                             //AGGIORNA RARITA!! l'altra parte e` gestita dall'upload manager _>se avremo voglia
                             c.addRarita(b.getBitfield());
                             /* PROVA */
-                            //for(int i = 0; i < b.getBitfield().length;i++){
-                            //    if(b.getBitfield()[i])System.out.println(i + " : true");
-                            //    else System.out.println(i + " : false");
-                            //}
+                            for(int i = 0; i < b.getBitfield().length;i++){
+                                if(b.getBitfield()[i])System.out.println(i + " : true");
+                                else System.out.println(i + " : false");
+                            }
 
 
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
@@ -194,8 +194,8 @@ public class Avvia implements Runnable {
 
                 }
 
-                //System.out.println(Thread.currentThread().getName() + " Avvia : CREO UPLOADER MANAGER !!!!!");
-                //peer.addTask(new UploadManager(peer, c));
+                System.out.println(Thread.currentThread().getName() + " Avvia : CREO UPLOADER MANAGER !!!!!");
+                peer.addTask(new UploadManager(peer, c));
                 /* inutile continuare a ciclare se non posso creare connessioni */
                 if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                     break;
