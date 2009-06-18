@@ -53,6 +53,7 @@ public class Ascolto implements Runnable {
                 }
                 try {
                     scambio = peer.getSS().accept();
+                    System.out.println("ASCOLTO :: HO ACCETTATO UNA CONNESSIONE CON " + scambio.getPort());
                 } catch (SocketTimeoutException e) {
                     // timeout scaduto : continuo a ciclare
                     continue;
@@ -93,8 +94,8 @@ public class Ascolto implements Runnable {
                         conn.set(false, scambio, in, out, null, con.getSS());
                         contacted.addConnessione(conn);
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
-                        //CREO IL THREAD RELATIVO IN UPLOAD
-                        //peer.addTask(new Uploader(conn, contacted));
+                    //CREO IL THREAD RELATIVO IN UPLOAD
+                    //peer.addTask(new Uploader(conn, contacted));
                     } else {
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE GIA PRESENTE");
                         /* in teoria se esiste già una connessione in upload non dovrei fare niente
@@ -106,7 +107,7 @@ public class Ascolto implements Runnable {
                         //toModify.setUp(scambio,in,out);
                         conn = toModify;
                         conn.set(false, scambio, in, out, null, con.getSS());
-                        //CREO IL THREAD RELATIVO IN UPLOAD 
+                    //CREO IL THREAD RELATIVO IN UPLOAD
                     }
                     peer.addTask(new Uploader(conn, contacted));
                     //CREO IL THREAD RELATIVO IN UPLOAD
@@ -141,7 +142,7 @@ public class Ascolto implements Runnable {
                         //conn.setSocketDown(mysock);
                         //conn.setBitfield(b.getBitfield());
                         // Prova nuovo metodo 
-                        conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
+                        conn.set(true, mysock, input, output, null, con.getSS());
                         output.writeObject(mycon);
                         b = (Bitfield) input.readObject();
                         conn.setBitfield(b.getBitfield());
@@ -161,8 +162,6 @@ public class Ascolto implements Runnable {
                     System.out.println("ClassNotFoundException in Ascolto");
                     Logger.getLogger(Ascolto.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-
             } catch (NullPointerException e) {
                 /* ipServer è null --> sono disconnesso quindi aspetto */
                 try {
