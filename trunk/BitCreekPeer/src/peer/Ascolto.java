@@ -4,7 +4,9 @@ import condivisi.ErrorException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -119,38 +121,38 @@ public class Ascolto implements Runnable {
                     if (!contacted.getStato()) {
                         contacted.incrPeer();
                     }
-                /* operazioni ulteriori se sono leecher : creo connessione in down
-                Lo devo fare solo se non ho già una connessione in down, non sono
-                seeder e posso creare connessioni !!!! 
-                if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
-                System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
-                Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
-                SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
-                Socket mysock = new Socket();
-                mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                System.out.println("HO FATTO LA CONNECT");
-                ObjectOutputStream output = new ObjectOutputStream(mysock.getOutputStream());
-                System.out.println("HO FATTO L'OUTPUT");
-                ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
-                System.out.println("HO FATTO L'INPUT");
-                output.writeObject(mycon);
-                Bitfield b = (Bitfield) input.readObject();
-                // modifica
-                //conn.setDown(mysock, input, output);
-                //conn.setSocketDown(mysock);
-                //conn.setBitfield(b.getBitfield());
+                    /* operazioni ulteriori se sono leecher : creo connessione in down
+                    Lo devo fare solo se non ho già una connessione in down, non sono
+                    seeder e posso creare connessioni !!!! */
+                    if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
+                        System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
+                        Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
+                        SocketAddress sa = new InetSocketAddress(con.getIp(), con.getSS());
+                        Socket mysock = new Socket();
+                        mysock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
+                        System.out.println("HO FATTO LA CONNECT");
+                        ObjectOutputStream output = new ObjectOutputStream(mysock.getOutputStream());
+                        System.out.println("HO FATTO L'OUTPUT");
+                        ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
+                        System.out.println("HO FATTO L'INPUT");
+                        output.writeObject(mycon);
+                        Bitfield b = (Bitfield) input.readObject();
+                        // modifica
+                        //conn.setDown(mysock, input, output);
+                        //conn.setSocketDown(mysock);
+                        //conn.setBitfield(b.getBitfield());
 
-                /* Prova nuovo metodo 
-                conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
-                System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
-                // aggiungo thread per download
-                peer.addTask(new Downloader(contacted, conn));
-                // incremento numero connessioni
-                System.out.println("ASCOLTO CALLBACK: AGGIUNGO CONNESSIONE");
-                peer.incrConnessioni();
-                // incremento numero peer in download
-                contacted.incrPeer();
-                }*/
+                        /* Prova nuovo metodo */
+                        conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
+                        System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
+                        // aggiungo thread per download
+                        peer.addTask(new Downloader(contacted, conn));
+                        // incremento numero connessioni
+                        System.out.println("ASCOLTO CALLBACK: AGGIUNGO CONNESSIONE");
+                        peer.incrConnessioni();
+                        // incremento numero peer in download
+                        contacted.incrPeer();
+                    }
                 } catch (IOException ex) {
                     System.out.println("IOException in Ascolto");
                     Logger.getLogger(Ascolto.class.getName()).log(Level.SEVERE, null, ex);

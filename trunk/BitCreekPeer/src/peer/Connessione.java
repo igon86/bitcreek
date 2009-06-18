@@ -58,20 +58,26 @@ public class Connessione implements Serializable {
     public void set(boolean download, Socket s, ObjectInputStream in, ObjectOutputStream out, boolean[] bitfield, int portaVicino) {
         if (download) {
             //CHIAMATO DA AVVIA
+            System.out.print("\n\nCHIAMATO DA AVVIA\n\n");
             this.bitfield = bitfield;
             this.down = s;
+            System.out.println("socket DOWN porta remota : " + s.getPort() + " porta locale : "+ s.getLocalPort());
             this.inDown = in;
             this.outDown = out;
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
+            System.out.println("Porta vicino : " + portaVicino);
             this.downloaded = 0;
         } else {
             //CHIAMATO DA ASCOLTA
+            System.out.print("\n\nCHIAMATO DA ASSCOLTA\n\n");
             this.up = s;
+            System.out.println("socket UP porta remota : " + s.getPort() + " porta locale : "+ s.getLocalPort());
             this.inUp = in;
             this.outUp = out;
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
+            System.out.println("Porta vicino : " + portaVicino);
         }
     }
 
