@@ -1,5 +1,11 @@
 package peer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author andrea
@@ -15,7 +21,16 @@ public class Uploader implements Runnable {
     }
 
     public void run() {
-        System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER \n");
+        FileOutputStream file;
+        PrintStream output = null;
+        try {
+            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
+            output = new PrintStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER  VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
+        output.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER  VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
         int count = 0;
         while (true) {
             Messaggio m = this.conn.receiveUp();
@@ -24,12 +39,13 @@ public class Uploader implements Runnable {
                 case Messaggio.REQUEST: {
                     Integer idPezzo = (Integer) m.getObj();
                     int pezzo = idPezzo.intValue();
-                    System.out.println("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
+                    System.out.print("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
                     //creo il chunk corretto da mandare
                     Chunk pezzoRichiesto = c.getChunk(pezzo);
                     Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
                     //riempio il buffer
                     this.conn.sendUp(nuovo);
+                    System.out.println("..........FATTA LA SENDUP");
                     break;
                 }
                 case Messaggio.INTERESTED: {

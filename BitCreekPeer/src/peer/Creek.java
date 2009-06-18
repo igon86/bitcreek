@@ -5,6 +5,7 @@ import condivisi.ErrorException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -53,6 +54,13 @@ public class Creek extends Descrittore implements Serializable {
     //ma che roba e`
     private int scaricati;
 
+    
+    
+    public static void stampaSbrodolina(PrintStream output,String s){
+        System.out.println(s);
+        output.println(s);
+    }
+    
     /**
      * Costruttore
      * @param d descrittore file

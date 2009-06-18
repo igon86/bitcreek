@@ -158,11 +158,7 @@ public class Avvia implements Runnable {
                             conn.setBitfield(b.getBitfield());
                             //AGGIORNA RARITA!! l'altra parte e` gestita dall'upload manager _>se avremo voglia
                             c.addRarita(b.getBitfield());
-                            /* PROVA */
-                            for(int i = 0; i < b.getBitfield().length;i++){
-                                if(b.getBitfield()[i])System.out.println(i + " : true");
-                                else System.out.println(i + " : false");
-                            }
+                            
 
 
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
