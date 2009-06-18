@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 public class BitCreekPeer {
 
     /* Costanti */
+    
     private final int NULL = -1;
     private final int ATTESARISPSERVER = 3000;
     private final int PORTASERVER = 9999;

@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class PIO implements Serializable, Comparable<PIO>{
     
     public static final long serialVersionUID = 45;
+
     
     private int id;
     private int rarita;

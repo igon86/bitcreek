@@ -1,9 +1,6 @@
 
 package peer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Thread per l'implementazione delle politiche di CHOKE/UNCHOKE delle
  * connessioni in upload di uno swarm

@@ -4,9 +4,7 @@ import condivisi.ErrorException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -123,7 +121,7 @@ public class Ascolto implements Runnable {
                     }
                 /* operazioni ulteriori se sono leecher : creo connessione in down
                 Lo devo fare solo se non ho già una connessione in down, non sono
-                seeder e posso creare connessioni !!!! */
+                seeder e posso creare connessioni !!!! 
                 if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
                 System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
                 Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
@@ -142,7 +140,7 @@ public class Ascolto implements Runnable {
                 //conn.setSocketDown(mysock);
                 //conn.setBitfield(b.getBitfield());
 
-                /* Prova nuovo metodo */
+                /* Prova nuovo metodo 
                 conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
                 System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
                 // aggiungo thread per download
@@ -152,7 +150,7 @@ public class Ascolto implements Runnable {
                 peer.incrConnessioni();
                 // incremento numero peer in download
                 contacted.incrPeer();
-                }
+                }*/
                 } catch (IOException ex) {
                     System.out.println("IOException in Ascolto");
                     Logger.getLogger(Ascolto.class.getName()).log(Level.SEVERE, null, ex);

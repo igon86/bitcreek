@@ -14,6 +14,7 @@ public class Chunk implements Serializable{
     //spero non si voglia  trasferire gighi di roba!!
     private int offset;
     private int dim;
+    
 
     public Chunk(byte[] data,int offset,int dim){
         this.data=data;

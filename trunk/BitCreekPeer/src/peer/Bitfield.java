@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class Bitfield implements Serializable{
     
     public static final long serialVersionUID = 45;
+
     
     private boolean[] bitfield;
         

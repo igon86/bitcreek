@@ -10,6 +10,7 @@ import java.util.logging.Logger;
  * @author andrea
  */
 public class Downloader implements Runnable{
+
     
     private Creek c;
     private Socket s;

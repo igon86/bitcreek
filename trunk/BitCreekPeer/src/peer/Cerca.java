@@ -17,10 +17,10 @@ public class Cerca implements Runnable {
     private final char INFORMATION = 2;
 
     /* Variabili d'istanza */
-    String nome; /* nome da cercare */
+    private String nome; /* nome da cercare */
 
-    BitCreekPeer peer;
-    BitCreekGui gui;
+    private BitCreekPeer peer;
+    private BitCreekGui gui;
 
     /**
      * Costruttore

@@ -14,6 +14,7 @@ public class ImplementazioneCallback implements InterfacciaCallback{
     /* Variabili d' istanza */
     private BitCreekPeer peer;
     
+    
     public ImplementazioneCallback(BitCreekPeer peer) throws ErrorException{
         super();
         if(peer == null)throw new ErrorException("Param null");

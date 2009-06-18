@@ -20,26 +20,26 @@ public class Connessione implements Serializable {
     protected static final boolean CHOKED = false;
     protected static final boolean UNCHOKED = true;
     //l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socket
-    Socket down;
-    Socket up;
+    private Socket down;
+    private Socket up;
     //identificativo unico dell'altro peer sulla connessione
-    int portaVicino;
-    InetAddress ipVicino;
-    ObjectInputStream inDown;
-    ObjectOutputStream outDown;
-    ObjectInputStream inUp;
-    ObjectOutputStream outUp;
+    private int portaVicino;
+    private InetAddress ipVicino;
+    private ObjectInputStream inDown;
+    private ObjectOutputStream outDown;
+    private ObjectInputStream inUp;
+    private ObjectOutputStream outUp;
     //CHOKED o UNCHOKED
-    boolean statoDown;
-    boolean statoUp;
+    private boolean statoDown;
+    private boolean statoUp;
     /**interesseDown viene inizializzato all'avvio del thread Downloader
      * interesseUp invece viene inizializzato a NOT_INTERESTED
      */
     //INTERESTED o NOT_INTERESTED
-    boolean interesseDown;
-    boolean interesseUp;
-    boolean[] bitfield;
-    int downloaded; /* numero pezzi scaricati su questa connessione */
+    private boolean interesseDown;
+    private boolean interesseUp;
+    private boolean[] bitfield;
+    private int downloaded; /* numero pezzi scaricati su questa connessione */
 
 
     /** Costruttore */
