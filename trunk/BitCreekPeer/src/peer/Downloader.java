@@ -40,34 +40,35 @@ public class Downloader implements Runnable{
         }
         
         //l'ho SCRITTO DAVVEROOO??
-        Creek.stampaSbrodolina(output,"\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
-        //System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
-        //output.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
+        Creek.stampaSbrodolina(output,"\n\n SONO UN NUOVO THREAD DOWNLOADER DA  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
         
         if(c.interested(conn.getBitfied())){
             conn.setInteresseDown(true);
+            Creek.stampaSbrodolina(output," Downloader : connessione interessante ");
             conn.sendDown(new Messaggio(Messaggio.INTERESTED, null));
-            System.out.println(Thread.currentThread().getName() + " Downloader : connessione interessante ");
+            Creek.stampaSbrodolina(output," Downloader : connessione interessante COMUNICATO ALL'UPLOADER ");
         } else {
             conn.setInteresseDown(false);
             conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED, null));
-            Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " Downloader : ! connessione interessante");
+            Creek.stampaSbrodolina(output, " Downloader : ! connessione interessante");
         }
 
         int count=0;
         while(true){
+            output.print("STO PER FARE LA RECEIVE......");
             Messaggio m = this.conn.receiveDown();
+            output.println(".....FATTA");
             
             if ( m == null){
-                System.out.println("Continuo perchè il 'canale' è null");
+                Creek.stampaSbrodolina(output,"Continuo perchè il 'canale' è null");
                 continue;
             }
             //System.out.print(count+" ");
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE:{
-                    Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " Downloader : HAVE ricevuto");
+                    Creek.stampaSbrodolina(output," Downloader : HAVE ricevuto");
                     boolean[] bitfield = (boolean[]) m.getObj();
                     this.conn.setBitfield(bitfield);
                     
@@ -78,18 +79,18 @@ public class Downloader implements Runnable{
                     break;
                 }
                 case Messaggio.CHOKE:{
-                    System.out.println(Thread.currentThread().getName() + " Downloader : CHOCKE ricevuto");
+                    Creek.stampaSbrodolina(output," Downloader : CHOCKE ricevuto");
                     this.conn.setStatoDown(Connessione.CHOKED);
                     break;
                 }
                 case Messaggio.UNCHOKE:{
-                    Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " Downloader : UNCHOKE ricevuto");
+                    Creek.stampaSbrodolina(output," Downloader : UNCHOKE ricevuto");
                     this.conn.setStatoDown(Connessione.UNCHOKED);
                     break;
                 }
                 case Messaggio.CHUNK:{
                     count++;
-                    Creek.stampaSbrodolina(output,Thread.currentThread().getName()+" Ricevuto Messaggio CHUNK: "+((Chunk) m.getObj()).getOffset());
+                    Creek.stampaSbrodolina(output," Ricevuto Messaggio CHUNK: "+((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
                     c.scriviChunk(chunk);
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
@@ -98,7 +99,7 @@ public class Downloader implements Runnable{
                     /* resetto il canale per evitare di impallare tutto -> nel downloader e` probabilmente inutile
                      in ogni caso questo pezzo di codice non viene eseguito sempre per qualche motivo */
                     if( count % 100 == 0){
-                        System.out.println("\n\n SVUOTO LO STREAM DEL DOWNLOADER\n");
+                        Creek.stampaSbrodolina(output,"\n\n SVUOTO LO STREAM DEL DOWNLOADER\n");
                         conn.ResetDown();
                     }
                     /*  controllare lo SHA del pezzo ------> da fare !!!!  */
@@ -110,10 +111,11 @@ public class Downloader implements Runnable{
                 PIO p = c.getNext(this.conn.getBitfied());
                 if(p != null){
                     //System.out.println("Downloader : Sto per fare sendDown per chè p != null");
+                    output.print("STO PER MANDARE UNA REQUEST.......");
                     conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
-                    System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato for chunk : "+p.getId());
+                    Creek.stampaSbrodolina(output,"Downloader : REQUEST inviato for chunk : "+p.getId());
                 }else{
-                    System.out.println(Thread.currentThread().getName() + " vediamo se esco dal while");
+                    Creek.stampaSbrodolina(output,"vediamo se esco dal while");
                     break;
                 }
             }
@@ -132,7 +134,7 @@ public class Downloader implements Runnable{
             Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
         }
         */
-        System.out.println(Thread.currentThread().getName() + " Downloader terminato");
+        Creek.stampaSbrodolina(output," Downloader terminato");
     }
     
 }

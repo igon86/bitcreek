@@ -57,7 +57,7 @@ public class Creek extends Descrittore implements Serializable {
     
     
     public static void stampaSbrodolina(PrintStream output,String s){
-        System.out.println(s);
+        System.out.println(Thread.currentThread().getName()+": " +s);
         output.println(s);
     }
     
@@ -246,13 +246,42 @@ public class Creek extends Descrittore implements Serializable {
         return null;
     }
 
-    public synchronized PIO orderedNext(boolean[] bitfield) {
+    public synchronized PIO nextD(boolean[] bitfield,PrintStream output){
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            if (temp.getBusy()) {
+            Creek.stampaSbrodolina(output,"Sono nel while con PIO : " + temp.getId() + " e busy" + temp.getBusy());
+            if (!temp.getBusy() && bitfield[temp.getId()]) {
+                return temp;
+            }
+        }
+        System.out.print("NON sono entrato nel while di next");
+        return null;
+    }
+    
+    public synchronized PIO getNextD(boolean[] bitfield,PrintStream output){
+        Creek.stampaSbrodolina(output," getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
+        //questo controllo e` totalmente inutile
+        if (this.statoDownload == INIT || this.statoDownload == ENDGAME) {
+            PIO temp = this.nextD(bitfield,output);
+            if (temp == null) {
+                System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
                 return null;
-            } else if (bitfield[temp.getId()]) {
+            } else {
+                System.out.println("RITORNO PIO: " + temp.getId());
+                temp.setBusy();
+                return temp;
+            }
+        } else if (this.statoDownload == RAREST) {
+            //ordino per rarita
+            Collections.sort(this.toDo);
+            PIO temp = this.nextD(bitfield,output);
+            if (temp == null) {
+                System.out.println("RITORNO NULL e sono in RAREST");
+                return null;
+            } else {
+                System.out.println("RITORNO PIO: " + temp.getId());
+                temp.setBusy();
                 return temp;
             }
         }
