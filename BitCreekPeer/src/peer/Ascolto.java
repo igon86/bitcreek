@@ -94,7 +94,7 @@ public class Ascolto implements Runnable {
                         contacted.addConnessione(conn);
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE AGGIUNTA");
                         //CREO IL THREAD RELATIVO IN UPLOAD
-                        peer.addTask(new Uploader(conn, contacted));
+                        //peer.addTask(new Uploader(conn, contacted));
                     } else {
                         System.out.println(Thread.currentThread().getName() + "CONNESSIONE GIA PRESENTE");
                         /* in teoria se esiste già una connessione in upload non dovrei fare niente
@@ -104,11 +104,11 @@ public class Ascolto implements Runnable {
                         ci occuperemo dei download stoppati e ripartiti !!!*/
                         //DA RIFARE/!!
                         //toModify.setUp(scambio,in,out);
-                        //conn = toModify;
-                        toModify.set(false, scambio, in, out, null, con.getSS());
-                        //CREO IL THREAD RELATIVO IN UPLOAD
-                        peer.addTask(new Uploader(toModify, contacted));
+                        conn = toModify;
+                        conn.set(false, scambio, in, out, null, con.getSS());
+                        //CREO IL THREAD RELATIVO IN UPLOAD 
                     }
+                    peer.addTask(new Uploader(conn, contacted));
                     //CREO IL THREAD RELATIVO IN UPLOAD
                     //peer.addTask(new Uploader(conn, contacted));
                     /* chiudo i file : NO */
@@ -135,15 +135,16 @@ public class Ascolto implements Runnable {
                         System.out.println("HO FATTO L'OUTPUT");
                         ObjectInputStream input = new ObjectInputStream(mysock.getInputStream());
                         System.out.println("HO FATTO L'INPUT");
-                        output.writeObject(mycon);
-                        Bitfield b = (Bitfield) input.readObject();
+                        Bitfield b = null;
                         // modifica
                         //conn.setDown(mysock, input, output);
                         //conn.setSocketDown(mysock);
                         //conn.setBitfield(b.getBitfield());
-
                         // Prova nuovo metodo 
                         conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
+                        output.writeObject(mycon);
+                        b = (Bitfield) input.readObject();
+                        conn.setBitfield(b.getBitfield());
                         System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
                         // aggiungo thread per download
                         peer.addTask(new Downloader(contacted, conn));

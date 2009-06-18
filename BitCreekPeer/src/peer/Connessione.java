@@ -25,6 +25,7 @@ public class Connessione implements Serializable {
     //identificativo unico dell'altro peer sulla connessione
     private int portaVicino;
     private InetAddress ipVicino;
+    
     private ObjectInputStream inDown;
     private ObjectOutputStream outDown;
     private ObjectInputStream inUp;
@@ -66,7 +67,7 @@ public class Connessione implements Serializable {
             this.outDown = out;
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
-            System.out.println("Porta vicino : " + portaVicino);
+            System.out.println("Avvia :::: Porta vicino : " + portaVicino);
             this.downloaded = 0;
         } else {
             //CHIAMATO DA ASCOLTA
@@ -77,7 +78,7 @@ public class Connessione implements Serializable {
             this.outUp = out;
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
-            System.out.println("Porta vicino : " + portaVicino);
+            System.out.println("Ascolta :::: Porta vicino : " + portaVicino);
         }
     }
 
