@@ -29,11 +29,13 @@ public class Uploader implements Runnable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER  VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
-        output.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER  VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
+        Creek.stampaSbrodolina(output,"\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER  VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
+        
         int count = 0;
         while (true) {
+            output.print("FACCIO RECEIVE....");
             Messaggio m = this.conn.receiveUp();
+            output.println("...FATTA");
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
@@ -45,24 +47,24 @@ public class Uploader implements Runnable {
                     Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
                     //riempio il buffer
                     this.conn.sendUp(nuovo);
-                    System.out.println("..........FATTA LA SENDUP");
+                    Creek.stampaSbrodolina(output,"..........FATTA LA SENDUP");
                     break;
                 }
                 case Messaggio.INTERESTED: {
-                    System.out.println(Thread.currentThread().getName() + " L'altro peer e` interessato");
+                    Creek.stampaSbrodolina(output, Thread.currentThread().getName() + " L'altro peer e` interessato");
                     this.conn.setInteresseUp(true);
                     //FAKE A BESTIA
                     this.conn.sendUp(new Messaggio(Messaggio.UNCHOKE, null));
                     break;
                 }
                 case Messaggio.NOT_INTERESTED: {
-                    System.out.println(Thread.currentThread().getName() + " L'altro peer NON e` interessato");
+                    Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " L'altro peer NON e` interessato");
                     this.conn.setInteresseUp(false);
                     break;
                 }
             }
             if (++count % 100 == 0) {
-                System.out.println("\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
+                Creek.stampaSbrodolina(output,"\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
                 this.conn.ResetUp();
             }
         }
