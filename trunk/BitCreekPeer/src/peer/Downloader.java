@@ -1,6 +1,9 @@
 
 package peer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,10 +25,24 @@ public class Downloader implements Runnable{
         this.conn = conn;
         this.pendingRequest = false;
     }
-
+    
+    
+    
     public void run() {
         
-        System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER \n");
+        FileOutputStream file;
+        PrintStream output = null;
+        try {
+            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
+            output = new PrintStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //l'ho SCRITTO DAVVEROOO??
+        Creek.stampaSbrodolina(output,"\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
+        //System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
+        //output.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER VERSO  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
         
         if(c.interested(conn.getBitfied())){
@@ -35,7 +52,7 @@ public class Downloader implements Runnable{
         } else {
             conn.setInteresseDown(false);
             conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED, null));
-            System.out.println(Thread.currentThread().getName() + " Downloader : ! connessione interessante");
+            Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " Downloader : ! connessione interessante");
         }
 
         int count=0;
@@ -46,11 +63,11 @@ public class Downloader implements Runnable{
                 System.out.println("Continuo perchè il 'canale' è null");
                 continue;
             }
-            System.out.print(count+" ");
+            //System.out.print(count+" ");
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE:{
-                    System.out.println(Thread.currentThread().getName() + " Downloader : HAVE ricevuto");
+                    Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " Downloader : HAVE ricevuto");
                     boolean[] bitfield = (boolean[]) m.getObj();
                     this.conn.setBitfield(bitfield);
                     
@@ -66,13 +83,13 @@ public class Downloader implements Runnable{
                     break;
                 }
                 case Messaggio.UNCHOKE:{
-                    System.out.println(Thread.currentThread().getName() + " Downloader : UNCHOKE ricevuto");
+                    Creek.stampaSbrodolina(output,Thread.currentThread().getName() + " Downloader : UNCHOKE ricevuto");
                     this.conn.setStatoDown(Connessione.UNCHOKED);
                     break;
                 }
                 case Messaggio.CHUNK:{
                     count++;
-                    System.out.println(Thread.currentThread().getName()+" Ricevuto Messaggio CHUNK: "+((Chunk) m.getObj()).getOffset());
+                    Creek.stampaSbrodolina(output,Thread.currentThread().getName()+" Ricevuto Messaggio CHUNK: "+((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
                     c.scriviChunk(chunk);
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
@@ -92,7 +109,7 @@ public class Downloader implements Runnable{
             if(! pendingRequest){
                 PIO p = c.getNext(this.conn.getBitfied());
                 if(p != null){
-                    System.out.println("Downloader : Sto per fare sendDown per chè p != null");
+                    //System.out.println("Downloader : Sto per fare sendDown per chè p != null");
                     conn.sendDown(new Messaggio(Messaggio.REQUEST,new Integer(p.getId())));
                     System.out.println(Thread.currentThread().getName() + " Downloader : REQUEST inviato for chunk : "+p.getId());
                 }else{

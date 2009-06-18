@@ -121,9 +121,9 @@ public class Ascolto implements Runnable {
                     if (!contacted.getStato()) {
                         contacted.incrPeer();
                     }
-                    /* operazioni ulteriori se sono leecher : creo connessione in down
-                    Lo devo fare solo se non ho già una connessione in down, non sono
-                    seeder e posso creare connessioni !!!! */
+                    // operazioni ulteriori se sono leecher : creo connessione in down
+                    // Lo devo fare solo se non ho già una connessione in down, non sono
+                    // seeder e posso creare connessioni !!!! 
                     if (contacted.getStato() && conn.DownNull() && peer.getConnessioni() < BitCreekPeer.MAXCONNESSIONI) {
                         System.out.println("\n\n" + Thread.currentThread().getName() + "SONO ENTRATO PERCHE` SONO LEECHER\n\n");
                         Contact mycon = new Contact(peer.getMioIp(), peer.getPortaRichieste(), swarmId);
@@ -142,7 +142,7 @@ public class Ascolto implements Runnable {
                         //conn.setSocketDown(mysock);
                         //conn.setBitfield(b.getBitfield());
 
-                        /* Prova nuovo metodo */
+                        // Prova nuovo metodo 
                         conn.set(true, mysock, input, output, b.getBitfield(), con.getSS());
                         System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
                         // aggiungo thread per download
