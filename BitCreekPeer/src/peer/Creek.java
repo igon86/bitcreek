@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class Creek extends Descrittore implements Serializable {
 
     /* Costanti */
+    
     private final int NONATTIVO = -1;
     public static final long serialVersionUID = 45;
     private static final boolean LEECHER = true;

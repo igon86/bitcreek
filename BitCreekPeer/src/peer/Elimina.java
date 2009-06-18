@@ -11,8 +11,8 @@ public class Elimina implements Runnable {
 
     /* Variabili d' istanza */
 
-    String nome;
-    BitCreekPeer peer;
+    private String nome;
+    private BitCreekPeer peer;
 
     public Elimina(String nome, BitCreekPeer peer) throws ErrorException {
         if (nome == null || peer == null) {

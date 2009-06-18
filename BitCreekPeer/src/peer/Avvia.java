@@ -23,6 +23,7 @@ public class Avvia implements Runnable {
 
     private BitCreekPeer peer;
     private int[] array;
+    
 
     //array e` l'array di indici dei descrittori da avviare
     public Avvia(BitCreekPeer peer, int[] array) {

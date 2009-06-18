@@ -24,9 +24,9 @@ import java.util.ArrayList;
 public class Crea implements Runnable {
 
     /* Variabili d'istanza */
-    File sorgente;
-    BitCreekPeer peer;
-    BitCreekGui gui;
+    private File sorgente;
+    private BitCreekPeer peer;
+    private BitCreekGui gui;
 
     /**
      * Costruttore

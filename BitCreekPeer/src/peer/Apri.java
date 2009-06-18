@@ -15,9 +15,9 @@ import java.io.ObjectInputStream;
 public class Apri implements Runnable {
 
     /* Variabili d'istanza */
-    File creek;
-    BitCreekPeer peer;
-    BitCreekGui gui;
+    private File creek;
+    private BitCreekPeer peer;
+    private BitCreekGui gui;
 
     /**
      * Costruttore

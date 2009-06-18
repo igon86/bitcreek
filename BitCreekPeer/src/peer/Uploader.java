@@ -6,8 +6,8 @@ package peer;
  */
 public class Uploader implements Runnable {
 
-    Connessione conn;
-    Creek c;
+    private Connessione conn;
+    private Creek c;
 
     public Uploader(Connessione conn, Creek c) {
         this.conn = conn;

@@ -13,6 +13,7 @@ public class Contact implements Serializable{
     public static final long serialVersionUID = 45;
     
     //Informazioni del peer
+    
     private int ss;
     private InetAddress ip;
     //id dello swarm a cui sono interessato

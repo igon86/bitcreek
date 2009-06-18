@@ -23,6 +23,7 @@ public class Messaggio implements Serializable{
     private int tipo;
     private Object corpo;
     
+    
     public Messaggio(int tipo, Object corpo){
         this.tipo = tipo;
         this.corpo = corpo;

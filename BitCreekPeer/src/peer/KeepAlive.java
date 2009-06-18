@@ -19,7 +19,7 @@ public class KeepAlive implements Runnable {
     private final int ATTESA = 3000;
 
     /* Variabili d'istanza */
-    BitCreekPeer peer;
+    private BitCreekPeer peer;
 
     /**
      * Costruttore
