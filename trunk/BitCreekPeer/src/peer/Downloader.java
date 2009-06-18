@@ -39,7 +39,7 @@ public class Downloader implements Runnable{
             Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //l'ho SCRITTO DAVVEROOO??
+        //l'ho SCRITTO DAVVEROOO?? si..con la stampa sbrodolina l'hai scritto
         Creek.stampaSbrodolina(output,"\n\n SONO UN NUOVO THREAD DOWNLOADER DA  "+this.conn.getIPVicino().getHostAddress()+" , " +this.conn.getPortaVicino() +"\n");
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
         
