@@ -41,13 +41,14 @@ public class Uploader implements Runnable {
                 case Messaggio.REQUEST: {
                     Integer idPezzo = (Integer) m.getObj();
                     int pezzo = idPezzo.intValue();
-                    System.out.print("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
+                    Creek.stampaSbrodolina(output,"RICEVUTA REQUEST  con id" + pezzo);
                     //creo il chunk corretto da mandare
                     Chunk pezzoRichiesto = c.getChunk(pezzo);
                     Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
+                    Creek.stampaSbrodolina(output,"Messaggio creato");
                     //riempio il buffer
                     this.conn.sendUp(nuovo);
-                    Creek.stampaSbrodolina(output,"..........FATTA LA SENDUP");
+                    Creek.stampaSbrodolina(output,"FATTA LA SENDUP");
                     break;
                 }
                 case Messaggio.INTERESTED: {
