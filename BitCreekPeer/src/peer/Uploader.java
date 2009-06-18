@@ -8,15 +8,12 @@ public class Uploader implements Runnable {
 
     Connessione conn;
     Creek c;
-    int puntatoreHave;
 
-    public Uploader(Connessione conn, Creek c, int numPieces) {
+    public Uploader(Connessione conn, Creek c) {
         this.conn = conn;
         this.c = c;
-        this.puntatoreHave = numPieces;
     }
 
-    
     public void run() {
         System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER \n");
         int count = 0;
@@ -48,20 +45,9 @@ public class Uploader implements Runnable {
                     break;
                 }
             }
-            //CONTROLLO RESET STREAM
             if (++count % 100 == 0) {
                 System.out.println("\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
                 this.conn.ResetUp();
-            }
-            //CONTROLLO/INVIO MESSAGGI DI HAVE
-            System.out.println(Thread.currentThread().getName()+"this.c.getScaricati: "+this.c.getScaricati() +" VS this.puntatoreHave: "+ this.puntatoreHave);
-            while (this.c.getScaricati() > this.puntatoreHave){
-                int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
-                //ennino il wrapper automatico
-                Messaggio have = new Messaggio(Messaggio.HAVE,daNotificare);
-                this.puntatoreHave++;
-                this.conn.sendUp(have);
-                System.out.println(Thread.currentThread().getName()+ " Invio la notifica del pezzo:  "+daNotificare);
             }
         }
 
