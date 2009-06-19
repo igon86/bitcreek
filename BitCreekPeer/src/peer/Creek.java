@@ -5,6 +5,7 @@ import condivisi.ErrorException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -111,6 +112,11 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println("CREEK COSTRUITO");
     }
 
+    public static void stampaDebug(PrintStream output,String s){
+        System.out.println(Thread.currentThread().getName()+": " +s);
+        output.println(s);
+    }
+    
     //METODI PER IL P2P
     /**
      * Ci vuole questo metodo in quanto in alcune piattaforme puo` esistere un solo

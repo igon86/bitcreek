@@ -1,5 +1,8 @@
 package peer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +25,20 @@ public class Downloader implements Runnable{
     }
 
     public void run() {
+        
+        
 
         System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD DOWNLOADER \n");
         //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
+        
+        FileOutputStream file;
+        PrintStream output = null;
+        try {
+            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
+            output = new PrintStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if(c.interested(conn.getBitfied())){
             conn.setInteresseDown(true);
@@ -35,7 +49,8 @@ public class Downloader implements Runnable{
             conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED, null));
             System.out.println(Thread.currentThread().getName() + " Downloader : ! connessione interessante");
         }
-
+        
+        //utilizzato per lo svuotamento dello buffer degli stream
         int count=0;
         while(true){
             //come prima cosa controllo se e` terminato il download
@@ -44,12 +59,14 @@ public class Downloader implements Runnable{
                         conn.sendDown(new Messaggio(Messaggio.CLOSE,null));
                         break;                  
             }
+            
+            
             Messaggio m = this.conn.receiveDown();
 
             // non cancellare : importante
             if ( m == null){
     
-                    System.out.println(Thread.currentThread().getName() + " Downloader: TIMEOUT sulla receiveDOwn ho ricevuto null come messaggio -> dormo un po");
+                    Creek.stampaDebug(output, " Downloader: TIMEOUT sulla receiveDOwn ho ricevuto null come messaggio -> dormo un po");
                     //dormo un pochetto e spero in BENE
                     //Thread.sleep(100);
                     continue;
