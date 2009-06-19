@@ -64,7 +64,7 @@ public class Connessione implements Serializable {
             System.out.print("\n\nCHIAMATO DA AVVIA\n\n");
             this.bitfield = bitfield;
             this.down = s;
-            System.out.println("Setto timeout su donw");
+            System.out.println("Setto timeout su down");
             try {
                 this.down.setSoTimeout(TIMEOUT);
             } catch (SocketException ex) {
@@ -202,6 +202,7 @@ public class Connessione implements Serializable {
             }
         } catch (SocketTimeoutException ex) {
             System.out.println("TIMEOUT di merda che finalmente rilascia");
+            return null;
         } catch (IOException ex) {
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
