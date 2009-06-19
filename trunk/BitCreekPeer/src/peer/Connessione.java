@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,13 +21,13 @@ public class Connessione implements Serializable {
     //codici mnemonici per lo stato
     protected static final boolean CHOKED = false;
     protected static final boolean UNCHOKED = true;
+    private static final int TIMEOUT = 300;
     //l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socket
     private Socket down;
     private Socket up;
     //identificativo unico dell'altro peer sulla connessione
     private int portaVicino;
     private InetAddress ipVicino;
-    
     private ObjectInputStream inDown;
     private ObjectOutputStream outDown;
     private ObjectInputStream inUp;
@@ -56,13 +58,19 @@ public class Connessione implements Serializable {
      * @param bitfield
      * @param portaVicino
      */
-    public void set(boolean download, Socket s, ObjectInputStream in, ObjectOutputStream out, boolean[] bitfield, int portaVicino) {
+    public synchronized void set(boolean download, Socket s, ObjectInputStream in, ObjectOutputStream out, boolean[] bitfield, int portaVicino) {
         if (download) {
             //CHIAMATO DA AVVIA
             System.out.print("\n\nCHIAMATO DA AVVIA\n\n");
             this.bitfield = bitfield;
             this.down = s;
-            System.out.println("socket DOWN porta remota : " + s.getPort() + " porta locale : "+ s.getLocalPort());
+            System.out.println("Setto timeout su donw");
+            try {
+                this.down.setSoTimeout(TIMEOUT);
+            } catch (SocketException ex) {
+                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("socket DOWN porta remota : " + s.getPort() + " porta locale : " + s.getLocalPort());
             this.inDown = in;
             this.outDown = out;
             this.ipVicino = s.getInetAddress();
@@ -73,7 +81,13 @@ public class Connessione implements Serializable {
             //CHIAMATO DA ASCOLTA
             System.out.print("\n\nCHIAMATO DA ASSCOLTA\n\n");
             this.up = s;
-            System.out.println("socket UP porta remota : " + s.getPort() + " porta locale : "+ s.getLocalPort());
+            System.out.println("Setto timeout su up");
+            try {
+                this.up.setSoTimeout(TIMEOUT);
+            } catch (SocketException ex) {
+                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("socket UP porta remota : " + s.getPort() + " porta locale : " + s.getLocalPort());
             this.inUp = in;
             this.outUp = out;
             this.ipVicino = s.getInetAddress();
@@ -167,8 +181,10 @@ public class Connessione implements Serializable {
             } else {
                 return (Messaggio) inDown.readObject();
             }
+        } catch (SocketTimeoutException ex) {
+            System.out.println("TIMEOUT di merda che finalmente rilascia");
         } catch (IOException ex) {
-            System.out.println(Thread.currentThread().getName()+" IO Exception nella receiveDown");
+            System.out.println(Thread.currentThread().getName() + " IO Exception nella receiveDown");
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFound Exception nella receiveDown");
@@ -184,6 +200,8 @@ public class Connessione implements Serializable {
             } else {
                 return (Messaggio) inUp.readObject();
             }
+        } catch (SocketTimeoutException ex) {
+            System.out.println("TIMEOUT di merda che finalmente rilascia");
         } catch (IOException ex) {
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

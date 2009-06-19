@@ -36,6 +36,11 @@ public class Uploader implements Runnable {
             output.print("FACCIO RECEIVE....");
             Messaggio m = this.conn.receiveUp();
             output.println("...FATTA");
+            // fondamentale !!!! --> non cancellare
+            if ( m == null){
+                Creek.stampaSbrodolina(output,"Continuo perchè il 'canale' è null");
+                continue;
+            }
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
