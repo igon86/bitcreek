@@ -1,5 +1,7 @@
-
 package peer;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Thread per l'implementazione delle politiche di CHOKE/UNCHOKE delle
@@ -7,14 +9,14 @@ package peer;
  * @author andrea
  */
 public class UploadManager implements Runnable{
-    
+
     /* Costanti */
     private final int ATTESA = 10000;
 
     /* Variabili d'istanza */
     private BitCreekPeer peer;
     private Creek c;
-    
+
     public UploadManager(BitCreekPeer peer, Creek c){
         this.peer = peer;
         this.c= c;
@@ -31,8 +33,8 @@ public class UploadManager implements Runnable{
                 System.out.println("UploadManager : sono stato interrotto");
             }
             /* invio i msg di HAVE*/
-            System.out.println("UploadManager : Invio msg di HAVE su tutte le connessioni");
-            c.inviaHave();
+            //System.out.println("UploadManager : Invio msg di HAVE su tutte le connessioni");
+            //c.inviaHave();
         }
     }
 

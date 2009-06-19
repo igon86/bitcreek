@@ -5,7 +5,6 @@ import condivisi.ErrorException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -16,14 +15,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Classe che definisce la struttura dati del client di supporto al 
+ * Classe che definisce la struttura dati del client di supporto al
  * download/upload in uno swarm
  * @author Bandettini
  */
 public class Creek extends Descrittore implements Serializable {
 
     /* Costanti */
-    
     private final int NONATTIVO = -1;
     public static final long serialVersionUID = 45;
     private static final boolean LEECHER = true;
@@ -53,14 +51,8 @@ public class Creek extends Descrittore implements Serializable {
     private RandomAccessFile raf;
     //ma che roba e`
     private int scaricati;
+    private int[] scaricatiId;
 
-    
-    
-    public static void stampaSbrodolina(PrintStream output,String s){
-        System.out.println(Thread.currentThread().getName()+": " +s);
-        output.println(s);
-    }
-    
     /**
      * Costruttore
      * @param d descrittore file
@@ -83,12 +75,17 @@ public class Creek extends Descrittore implements Serializable {
         } else {
             this.peercercano = NONATTIVO;
         }
+
         //aggiunte per il p2p
         float temp = (float) d.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
         System.out.println(Thread.currentThread().getName() + " NUMERO DI BLOCCHI: " + temp);
         int dimArray = (int) Math.ceil(temp);
         System.out.println("FILE HA DIMENSIONE: " + d.getDimensione() + "\nL'ARRAY HAVE HA DIMENSIONE: " + dimArray);
+
+        //Array di supportos
         have = new boolean[dimArray];
+        scaricatiId = new int[dimArray];
+
         if (this.getStato() == LEECHER) {
             //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
             //SONO LEECHER
@@ -133,17 +130,23 @@ public class Creek extends Descrittore implements Serializable {
         //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
         this.removePIO(offset);
-        //poi modifico anche l'array have
-        this.have[offset] = true;
-        //la lunghezza serve perché il buffer passato ha sempre la dimensione
-        //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
-        int length = c.getDim();
-        System.out.println("Sto per scrivere un chunk di dimensione: " + length);
-        try {
-            raf.seek(offset * BitCreekPeer.DIMBLOCCO);
-            raf.write(c.getData(), 0, length);
-        } catch (IOException ex) {
-            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+        if (this.have[offset] == false) {
+            //poi modifico anche l'array have
+            this.have[offset] = true;
+
+            //in questo fortissimo ordine sequenziale mi arraccomando bande
+            this.scaricatiId[this.scaricati] = offset;
+            this.scaricati++;
+            //la lunghezza serve perché il buffer passato ha sempre la dimensione
+            //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
+            int length = c.getDim();
+            System.out.println("Sto per scrivere un chunk di dimensione: " + length);
+            try {
+                raf.seek(offset * BitCreekPeer.DIMBLOCCO);
+                raf.write(c.getData(), 0, length);
+            } catch (IOException ex) {
+                Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -199,6 +202,7 @@ public class Creek extends Descrittore implements Serializable {
         }
     }
 
+
     /**
      * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PIO
      * @param bitfield
@@ -246,42 +250,13 @@ public class Creek extends Descrittore implements Serializable {
         return null;
     }
 
-    public synchronized PIO nextD(boolean[] bitfield,PrintStream output){
+    public synchronized PIO orderedNext(boolean[] bitfield) {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            Creek.stampaSbrodolina(output,"Sono nel while con PIO : " + temp.getId() + " e busy" + temp.getBusy());
-            if (!temp.getBusy() && bitfield[temp.getId()]) {
-                return temp;
-            }
-        }
-        System.out.print("NON sono entrato nel while di next");
-        return null;
-    }
-    
-    public synchronized PIO getNextD(boolean[] bitfield,PrintStream output){
-        Creek.stampaSbrodolina(output," getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
-        //questo controllo e` totalmente inutile
-        if (this.statoDownload == INIT || this.statoDownload == ENDGAME) {
-            PIO temp = this.nextD(bitfield,output);
-            if (temp == null) {
-                System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
+            if (temp.getBusy()) {
                 return null;
-            } else {
-                System.out.println("RITORNO PIO: " + temp.getId());
-                temp.setBusy();
-                return temp;
-            }
-        } else if (this.statoDownload == RAREST) {
-            //ordino per rarita
-            Collections.sort(this.toDo);
-            PIO temp = this.nextD(bitfield,output);
-            if (temp == null) {
-                System.out.println("RITORNO NULL e sono in RAREST");
-                return null;
-            } else {
-                System.out.println("RITORNO PIO: " + temp.getId());
-                temp.setBusy();
+            } else if (bitfield[temp.getId()]) {
                 return temp;
             }
         }
@@ -398,8 +373,14 @@ public class Creek extends Descrittore implements Serializable {
     public boolean[] getHave() {
         return this.have;
     }
-    //SETTER
 
+    public int getScaricati(){
+        return this.scaricati;
+    }
+    public int getScaricatiIndex(int index){
+        return this.scaricatiId[index];
+    }
+    //SETTER
     public void settaPeerCerca() {
         if (this.peercercano != NONATTIVO) {
             this.peercercano++;
@@ -428,6 +409,7 @@ public class Creek extends Descrittore implements Serializable {
         c.ind = ind;
         return c;
     }
+
 
     /**
      * Crea un creek da esportare
@@ -459,7 +441,7 @@ public class Creek extends Descrittore implements Serializable {
      * @param np
      */
     public synchronized void settaPerc() {
-        this.scaricati++;
+        //QUI per motivi incapibili al genere umano si aumentava il contatore dei chunk scaricati
         this.percentuale = (this.scaricati * 100) / have.length;
         /* se percentuale = 100 ho finito di scaricare quindi il file può andare in upload */
         if (this.percentuale == 100) {

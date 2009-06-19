@@ -23,7 +23,7 @@ public class Avvia implements Runnable {
 
     private BitCreekPeer peer;
     private int[] array;
-    
+
 
     //array e` l'array di indici dei descrittori da avviare
     public Avvia(BitCreekPeer peer, int[] array) {
@@ -68,8 +68,8 @@ public class Avvia implements Runnable {
             if (presenza) {
                 //recupero della lista Peer dal tracker
                 int portatracker = d.getTCP();
-                
-                
+
+
                 //CONTATTO SSL
                 System.out.println(Thread.currentThread().getName() + " : Avvia : !presenza --> Contatto tracker sulla porta : " + portatracker);
                 try {
@@ -83,8 +83,8 @@ public class Avvia implements Runnable {
                     for (int j = 0; j < dimlista; j++) {
                         lista.add((NetRecord) oin.readObject());
                         NetRecord toPrint = lista.get(j);
-                        System.out.print("indirizzo : "+toPrint.getIp().getHostAddress());
-                        System.out.println(" porta : "+toPrint.getPorta());
+                        System.out.print("indirizzo : " + toPrint.getIp().getHostAddress());
+                        System.out.println(" porta : " + toPrint.getPorta());
                     }
                     s.close();
                 } catch (ClassNotFoundException ex) {
@@ -95,40 +95,35 @@ public class Avvia implements Runnable {
                     Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                
-                
-                
+
+
+
                 //devo contattare i peer nella lista
                 for (NetRecord n : lista) {
-                    
+
                     try {
-                        
-                        
                         if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                             //INSERIRE MONITOR
                             break;
                         }
-                        
-                       
-                        
-                        if(n.getPorta() == peer.getPortaRichieste() && n.getIp().getHostAddress().compareTo(peer.getMioIp().getHostAddress()) == 0) {
+                        if (n.getPorta() == peer.getPortaRichieste() && n.getIp().getHostAddress().compareTo(peer.getMioIp().getHostAddress()) == 0) {
                             System.out.println("MI STAVO AUTOCONTATTANDO PERCHE SONO IMBECILLE");
                             continue;
                         }
-                        
-                        if(c.presenzaConnessione(n.getIp(), n.getPorta()) != null){
+
+                        if (c.presenzaConnessione(n.getIp(), n.getPorta()) != null) {
                             System.out.println("STAVO RICONTATTANDO UNO STESSO PEER PERCHE LA LISTAPEER E` BUGGATA");
                             continue;
                         }
-                        
+
                         System.out.println(Thread.currentThread().getName() + " Avvia : Contatto peer con porta " + n.getPorta());
                         //contatto il peer n
                         SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
                         System.out.println(Thread.currentThread().getName() + "fatto inetsocketaddress");
-                        
+
                         Socket sock = new Socket();
                         System.out.println(Thread.currentThread().getName() + "aftta socket");
-                        
+
                         sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
                         System.out.println(Thread.currentThread().getName() + "fatto connect");
                         Bitfield b = new Bitfield(null);
@@ -136,21 +131,21 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + "fatto OUT");
                         ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
                         System.out.println(Thread.currentThread().getName() + "fatto IN");
-                        
+
                         //QUI LA CREO COSI SONO SICURO CHE QUANDO VERRO RICONTATTATO LA CONNESSIONE C'E GIA
                         Connessione conn = new Connessione();
                         /* Prova nuovo metodo */
                         System.out.println("Prova metodo");
                         conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
                         c.addConnessione(conn);
-                        
+
                         //lo contatto dandogli le informazioni per contattarmi in seguito (la mia server socket)
                         //System.out.print("\n\n Avvia : " + c.getId());
                         contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
-                        System.out.println(Thread.currentThread().getName() + "fatto write delle info verso "+sock.getInetAddress().getHostAddress());
-                        
-                        
-                        
+                        System.out.println(Thread.currentThread().getName() + "fatto write delle info verso " + sock.getInetAddress().getHostAddress());
+
+
+
                         try {
                             //lui mi risponde con il suo bitfield
                             b = (Bitfield) contactIN.readObject();
@@ -158,7 +153,7 @@ public class Avvia implements Runnable {
                             conn.setBitfield(b.getBitfield());
                             //AGGIORNA RARITA!! l'altra parte e` gestita dall'upload manager _>se avremo voglia
                             c.addRarita(b.getBitfield());
-                            
+
 
 
                             System.out.println(Thread.currentThread().getName() + " Ricevuto Bitfield");
@@ -171,8 +166,8 @@ public class Avvia implements Runnable {
                         //aggiungo l'oggetto connessione
                         System.out.println(Thread.currentThread().getName() + " Avvia : Aggiungo connessione in download");
                         //Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
-                        
-                       
+
+
                         System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");
                         //creo il thread per il download e lo aggiungo al ThreadPool
                         peer.addTask(new Downloader(c, conn));
@@ -197,8 +192,9 @@ public class Avvia implements Runnable {
                 if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                     break;
                 }
-            }else
+            } else {
                 System.out.println(Thread.currentThread().getName() + " Avvia : non aggiunto");
+            }
 
         }
     }
