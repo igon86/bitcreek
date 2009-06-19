@@ -42,7 +42,7 @@ public class Downloader implements Runnable{
 
             // non cancellare : importante
             if ( m == null){
-                System.out.println("Continuo perchè il 'canale' è null");
+                System.out.println(Thread.currentThread().getName()+" Continuo perchè il 'canale' è null");
                 continue;
             }
             System.out.print(count+" ");
