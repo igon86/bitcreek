@@ -116,7 +116,7 @@ public class Avvia implements Runnable {
                             continue;
                         }
                         
-                        if(c.presenzaConnessione(n.getIp(), n.getPorta())!=null){
+                        if(c.presenzaConnessione(n.getIp(), n.getPorta()) != null){
                             System.out.println("STAVO RICONTATTANDO UNO STESSO PEER PERCHE LA LISTAPEER E` BUGGATA");
                             continue;
                         }
