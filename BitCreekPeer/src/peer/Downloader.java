@@ -59,7 +59,7 @@ public class Downloader implements Runnable{
             output.print("STO PER FARE LA RECEIVE......");
             Messaggio m = this.conn.receiveDown();
             output.println(".....FATTA");
-            
+            // fondamentale !!!! --> non cancellare
             if ( m == null){
                 Creek.stampaSbrodolina(output,"Continuo perchè il 'canale' è null");
                 continue;
