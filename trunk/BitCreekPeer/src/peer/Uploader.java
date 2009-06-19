@@ -1,5 +1,8 @@
 package peer;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author andrea
@@ -9,11 +12,13 @@ public class Uploader implements Runnable {
     Connessione conn;
     Creek c;
     int puntatoreHave;
+    boolean terminato;
 
     public Uploader(Connessione conn, Creek c, int numPieces) {
         this.conn = conn;
         this.c = c;
         this.puntatoreHave = numPieces;
+        this.terminato = false;
     }
 
     public void run() {
@@ -22,8 +27,11 @@ public class Uploader implements Runnable {
         while (true) {
             Messaggio m = this.conn.receiveUp();
             if ( m == null){
-                System.out.println("Continuo perchè il 'canale' è null");
-                continue;
+   
+                    System.out.println(Thread.currentThread().getName() + "Uploader: Timeout da connessione -> dormo un pochetto");
+                    //Thread.sleep(100);
+                    continue;
+    
             }
             int tipo = m.getTipo();
             switch (tipo) {
@@ -50,6 +58,14 @@ public class Uploader implements Runnable {
                     this.conn.setInteresseUp(false);
                     break;
                 }
+                case Messaggio.CLOSE: {
+                    System.out.println(Thread.currentThread().getName()+" Mi e` arrivata una close");
+                    this.terminato = true;
+                    break;
+                }
+            }
+            if(this.terminato){
+                break;
             }
             //CONTROLLO RESET STREAM
             if (++count % 100 == 0) {
@@ -66,6 +82,7 @@ public class Uploader implements Runnable {
                 System.out.println(Thread.currentThread().getName()+ " Invio la notifica del pezzo:  "+daNotificare);
             }
         }
+        System.out.println(Thread.currentThread().getName()+ "Uploader: sto morendo perche` me l'ha detto l'altro");
 
     }
 }

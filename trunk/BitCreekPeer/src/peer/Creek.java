@@ -127,10 +127,11 @@ public class Creek extends Descrittore implements Serializable {
             this.statoDownload = ENDGAME;
             System.out.println("Sono passato in endgame");
         }
-        //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
         int offset = c.getOffset();
-        this.removePIO(offset);
         if (this.have[offset] == false) {
+            //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
+            this.removePIO(offset);
+            
             //poi modifico anche l'array have
             this.have[offset] = true;
 
@@ -177,9 +178,9 @@ public class Creek extends Descrittore implements Serializable {
             }
             long indice = offset * BitCreekPeer.DIMBLOCCO;
             raf.seek(indice);
-            System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
+            //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
             ridden = raf.read(buffer, 0, buffer.length);
-            System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
+            //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
         } catch (IOException ex) {
             System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
@@ -241,7 +242,7 @@ public class Creek extends Descrittore implements Serializable {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            System.out.println("Sono nel while con PIO : " + temp.getId() + " e busy" + temp.getBusy());
+            //System.out.println("Sono nel while con PIO : " + temp.getId() + " e busy" + temp.getBusy());
             if (!temp.getBusy() && bitfield[temp.getId()]) {
                 return temp;
             }
@@ -249,7 +250,8 @@ public class Creek extends Descrittore implements Serializable {
         System.out.print("NON sono entrato nel while di next");
         return null;
     }
-
+    
+    @Deprecated
     public synchronized PIO orderedNext(boolean[] bitfield) {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
@@ -272,7 +274,7 @@ public class Creek extends Descrittore implements Serializable {
                 System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
                 return null;
             } else {
-                System.out.println("RITORNO PIO: " + temp.getId());
+                System.out.println(Thread.currentThread().getName()+" RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
@@ -281,10 +283,10 @@ public class Creek extends Descrittore implements Serializable {
             Collections.sort(this.toDo);
             PIO temp = this.next(bitfield);
             if (temp == null) {
-                System.out.println("RITORNO NULL e sono in RAREST");
+                System.out.println(Thread.currentThread().getName()+" RITORNO NULL e sono in RAREST");
                 return null;
             } else {
-                System.out.println("RITORNO PIO: " + temp.getId());
+                System.out.println(Thread.currentThread().getName()+" RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }

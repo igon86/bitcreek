@@ -19,6 +19,7 @@ public class Messaggio implements Serializable{
     protected static final int HAVE = 4;
     protected static final int CHUNK = 5;
     protected static final int REQUEST = 6;
+    protected static final int CLOSE = 7;
 
     private int tipo;
     private Object corpo;
