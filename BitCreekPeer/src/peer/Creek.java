@@ -337,6 +337,8 @@ public class Creek extends Descrittore implements Serializable {
         } else {
             this.statoDownload = INIT;
         }
+        //La ganzata glieli ordino a caso :D
+        Collections.shuffle(this.toDo);
         //CONTROLLO SUL NUMERO DI PIO
         System.out.println(Thread.currentThread().getName() + " ToDo ha dimensione: " + this.toDo.size());
     }
