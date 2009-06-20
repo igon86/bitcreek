@@ -1,23 +1,22 @@
 package peer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author andrea
  */
 public class Uploader implements Runnable {
 
-    Connessione conn;
-    Creek c;
-    int puntatoreHave;
-    boolean terminato;
+    private Connessione conn;
+    private Creek c;
+    private BitCreekPeer peer;
+    private int puntatoreHave;
+    private boolean terminato;
 
-    public Uploader(Connessione conn, Creek c, int numPieces) {
+    public Uploader(Connessione conn, Creek c, int numPieces,BitCreekPeer peer) {
         this.conn = conn;
         this.c = c;
         this.puntatoreHave = numPieces;
+        this.peer = peer;
         this.terminato = false;
     }
 
@@ -82,7 +81,9 @@ public class Uploader implements Runnable {
                 System.out.println(Thread.currentThread().getName()+ " Invio la notifica del pezzo:  "+daNotificare);
             }
         }
-        System.out.println(Thread.currentThread().getName()+ "Uploader: sto morendo perche` me l'ha detto l'altro");
 
+        System.out.println(Thread.currentThread().getName()+ "Uploader: sto morendo perche` me l'ha detto l'altro");
+        // decremento il numero di connessioni
+        peer.decrConnessioni();
     }
 }

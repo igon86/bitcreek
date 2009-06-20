@@ -170,7 +170,7 @@ public class Avvia implements Runnable {
 
                         System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");
                         //creo il thread per il download e lo aggiungo al ThreadPool
-                        peer.addTask(new Downloader(c, conn));
+                        peer.addTask(new Downloader(c, conn, peer));
                         System.out.println(Thread.currentThread().getName() + " Avvia : Incrconnessioni");
                         /* incremento  il numero di connessioni */
                         peer.incrConnessioni();
