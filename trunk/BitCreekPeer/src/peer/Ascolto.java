@@ -111,7 +111,7 @@ public class Ascolto implements Runnable {
                         //peer.addTask(new Uploader(toModify, contacted,alreadyDownloaded));
                     }
                     //CREO IL THREAD RELATIVO IN UPLOAD
-                    peer.addTask(new Uploader(conn, contacted, alreadyDownloaded));
+                    peer.addTask(new Uploader(conn, contacted, alreadyDownloaded, peer));
                     /* chiudo i file : NO */
                     //in.close();
                     //out.close();
@@ -150,7 +150,7 @@ public class Ascolto implements Runnable {
                 conn.setBitfield(b.getBitfield());
                 System.out.println(Thread.currentThread().getName() + "Creo thread downloader perchè ho inviato mie credenzioali");
                 // aggiungo thread per download
-                peer.addTask(new Downloader(contacted, conn));
+                peer.addTask(new Downloader(contacted, conn, peer));
                 // incremento numero connessioni
                 System.out.println("ASCOLTO CALLBACK: AGGIUNGO CONNESSIONE");
                 peer.incrConnessioni();
