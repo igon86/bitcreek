@@ -231,6 +231,10 @@ public class Connessione implements Serializable {
     public synchronized void setBitfield(boolean[] b) {
         this.bitfield = b;
     }
+    
+    public synchronized void setIndexBitfield(int id){
+        this.bitfield[id] = true;
+    }
 
     //GETTER
     public boolean[] getBitfied() {
