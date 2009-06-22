@@ -61,8 +61,6 @@ public class Downloader implements Runnable {
 
         //********************** il ciclo *******************
         while (true) {
-
-
             //come prima cosa controllo se e` terminato il download oppure
             // se devo uscire
             if (!this.c.getStato() || this.conn.getTermina()) {

@@ -461,8 +461,6 @@ public class BitCreekPeer {
      */
     public void disconnetti() {
 
-        /* chiusura socket con altri peer */
-        this.terminaConn();
         /* chiusura "connessione" con il server */
         ipServer = null;
         portarichieste = NULL;
@@ -476,6 +474,8 @@ public class BitCreekPeer {
             }
         } catch (IOException ex) {
         }
+        /* chiusura socket con altri peer */
+        this.terminaConn();
     }
 
     public void cerca(String nome, BitCreekGui gui) throws ErrorException {
