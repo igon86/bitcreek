@@ -1063,7 +1063,7 @@ private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
             doubleclick();
             /* visualizzo le info */
             PrintInformation("A cura di Bandettini Alberto e " +
-                    "Andrea Lottarini\nbande14@hotmail.it\nandre.lotta86@gmail.com", AIUTO);
+                    "Andrea Lottarini\nalberto.bandettini@gmail.com\nandre.lotta86@gmail.com", AIUTO);
         }
     });
 }//GEN-LAST:event_infoActionPerformed
@@ -1989,7 +1989,7 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private ModelloTabellaCerca modellocerca;
     private boolean tabellacercaclicked; /* per emulare 2-click */
 
-    BitCreekPeer peer; /* logica del programma */
+    private BitCreekPeer peer; /* logica del programma */
 
     /* Costanti */
     private final int AGGIORNAMENTO = 500; /* 500 ms */

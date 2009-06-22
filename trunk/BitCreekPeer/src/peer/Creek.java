@@ -9,6 +9,8 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +31,7 @@ public class Creek extends Descrittore implements Serializable {
     private static final boolean SEEDER = false;
     private static final boolean NOTSTARTED = false;
     private static final boolean STARTED = true;
+    private static final int DIMSHA = 20;
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
@@ -112,18 +115,45 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println("CREEK COSTRUITO");
     }
 
-    public static void stampaDebug(PrintStream output,String s){
-        System.out.println(Thread.currentThread().getName()+": " +s);
+    public static void stampaDebug(PrintStream output, String s) {
+        System.out.println(Thread.currentThread().getName() + ": " + s);
         output.println(s);
     }
-    
+
     //METODI PER IL P2P
     /**
      * Ci vuole questo metodo in quanto in alcune piattaforme puo` esistere un solo
      * FileOutputStream per file.... la file channel pero` pare essere thread safe...
      * @param c
      */
-    public synchronized void scriviChunk(Chunk c) {
+    public synchronized void scriviChunk(Chunk c) throws ErrorException {
+        // controllo SHA
+        int offset = c.getOffset();
+        byte[] stringa = this.getHash();
+        byte[] sha = new byte[DIMSHA];
+        int i = DIMSHA * offset;
+        for (int j = 0; j < DIMSHA; j++) {
+            sha[j] = stringa[i + j];
+        }
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException ex) {
+            throw new ErrorException("No such Algorithm");
+        }
+        md.update(c.getData());
+        byte[] ris = new byte[DIMSHA];
+        ris = md.digest();
+        for (i = 0; i < ris.length; i++) {
+            System.out.println("ris : " + ris[i] + " , sha : " + sha[i]);
+            if (ris[i] != sha[i]) {
+                float temp = (float) this.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
+                int dim = (int) Math.ceil(temp);
+                if (c.getOffset() != dim  - 1) {
+                    throw new ErrorException("SHA non corretto");
+                }
+            }
+        }
         //come prima cosa rendo consistente lo statoDownload
         if (this.statoDownload == INIT) {
             this.statoDownload = RAREST;
@@ -133,11 +163,11 @@ public class Creek extends Descrittore implements Serializable {
             this.statoDownload = ENDGAME;
             System.out.println("Sono passato in endgame");
         }
-        int offset = c.getOffset();
+
         if (this.have[offset] == false) {
             //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
             this.removePIO(offset);
-            
+
             //poi modifico anche l'array have
             this.have[offset] = true;
 
@@ -186,7 +216,7 @@ public class Creek extends Descrittore implements Serializable {
             raf.seek(indice);
             //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
             ridden = raf.read(buffer, 0, buffer.length);
-            //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
+        //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
         } catch (IOException ex) {
             System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
             Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
@@ -208,7 +238,6 @@ public class Creek extends Descrittore implements Serializable {
             System.out.println("E` L'ORIGINALE!! DI LUSSO");
         }
     }
-
 
     /**
      * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PIO
@@ -256,7 +285,7 @@ public class Creek extends Descrittore implements Serializable {
         System.out.print("NON sono entrato nel while di next");
         return null;
     }
-    
+
     @Deprecated
     public synchronized PIO orderedNext(boolean[] bitfield) {
         Iterator h = this.toDo.iterator();
@@ -280,7 +309,7 @@ public class Creek extends Descrittore implements Serializable {
                 System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
                 return null;
             } else {
-                System.out.println(Thread.currentThread().getName()+" RITORNO PIO: " + temp.getId());
+                System.out.println(Thread.currentThread().getName() + " RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
@@ -289,10 +318,10 @@ public class Creek extends Descrittore implements Serializable {
             Collections.sort(this.toDo);
             PIO temp = this.next(bitfield);
             if (temp == null) {
-                System.out.println(Thread.currentThread().getName()+" RITORNO NULL e sono in RAREST");
+                System.out.println(Thread.currentThread().getName() + " RITORNO NULL e sono in RAREST");
                 return null;
             } else {
-                System.out.println(Thread.currentThread().getName()+" RITORNO PIO: " + temp.getId());
+                System.out.println(Thread.currentThread().getName() + " RITORNO PIO: " + temp.getId());
                 temp.setBusy();
                 return temp;
             }
@@ -384,13 +413,15 @@ public class Creek extends Descrittore implements Serializable {
         return this.have;
     }
 
-    public int getScaricati(){
+    public int getScaricati() {
         return this.scaricati;
     }
-    public int getScaricatiIndex(int index){
+
+    public int getScaricatiIndex(int index) {
         return this.scaricatiId[index];
     }
     //SETTER
+
     public void settaPeerCerca() {
         if (this.peercercano != NONATTIVO) {
             this.peercercano++;
@@ -419,7 +450,6 @@ public class Creek extends Descrittore implements Serializable {
         c.ind = ind;
         return c;
     }
-
 
     /**
      * Crea un creek da esportare

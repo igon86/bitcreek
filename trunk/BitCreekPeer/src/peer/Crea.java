@@ -201,7 +201,7 @@ public class Crea implements Runnable {
      * @throws condivisi.ErrorException
      */
     private byte[] hash() throws ErrorException {
-        MessageDigest md;
+        MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException ex) {
@@ -217,8 +217,7 @@ public class Crea implements Runnable {
             arraybyte = new byte[BitCreekPeer.DIMBLOCCO];
         }
 
-        for (int i = 0; i <
-                arraybyte.length; i++) {
+        for (int i = 0; i < arraybyte.length; i++) {
             arraybyte[i] = 0;
         }
 
@@ -242,6 +241,7 @@ public class Crea implements Runnable {
                 md.update(arraybyte);
                 arrayris = md.digest();
                 dimhash += arrayris.length;
+                System.out.println("LUNGHEZZA ARRAY RIS : " + arrayris.length);
                 array.add(arrayris);
                 if (dim != 0) {
                     if (dim < BitCreekPeer.DIMBLOCCO) {
@@ -250,11 +250,9 @@ public class Crea implements Runnable {
                         arraybyte = new byte[BitCreekPeer.DIMBLOCCO];
                     }
 
-                    for (int i = 0; i <
-                            arraybyte.length; i++) {
+                    for (int i = 0; i < arraybyte.length; i++) {
                         arraybyte[i] = 0;
                     }
-
                 }
             }
         } catch (IOException ex) {
@@ -268,8 +266,8 @@ public class Crea implements Runnable {
             arrayris = array.get(i);
             for (int j = 0; j < arrayris.length; j++) {
                 hash[k] = arrayris[j];
+                k++;
             }
-            k++;
         }
         return hash;
     }
