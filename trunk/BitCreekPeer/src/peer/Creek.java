@@ -190,13 +190,9 @@ public class Creek extends Descrittore implements Serializable {
         }
     }
 
-    /**
-     * Invia i messaggi di Have sulle connessioni in upload
-     */
-    public synchronized void inviaHave() {
-        for (Connessione c : connessioni) {
-            System.out.println("\nSono Creek : invio have\n");
-            c.sendUp(new Messaggio(Messaggio.HAVE, this.have));
+    public synchronized void chiudi(){
+        for(Connessione c : connessioni){
+            c.setTermina();
         }
     }
 
@@ -284,7 +280,6 @@ public class Creek extends Descrittore implements Serializable {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            //System.out.println("Sono nel while con PIO : " + temp.getId() + " e busy" + temp.getBusy());
             if (!temp.getBusy() && bitfield[temp.getId()]) {
                 return temp;
             }
