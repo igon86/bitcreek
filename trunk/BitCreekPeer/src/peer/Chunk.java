@@ -11,7 +11,8 @@ public class Chunk implements Serializable{
     public static final long serialVersionUID = 45;
 
     private byte[] data;
-    //spero non si voglia  trasferire gighi di roba!!
+    // spero non si voglia trasferire gighi di roba!! :::: io una prova la faccio sicuro!!!..se non va vengo
+    // a lamentarmi da te
     private int offset;
     private int dim;
     
