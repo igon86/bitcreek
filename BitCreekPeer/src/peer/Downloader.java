@@ -109,6 +109,9 @@ public class Downloader implements Runnable {
                     c.scriviChunk(chunk);
                 } catch (ErrorException ex) {
                     System.out.println("Lo sha non torna : " + ex.getMessage());
+                    // lo sha non torna : richiedo il pezzo
+                    conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(chunk.getOffset())));
+                    continue;
                 }
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
                     conn.incrDown();

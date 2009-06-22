@@ -1063,7 +1063,9 @@ private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
             doubleclick();
             /* visualizzo le info */
             PrintInformation("A cura di Bandettini Alberto e " +
-                    "Andrea Lottarini\nalberto.bandettini@gmail.com\nandre.lotta86@gmail.com", AIUTO);
+                    "Andrea Lottarini\nalberto.bandettini@gmail.com\nandre.lotta86@gmail.com\n" +
+                    "In particolare : per problemi e lamentele contattare Lottarini,\n" +
+                    "per elogi vari ed eventuali contattare Bandettini", AIUTO);
         }
     });
 }//GEN-LAST:event_infoActionPerformed
