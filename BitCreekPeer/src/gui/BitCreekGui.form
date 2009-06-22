@@ -151,30 +151,6 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
-            <Menu class="javax.swing.JMenu" name="ferma">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Ferma"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="fermaselezionato">
-                  <Properties>
-                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                      <KeyStroke key="Ctrl+F"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Creek selezionato"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="fermatutti">
-                  <Properties>
-                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                      <KeyStroke key="Ctrl+G"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Tutti i miei creek"/>
-                  </Properties>
-                </MenuItem>
-              </SubComponents>
-            </Menu>
             <Menu class="javax.swing.JMenu" name="elimina">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Elimina"/>
@@ -369,8 +345,8 @@
                   <Component id="pannellopubblicati" alignment="0" max="32767" attributes="0"/>
                   <Component id="pannellomieicreek" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="barrastrumenti" min="-2" pref="522" max="-2" attributes="0"/>
-                      <EmptySpace pref="57" max="32767" attributes="0"/>
+                      <Component id="barrastrumenti" min="-2" pref="478" max="-2" attributes="0"/>
+                      <EmptySpace pref="101" max="32767" attributes="0"/>
                       <Component id="areacerca" min="-2" pref="156" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="bottonecerca" min="-2" pref="73" max="-2" attributes="0"/>
@@ -621,18 +597,6 @@
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="bottoneeliminaMouseClicked"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="bottonestop">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icone/gtk-media-record.png"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Ferma"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="bottoneriparti">
           <Properties>

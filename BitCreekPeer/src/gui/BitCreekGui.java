@@ -137,8 +137,6 @@ public class BitCreekGui extends javax.swing.JFrame {
                     elimina.setEnabled(true);
                     eliminaselezionato.setEnabled(false);
                     apri.setEnabled(true);
-                    ferma.setEnabled(true);
-                    fermaselezionato.setEnabled(false);
                     avvia.setEnabled(true);
                     avviaselezionato.setEnabled(false);
                     bottonedisconnetti.setEnabled(true);
@@ -214,7 +212,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneprecedente = new javax.swing.JButton();
         bottonesuccessivo = new javax.swing.JButton();
         bottoneelimina = new javax.swing.JButton();
-        bottonestop = new javax.swing.JButton();
         bottoneriparti = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         bottoneconnetti = new javax.swing.JButton();
@@ -258,9 +255,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         avviaselezionato = new javax.swing.JMenuItem();
         avviatutti = new javax.swing.JMenuItem();
         avviatutticerca = new javax.swing.JMenuItem();
-        ferma = new javax.swing.JMenu();
-        fermaselezionato = new javax.swing.JMenuItem();
-        fermatutti = new javax.swing.JMenuItem();
         elimina = new javax.swing.JMenu();
         eliminaselezionato = new javax.swing.JMenuItem();
         bottoneeliminatutticreek = new javax.swing.JMenuItem();
@@ -396,14 +390,6 @@ public class BitCreekGui extends javax.swing.JFrame {
             }
         });
         barrastrumenti.add(bottoneelimina);
-
-        bottonestop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icone/gtk-media-record.png"))); // NOI18N
-        bottonestop.setToolTipText("Ferma");
-        bottonestop.setEnabled(false);
-        bottonestop.setFocusable(false);
-        bottonestop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        bottonestop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        barrastrumenti.add(bottonestop);
 
         bottoneriparti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icone/gtk-media-play-ltr.png"))); // NOI18N
         bottoneriparti.setToolTipText("Avvia");
@@ -685,19 +671,6 @@ public class BitCreekGui extends javax.swing.JFrame {
 
         trasferimenti.add(avvia);
 
-        ferma.setText("Ferma");
-        ferma.setEnabled(false);
-
-        fermaselezionato.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
-        fermaselezionato.setText("Creek selezionato");
-        ferma.add(fermaselezionato);
-
-        fermatutti.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
-        fermatutti.setText("Tutti i miei creek");
-        ferma.add(fermatutti);
-
-        trasferimenti.add(ferma);
-
         elimina.setText("Elimina");
         elimina.setEnabled(false);
 
@@ -831,8 +804,8 @@ public class BitCreekGui extends javax.swing.JFrame {
                     .addComponent(pannellopubblicati, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pannellomieicreek, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
                         .addComponent(areacerca, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bottonecerca, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -903,11 +876,11 @@ public class BitCreekGui extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     /**
      * Aggiorna il grafico
      * @param evt
      */
-
     private void graficolistenerActionPerformed(ActionEvent evt) {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -951,36 +924,36 @@ public class BitCreekGui extends javax.swing.JFrame {
                         if (c.getStato()) {
 
                             /* file in download */
-                            RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getSituazione(),c.getPercentuale());
+                            RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getSituazione(), c.getPercentuale());
                             try {
-                                    modellomieicreek.addRiga(r);
-                                } catch (ErrorException e) {
-                                    System.err.println("Listener : modellomieicreek.addRiga(r), " + e.getMessage());
-                                }
-                            /*if ((riga = modellomieicreek.presenza(c.getName())) != null) {
-                                try {
-                                    /* modifico riga 
+                                modellomieicreek.addRiga(r);
+                            } catch (ErrorException e) {
+                                System.err.println("Listener : modellomieicreek.addRiga(r), " + e.getMessage());
+                            }
+                        /*if ((riga = modellomieicreek.presenza(c.getName())) != null) {
+                        try {
+                        /* modifico riga
 
-                                    riga.setStato("In download");
-                                    if (c.getSituazione()) {
-                                        riga.setSituazione("Attivo");
-                                    } else {
-                                        riga.setSituazione("Non Attivo");
-                                    }
-                                    riga.setPercentuale("" + c.getPercentuale() + "%");
-                                    riga.setPeer("" + c.getPeer());
+                        riga.setStato("In download");
+                        if (c.getSituazione()) {
+                        riga.setSituazione("Attivo");
+                        } else {
+                        riga.setSituazione("Non Attivo");
+                        }
+                        riga.setPercentuale("" + c.getPercentuale() + "%");
+                        riga.setPeer("" + c.getPeer());
 
-                                } catch (ErrorException e) {
-                                    System.err.println("Listener : invalid change in " + riga.getFile() + ", " + e.getMessage());
-                                }
+                        } catch (ErrorException e) {
+                        System.err.println("Listener : invalid change in " + riga.getFile() + ", " + e.getMessage());
+                        }
 
-                            } else {
+                        } else {
 
-                                /* creek non presente : lo aggiungo 
+                        /* creek non presente : lo aggiungo
 
-                                RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione() + " byte");
-                                
-                            }*/
+                        RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione() + " byte");
+
+                        }*/
 
                         } else {
 
@@ -1008,7 +981,7 @@ public class BitCreekGui extends javax.swing.JFrame {
 
                                 /* creek non presente : lo aggiungo */
 
-                                RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione() , c.getPubblicato());
+                                RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione(), c.getPubblicato());
                                 try {
                                     modellopubblicati.addRiga(r);
                                 } catch (ErrorException e) {
@@ -1208,10 +1181,8 @@ private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_
             eliminaselezionato.setEnabled(false);
             avviaselezionato.setEnabled(false);
             bottoneriparti.setEnabled(false);
-            bottonestop.setEnabled(false);
             bottonesalva.setEnabled(false);
             menusalva.setEnabled(false);
-            fermaselezionato.setEnabled(false);
         }
     });
 }//GEN-LAST:event_formMouseClicked
@@ -1241,8 +1212,6 @@ private void tabellapubblicatiMouseClicked(java.awt.event.MouseEvent evt) {//GEN
                 bottoneprecedente.setEnabled(true);
                 menuprecedente.setEnabled(true);
                 menusuccessivo.setEnabled(true);
-                bottonestop.setEnabled(false);
-                fermaselezionato.setEnabled(false);
                 menusalva.setEnabled(false);
                 bottonesalva.setEnabled(false);
                 // se sono connesso attivo anche altre funzioni
@@ -1275,10 +1244,8 @@ private void tabellamieicreekMouseClicked(java.awt.event.MouseEvent evt) {//GEN-
                 /* se sono connesso attivo anche altre funzionalità */
                 if (peer.getIpServer() != null) {
                     eliminaselezionato.setEnabled(true);
-                    fermaselezionato.setEnabled(true);
                     avviaselezionato.setEnabled(true);
                     bottoneelimina.setEnabled(true);
-                    bottonestop.setEnabled(true);
                     bottoneriparti.setEnabled(true);
                 }
             }
@@ -1312,8 +1279,6 @@ private void tabellaricercaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                     bottoneprecedente.setEnabled(true);
                     menuprecedente.setEnabled(true);
                     menusuccessivo.setEnabled(true);
-                    bottonestop.setEnabled(false);
-                    fermaselezionato.setEnabled(false);
                     menusalva.setEnabled(true);
                     bottonesalva.setEnabled(true);
                     if (peer.getIpServer() != null) {
@@ -1471,8 +1436,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 eliminaselezionato.setEnabled(false);
                 bottoneriparti.setEnabled(false);
                 avviaselezionato.setEnabled(false);
-                bottonestop.setEnabled(false);
-                fermaselezionato.setEnabled(false);
                 bottonesuccessivo.setEnabled(false);
                 menusuccessivo.setEnabled(false);
                 bottoneprecedente.setEnabled(false);
@@ -1606,8 +1569,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 bottoneelimina.setEnabled(false);
                 elimina.setEnabled(false);
                 apri.setEnabled(false);
-                ferma.setEnabled(false);
-                bottonestop.setEnabled(false);
                 avvia.setEnabled(false);
                 bottoneriparti.setEnabled(false);
                 bottonedisconnetti.setEnabled(false);
@@ -2005,7 +1966,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private javax.swing.JButton bottoneriparti;
     private javax.swing.JButton bottonesalva;
     private javax.swing.JButton bottonesettaporta;
-    private javax.swing.JButton bottonestop;
     private javax.swing.JButton bottonesuccessivo;
     private javax.swing.JButton bottonetest;
     private javax.swing.JMenuItem cerca;
@@ -2016,9 +1976,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private javax.swing.JMenuItem eliminacercati;
     private javax.swing.JMenuItem eliminaselezionato;
     private javax.swing.JMenuItem esci;
-    private javax.swing.JMenu ferma;
-    private javax.swing.JMenuItem fermaselezionato;
-    private javax.swing.JMenuItem fermatutti;
     private javax.swing.JMenu file;
     private javax.swing.JPanel grafico;
     private javax.swing.JMenuItem info;
