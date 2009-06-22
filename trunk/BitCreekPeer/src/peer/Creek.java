@@ -34,7 +34,9 @@ public class Creek extends Descrittore implements Serializable {
     private static final int DIMSHA = 20;
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
+
     private boolean situazione; // true se attivo, false altrimenti
+
     private static final int ENDED = 0;
     private static final int INIT = 1;
     private static final int RAREST = 2;
@@ -48,6 +50,7 @@ public class Creek extends Descrittore implements Serializable {
     private int peercercano;
     private InetAddress ind;
     private boolean[] have; //false se non posseduto true se posseduto
+
     private ArrayList<PIO> toDo;
     private ArrayList<Connessione> connessioni;
     //Strutture per la gestione del file
@@ -149,7 +152,7 @@ public class Creek extends Descrittore implements Serializable {
             if (ris[i] != sha[i]) {
                 float temp = (float) this.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
                 int dim = (int) Math.ceil(temp);
-                if (c.getOffset() != dim  - 1) {
+                if (c.getOffset() != dim - 1) {
                     throw new ErrorException("SHA non corretto");
                 }
             }
@@ -203,25 +206,29 @@ public class Creek extends Descrittore implements Serializable {
      * @param id
      */
     public synchronized Chunk getChunk(int offset) {
-        int ridden = 0;
-        byte[] buffer = new byte[BitCreekPeer.DIMBLOCCO];
-        for (int i = 0; i < buffer.length; i++) {
-            buffer[i] = 0;
-        }
-        try {
-            if (raf == null) {
-                System.out.println("E` successa una tragedia al RAF");
+        if (this.have[offset]) {
+            int ridden = 0;
+            byte[] buffer = new byte[BitCreekPeer.DIMBLOCCO];
+            for (int i = 0; i < buffer.length; i++) {
+                buffer[i] = 0;
             }
-            long indice = offset * BitCreekPeer.DIMBLOCCO;
-            raf.seek(indice);
-            //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
-            ridden = raf.read(buffer, 0, buffer.length);
-        //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
-        } catch (IOException ex) {
-            System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
-            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                if (raf == null) {
+                    System.out.println("E` successa una tragedia al RAF");
+                }
+                long indice = offset * BitCreekPeer.DIMBLOCCO;
+                raf.seek(indice);
+                //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
+                ridden = raf.read(buffer, 0, buffer.length);
+            //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
+            } catch (IOException ex) {
+                System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
+                Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return new Chunk(buffer, offset, ridden);
+        } else {
+            return null;
         }
-        return new Chunk(buffer, offset, ridden);
     }
 
     /**
@@ -303,7 +310,7 @@ public class Creek extends Descrittore implements Serializable {
     public synchronized PIO getNext(boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
         //questo controllo e` totalmente inutile
-        if (this.statoDownload == INIT || this.statoDownload == ENDGAME) {
+        if (this.statoDownload == INIT) {
             PIO temp = this.next(bitfield);
             if (temp == null) {
                 System.out.println("RITORNO NULL e sono in INIT o in ENDGAME");
@@ -326,7 +333,27 @@ public class Creek extends Descrittore implements Serializable {
                 return temp;
             }
         }
+        else if (this.statoDownload == ENDGAME){
+            //PIO fittizio per avvisare il downloader dell'endgame
+            return new PIO(Downloader.ENDGAME);
+        }
         return null;
+    }
+    
+    /**
+     * metodo per ottenere gli id di tutti gli ultimi chunk da scaricare
+     * @return
+     */
+    public synchronized int[] getLast(){
+        //inizializzazione
+        int[] ret = new int[this.toDo.size()];
+        int count=0;
+        Iterator h = this.toDo.iterator();
+        while (h.hasNext()) {
+            PIO temp = (PIO) h.next();
+            ret[count++]=temp.getId();
+        }
+        return ret;
     }
 
     public void addConnessione(Connessione conn) {

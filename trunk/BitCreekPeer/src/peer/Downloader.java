@@ -13,12 +13,14 @@ import java.util.logging.Logger;
  */
 public class Downloader implements Runnable {
 
+    //Messaggio utilizzato per comunicare il passaggio in endgame
+    protected static final int ENDGAME = -1;
     private Creek c;
     private Connessione conn;
     private BitCreekPeer peer;
     private boolean pendingRequest;
 
-    public Downloader(Creek c, Connessione conn,BitCreekPeer peer) {
+    public Downloader(Creek c, Connessione conn, BitCreekPeer peer) {
         this.c = c;
         this.conn = conn;
         this.peer = peer;
@@ -43,7 +45,7 @@ public class Downloader implements Runnable {
 
 
 
-        if (c.interested(conn.getBitfied())) {
+        if (c.interested(conn.getBitfield())) {
             conn.setInteresseDown(true);
             conn.sendDown(new Messaggio(Messaggio.INTERESTED, null));
             Creek.stampaDebug(output, "connessione interessante ");
@@ -87,7 +89,7 @@ public class Downloader implements Runnable {
                     Creek.stampaDebug(output, "HAVE ricevuto di " + piece);
                     /* ma questo controllo serve ????..non va eseguito in ogni caso il corpo ??*/
                     if (this.conn.getInteresseDown() == false) {
-                        this.conn.setInteresseDown(this.c.interested(this.conn.getBitfied()));
+                        this.conn.setInteresseDown(this.c.interested(this.conn.getBitfield()));
                     }
                     break;
                 }
@@ -105,14 +107,14 @@ public class Downloader implements Runnable {
                     count++;
                     Creek.stampaDebug(output, "Ricevuto Messaggio CHUNK: " + ((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
-                try {
-                    c.scriviChunk(chunk);
-                } catch (ErrorException ex) {
-                    System.out.println("Lo sha non torna : " + ex.getMessage());
-                    // lo sha non torna : richiedo il pezzo
-                    conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(chunk.getOffset())));
-                    continue;
-                }
+                    try {
+                        c.scriviChunk(chunk);
+                    } catch (ErrorException ex) {
+                        System.out.println("Lo sha non torna : " + ex.getMessage());
+                        // lo sha non torna : richiedo il pezzo
+                        conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(chunk.getOffset())));
+                        continue;
+                    }
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
                     conn.incrDown();
                     c.settaPerc();
@@ -135,12 +137,27 @@ public class Downloader implements Runnable {
             }
 
             if (!pendingRequest) {
-                PIO p = c.getNext(this.conn.getBitfied());
+                PIO p = c.getNext(this.conn.getBitfield());
                 if (p != null) {
-                    //System.out.println("Downloader : Sto per fare sendDown perchè p != null");
-                    conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(p.getId())));
-                    this.pendingRequest = true;
-                    Creek.stampaDebug(output, " Downloader : REQUEST inviato for chunk : " + p.getId());
+                    int id = p.getId();
+                    if (id == Downloader.ENDGAME) {
+                        //sono passato in endgame, chiedo tutti i PIO
+                        int[] ultimi = c.getLast();
+                        if(ultimi.length>0){
+                        Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
+                        conn.sendDown(new Messaggio(Messaggio.REQUEST, ultimi));
+                        Creek.stampaDebug(output, " Downloader : REQUEST inviato per endgame : ");
+                        }
+                        this.pendingRequest = true;
+                    } else {
+                        //invio normale
+                        int[] toSend = new int[1];
+                        toSend[0] = id;
+                        //System.out.println("Downloader : Sto per fare sendDown perchè p != null");
+                        conn.sendDown(new Messaggio(Messaggio.REQUEST, toSend));
+                        this.pendingRequest = true;
+                        Creek.stampaDebug(output, " Downloader : REQUEST inviato for chunk : " + p.getId());
+                    }
                 } else {
                     output.println();
                     try {

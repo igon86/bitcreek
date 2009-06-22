@@ -12,7 +12,7 @@ public class Uploader implements Runnable {
     private int puntatoreHave;
     private boolean terminato;
 
-    public Uploader(Connessione conn, Creek c, int numPieces,BitCreekPeer peer) {
+    public Uploader(Connessione conn, Creek c, int numPieces, BitCreekPeer peer) {
         this.conn = conn;
         this.c = c;
         this.puntatoreHave = numPieces;
@@ -21,29 +21,49 @@ public class Uploader implements Runnable {
     }
 
     public void run() {
-        System.out.println("\n\n"+Thread.currentThread().getName() +" SONO UN NUOVO THREAD UPLOADER \n");
+        System.out.println("\n\n" + Thread.currentThread().getName() + " SONO UN NUOVO THREAD UPLOADER \n");
         int count = 0;
         while (true) {
             Messaggio m = this.conn.receiveUp();
-            if ( m == null){
-   
-                    System.out.println(Thread.currentThread().getName() + "Uploader: Timeout da connessione -> dormo un pochetto");
-                    //Thread.sleep(100);
-                    continue;
-    
+            if (m == null) {
+
+                System.out.println(Thread.currentThread().getName() + "Uploader: Timeout da connessione -> dormo un pochetto");
+                //Thread.sleep(100);
+                continue;
+
             }
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
-                    Integer idPezzo = (Integer) m.getObj();
-                    int pezzo = idPezzo.intValue();
-                    System.out.println("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
-                    //creo il chunk corretto da mandare
-                    Chunk pezzoRichiesto = c.getChunk(pezzo);
-                    Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
-                    //riempio il buffer
-                    this.conn.sendUp(nuovo);
-                    break;
+                    int pezzo;
+                    int[] idPezzo = (int[]) m.getObj();
+                    if (idPezzo.length == 1) {
+                        pezzo = idPezzo[0];
+                        System.out.println("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
+                        //creo il chunk corretto da mandare
+                        Chunk pezzoRichiesto = c.getChunk(pezzo);
+                        Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
+                        //riempio il buffer
+                        this.conn.sendUp(nuovo);
+                        break;
+                    } else {
+                        //gestione endgame -> glieli mando tutti (se li possiedo)
+                        for (int i = 0; i < idPezzo.length; i++) {
+                            pezzo = idPezzo[i];
+                            System.out.println("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
+                            //creo il chunk corretto da mandare
+                            Chunk pezzoRichiesto = c.getChunk(pezzo);
+                            
+                            if(pezzoRichiesto!=null){
+                                Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
+                                this.conn.sendUp(nuovo);
+                            }
+                            
+                            //riempio il buffer
+                            
+                        }
+                        break;
+                    }
                 }
                 case Messaggio.INTERESTED: {
                     System.out.println(Thread.currentThread().getName() + " L'altro peer e` interessato");
@@ -58,12 +78,12 @@ public class Uploader implements Runnable {
                     break;
                 }
                 case Messaggio.CLOSE: {
-                    System.out.println(Thread.currentThread().getName()+" Mi e` arrivata una close");
+                    System.out.println(Thread.currentThread().getName() + " Mi e` arrivata una close");
                     this.terminato = true;
                     break;
                 }
             }
-            if(this.terminato){
+            if (this.terminato) {
                 break;
             }
             //CONTROLLO RESET STREAM
@@ -72,17 +92,17 @@ public class Uploader implements Runnable {
                 this.conn.ResetUp();
             }
             //CONTROLLO/INVIO MESSAGGI DI HAVE
-            while (this.c.getScaricati() > this.puntatoreHave){
+            while (this.c.getScaricati() > this.puntatoreHave) {
                 int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
                 //ennino il wrapper automatico
-                Messaggio have = new Messaggio(Messaggio.HAVE,daNotificare);
+                Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
                 this.puntatoreHave++;
                 this.conn.sendUp(have);
-                System.out.println(Thread.currentThread().getName()+ " Invio la notifica del pezzo:  "+daNotificare);
+                System.out.println(Thread.currentThread().getName() + " Invio la notifica del pezzo:  " + daNotificare);
             }
         }
 
-        System.out.println(Thread.currentThread().getName()+ "Uploader: sto morendo perche` me l'ha detto l'altro");
+        System.out.println(Thread.currentThread().getName() + "Uploader: sto morendo perche` me l'ha detto l'altro");
         // decremento il numero di connessioni
         peer.decrConnessioni();
     }

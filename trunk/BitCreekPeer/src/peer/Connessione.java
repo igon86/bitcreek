@@ -237,7 +237,7 @@ public class Connessione implements Serializable {
     }
 
     //GETTER
-    public boolean[] getBitfied() {
+    public boolean[] getBitfield() {
         return this.bitfield;
     }
 
