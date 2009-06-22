@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
  */
 public class BitCreekGui extends javax.swing.JFrame {
 
-    /** Costruttore vuoto dell'interfaccia */
+    /** Costruttore dell'interfaccia */
     public BitCreekGui() {
         /* per emulare l'aspetto di vari sistemi operativi */
         try {
@@ -930,31 +930,6 @@ public class BitCreekGui extends javax.swing.JFrame {
                             } catch (ErrorException e) {
                                 System.err.println("Listener : modellomieicreek.addRiga(r), " + e.getMessage());
                             }
-                        /*if ((riga = modellomieicreek.presenza(c.getName())) != null) {
-                        try {
-                        /* modifico riga
-
-                        riga.setStato("In download");
-                        if (c.getSituazione()) {
-                        riga.setSituazione("Attivo");
-                        } else {
-                        riga.setSituazione("Non Attivo");
-                        }
-                        riga.setPercentuale("" + c.getPercentuale() + "%");
-                        riga.setPeer("" + c.getPeer());
-
-                        } catch (ErrorException e) {
-                        System.err.println("Listener : invalid change in " + riga.getFile() + ", " + e.getMessage());
-                        }
-
-                        } else {
-
-                        /* creek non presente : lo aggiungo
-
-                        RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione() + " byte");
-
-                        }*/
-
                         } else {
 
                             /* file in upload */
@@ -1408,7 +1383,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
      */
     private void avvia() {
         int[] arraycerca = tabellaricerca.getSelectedRows();
-        int[] arraydown = tabellamieicreek.getSelectedRows();
 
         //qui siamo sempre neel'eventLoop, sposto i file cercati in arraydescr, va messo come thread!!
         if (arraycerca.length != 0) {
@@ -2023,10 +1997,10 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private final int AGGIORNAMENTOGRAFICO = 1200; /* 1,2 secondi */
 
     private final int NULL = -1;
-    public final int PORTAMIN = 0;
-    public final int PORTAMAX = 65536;
+    private final int PORTAMIN = 0;
+    private final int PORTAMAX = 65536;
     public final char ERRORE = 1;
-    public final char INFORMATION = 2;
-    public final char AIUTO = 3;
+    private final char INFORMATION = 2;
+    private final char AIUTO = 3;
     public static final long serialVersionUID = 10;
 }
