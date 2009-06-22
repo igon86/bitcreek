@@ -35,8 +35,7 @@ public class MetaInfo extends HashSet<Descrittore> {
         Descrittore temp = null;
         while (i.hasNext()) {
             temp = i.next();
-            // controllo hash da rivedere
-            if (/*temp.getHash().equals(d.getHash()) && */temp.getDimensione() == d.getDimensione() && temp.getName().compareTo(d.getName()) == 0) {
+            if (temp.getDimensione() == d.getDimensione() && temp.getName().compareTo(d.getName()) == 0) {
                 return temp;
             }
         }
@@ -69,7 +68,7 @@ public class MetaInfo extends HashSet<Descrittore> {
                 }
                 nummatch++;
             }
-            if (nummatch == cerca.length) {
+            if (nummatch == cerca.length && !(d.getNumLeechers() == 0 && d.getNumSeeders() == 0)) {
                 array.add(d);
             }
             /* se ho trovato 15 descrittori esco */
