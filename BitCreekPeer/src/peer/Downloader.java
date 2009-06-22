@@ -1,5 +1,6 @@
 package peer;
 
+import condivisi.ErrorException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -74,16 +75,9 @@ public class Downloader implements Runnable {
 
             // non cancellare : importante
             if (m == null) {
-
                 Creek.stampaDebug(output, "TIMEOUT sulla receiveDOwn ho ricevuto null come messaggio");
-                //dormo un pochetto e spero in BENE
-                //Thread.sleep(100);
                 continue;
-            //} catch (InterruptedException ex) {
-            //  Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
-            //}
             }
-            //System.out.print(count+" ");
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE: {
@@ -111,7 +105,11 @@ public class Downloader implements Runnable {
                     count++;
                     Creek.stampaDebug(output, "Ricevuto Messaggio CHUNK: " + ((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
+                try {
                     c.scriviChunk(chunk);
+                } catch (ErrorException ex) {
+                    System.out.println("Lo sha non torna : " + ex.getMessage());
+                }
                     /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
                     conn.incrDown();
                     c.settaPerc();

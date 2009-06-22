@@ -17,9 +17,9 @@ public class Chunk implements Serializable{
     
 
     public Chunk(byte[] data,int offset,int dim){
-        this.data=data;
-        this.offset=offset;
-        this.dim=dim;
+        this.data = data;
+        this.offset = offset;
+        this.dim = dim;
     }
 
     public int getOffset(){
