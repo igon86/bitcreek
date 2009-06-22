@@ -43,10 +43,11 @@ public class Connessione implements Serializable {
     private boolean interesseUp;
     private boolean[] bitfield;
     private int downloaded; /* numero pezzi scaricati su questa connessione */
-
+    private boolean termina; /* flag che indica di terminare */
 
     /** Costruttore */
     public Connessione() {
+        termina = false;
     }
 
     /**
@@ -139,8 +140,23 @@ public class Connessione implements Serializable {
      * Restituisce true se la socket in download è null
      * @return
      */
-    public boolean DownNull() {
+    public synchronized boolean DownNull() {
         return down == null;
+    }
+
+    /**
+     * Setta il flag di terminazione
+     */
+    public synchronized void setTermina(){
+        this.termina = true;
+    }
+
+    /**
+     * Restituisce il flag di terminazione
+     * @return termina
+     */
+    public synchronized boolean getTermina(){
+        return this.termina;
     }
 
     /**
@@ -149,7 +165,7 @@ public class Connessione implements Serializable {
      * @param porta
      * @return
      */
-    public boolean confronta(InetAddress ip, int porta) {
+    public synchronized boolean confronta(InetAddress ip, int porta) {
         if (this.ipVicino.getHostAddress().compareTo(ip.getHostAddress()) == 0 && this.portaVicino == porta) {
             return true;
         } else {
@@ -158,7 +174,7 @@ public class Connessione implements Serializable {
     }
 
     //Virtualizzazione
-    public /*synchronized*/ void sendDown(Messaggio m) {
+    public synchronized void sendDown(Messaggio m) {
         try {
             outDown.writeObject(m);
         } catch (IOException ex) {
@@ -166,7 +182,7 @@ public class Connessione implements Serializable {
         }
     }
 
-    public /*synchronized*/ void sendUp(Messaggio m) {
+    public synchronized void sendUp(Messaggio m) {
         try {
             this.outUp.writeObject(m);
         } catch (IOException ex) {
@@ -174,7 +190,7 @@ public class Connessione implements Serializable {
         }
     }
 
-    public /*synchronized*/ Messaggio receiveDown() {
+    public synchronized Messaggio receiveDown() {
         try {
             if (inDown == null) {
                 System.out.println(Thread.currentThread().getName() + " inDown non inizializzata, sei un programmatore BUSTA");
@@ -193,7 +209,7 @@ public class Connessione implements Serializable {
         return null;
     }
 
-    public /*synchronized*/ Messaggio receiveUp() {
+    public synchronized Messaggio receiveUp() {
         try {
             if (inUp == null) {
                 System.out.println(Thread.currentThread().getName() + " inUp non inizializzata, sei un programmatore BUSTA");
@@ -237,31 +253,32 @@ public class Connessione implements Serializable {
     }
 
     //GETTER
-    public boolean[] getBitfield() {
+
+    public synchronized boolean[] getBitfield() {
         return this.bitfield;
     }
 
-    public int getPortaVicino() {
+    public synchronized int getPortaVicino() {
         return this.portaVicino;
     }
 
-    public InetAddress getIPVicino() {
+    public synchronized InetAddress getIPVicino() {
         return this.ipVicino;
     }
 
-    public boolean getStatoDown() {
+    public synchronized boolean getStatoDown() {
         return this.statoDown;
     }
 
-    public boolean getStatoUp() {
+    public synchronized boolean getStatoUp() {
         return this.statoUp;
     }
 
-    public boolean getInteresseDown() {
+    public synchronized boolean getInteresseDown() {
         return this.interesseDown;
     }
 
-    public boolean getInteresseUp() {
+    public synchronized boolean getInteresseUp() {
         return this.interesseUp;
     }
 

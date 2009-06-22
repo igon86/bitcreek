@@ -30,7 +30,7 @@ public class Downloader implements Runnable {
     public void run() {
 
         //INIZIALIZZAZIONE STAMPA DI DEBUG
-        FileOutputStream file;
+        FileOutputStream file = null;
         PrintStream output = null;
         try {
             file = new FileOutputStream(Thread.currentThread().getName() + ".log");
@@ -57,18 +57,23 @@ public class Downloader implements Runnable {
 
         //utilizzato per lo svuotamento dello buffer degli stream
         int count = 0;
-
+        PIO p = null;
 
         //********************** il ciclo *******************
         while (true) {
 
 
-            //come prima cosa controllo se e` terminato il download
-            if (this.c.getStato() == false) {
+            //come prima cosa controllo se e` terminato il download oppure
+            // se devo uscire
+            if (!this.c.getStato() || this.conn.getTermina()) {
                 Creek.stampaDebug(output, "Ho terminato");
                 conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
                 // decremento il numero di connessioni
                 peer.decrConnessioni();
+                // rilascio il PIO se sono stato chiuso
+                if (p != null) {
+                    p.setFree();
+                }
                 break;
             }
 
@@ -103,6 +108,9 @@ public class Downloader implements Runnable {
                     this.conn.setStatoDown(Connessione.UNCHOKED);
                     break;
                 }
+                case Messaggio.CLOSE: {
+                    break;
+                }
                 case Messaggio.CHUNK: {
                     count++;
                     Creek.stampaDebug(output, "Ricevuto Messaggio CHUNK: " + ((Chunk) m.getObj()).getOffset());
@@ -129,6 +137,16 @@ public class Downloader implements Runnable {
                     this.pendingRequest = false;
                 }
             }
+            if (tipo == Messaggio.CLOSE) {
+                Creek.stampaDebug(output, "Ho terminato");
+                // decremento il numero di connessioni
+                peer.decrConnessioni();
+                // rilascio il PIO se sono stato chiuso
+                if (p != null) {
+                    p.setFree();
+                }
+                break;
+            }
             //debug perverso
             if (pendingRequest) {
                 output.println("Ho una pending Request");
@@ -137,7 +155,7 @@ public class Downloader implements Runnable {
             }
 
             if (!pendingRequest) {
-                PIO p = c.getNext(this.conn.getBitfield());
+                p = c.getNext(this.conn.getBitfield());
                 if (p != null) {
                     int id = p.getId();
                     if (id == Downloader.ENDGAME) {
@@ -168,21 +186,7 @@ public class Downloader implements Runnable {
                     }
                 }
             }
-        /**try {
-        //}
-        //TEMPORANEO!!!
-        Thread.sleep(10);
-        } catch (InterruptedException ex) {
-        Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         }
-        /**
-        try {
-        this.c.raf.close();
-        } catch (IOException ex) {
-        Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         */
         Creek.stampaDebug(output, " Downloader terminato");
     }
 }

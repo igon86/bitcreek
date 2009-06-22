@@ -31,6 +31,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Parte client del protocollo BitCreek
@@ -39,7 +41,6 @@ import java.util.concurrent.Executors;
 public class BitCreekPeer {
 
     /* Costanti */
-    
     private final int NULL = -1;
     private final int ATTESARISPSERVER = 3000;
     private final int PORTASERVER = 9999;
@@ -80,7 +81,6 @@ public class BitCreekPeer {
     private ExecutorService TP;
     /** Numero di connessioni aperte */
     private int connessioni;
-    
 
     /**
      * Costruttore vuoto
@@ -105,9 +105,7 @@ public class BitCreekPeer {
         connessioni = 0;
         /* Avvio del thread Pool */
         TP = Executors.newFixedThreadPool(NUMTHREAD);
-
         /* Creazione cartelle se non esistenti*/
-
         File dir = new File("./FileCondivisi");
         dir.mkdir();
         dir = new File("./MetaInfo");
@@ -141,22 +139,24 @@ public class BitCreekPeer {
      * Restituisce il numero di connessioni
      * @return
      */
-    public synchronized int getConnessioni(){
+    public synchronized int getConnessioni() {
         return this.connessioni;
     }
 
     /**
      * Incrementa il numero di connessioni
      */
-    public synchronized void incrConnessioni(){
+    public synchronized void incrConnessioni() {
         this.connessioni++;
     }
+
     /**
      * Incrementa il numero di connessioni
      */
-    public synchronized void decrConnessioni(){
+    public synchronized void decrConnessioni() {
         this.connessioni--;
     }
+
     /**
      * Restituisce l' ip del client
      * @return mioip
@@ -169,9 +169,10 @@ public class BitCreekPeer {
      * Aggiunge un task al pool
      * @param r
      */
-    public synchronized void addTask(Runnable r){
+    public synchronized void addTask(Runnable r) {
         this.TP.execute(r);
     }
+
     /**
      * Restituisce il numero della porta in ascolto
      * @return portarichieste
@@ -195,7 +196,7 @@ public class BitCreekPeer {
     public boolean getBloccato() {
         return this.bloccato;
     }
-    
+
     /**
      * Restituisce lo stub per le callback
      * @return stubcb
@@ -241,7 +242,7 @@ public class BitCreekPeer {
         //    ris.add(nuovo);
         //}
         return this.arraydescr; // -----------> da fare ammodo !!!!!!!!!!!!
-        //return ris;
+    //return ris;
     }
 
     //SETTER
@@ -291,36 +292,37 @@ public class BitCreekPeer {
         boolean presenza = false;
         for (Creek c : arraydescr) {
             //if (c.getId() == id) {
-            if(c.getName().compareTo(nome) == 0){
+            if (c.getName().compareTo(nome) == 0) {
                 presenza = true;
                 break;
             }
         }
         return presenza;
     }
-    
+
     /**
      * ricerca e ritorna un creek in base all'id univoco passato come parametro
      * se non lo trova ritorna null
      * @param id
      * @return il Creek cercato
      */
-    public synchronized Creek getCreek(int id){
+    public synchronized Creek getCreek(int id) {
         Creek ret = null;
-        for(Creek c : arraydescr){
-            if(c.getId() == id){
+        for (Creek c : arraydescr) {
+            if (c.getId() == id) {
                 return c;
             }
         }
         //creek non trovato
         return ret;
     }
+
     /**
      * Avvia il download dei file selezionati nella ricerca per lo scaricamento
      * @param array indici dei file da scaricare
      */
     public synchronized void avviaDescr(int[] array) throws ErrorException {
-        Thread t = new Thread(new Avvia(this,array));
+        Thread t = new Thread(new Avvia(this, array));
         t.start();
     }
 
@@ -338,12 +340,12 @@ public class BitCreekPeer {
         boolean trovato = this.presenza(creek.getName());
         System.out.println("Sono in addCrek");
         if (!trovato) {
-            System.out.println(Thread.currentThread().getName()+"CREEK NON PRESENTE IN ARRAYDESCR");
+            System.out.println(Thread.currentThread().getName() + "CREEK NON PRESENTE IN ARRAYDESCR");
             FileOutputStream c = null;
             ObjectOutputStream o = null;
             try {
                 System.out.println("INIZIO PEZZO TRAGICO");
-                
+
                 c = new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek"));
                 //PROBLEMONE!!! non posso serializzare su file system file e randomAccessFile
                 Creek toBeWritten = creek.copia();
@@ -365,8 +367,9 @@ public class BitCreekPeer {
                 throw new ErrorException("Impossibile aggiungere il file: IOEXCEPTION");
             }
             arraydescr.add(creek);
-        }else
+        } else {
             System.out.println("Trovato creek in arraydescr");
+        }
         return !trovato;
     }
 
@@ -420,15 +423,15 @@ public class BitCreekPeer {
      * Handler di chiusura del protocollo
      */
     public void close() {
-
         /* chiusura connessioni */
-
         disconnetti();
-
-        /* chiusura threads */
-
-        // vedere se necessario visto che appl termina
-
+        /* attendo terminazione thread */
+        while (connessioni > 0) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ex) {
+            }
+        }
         /* eventuale salvataggio  */
 
         // già fatto durante la creazione ddel creek, vedere per file in download
@@ -444,17 +447,23 @@ public class BitCreekPeer {
     }
 
     /**
+     * Chiude tutte le connessioni in upload e in download
+     */
+    private synchronized void terminaConn() {
+        for (Creek c : arraydescr) {
+            c.chiudi();
+        }
+    }
+
+    /**
      * Disconnette il peer
      * @throws condivisi.ErrorException
      */
     public void disconnetti() {
 
         /* chiusura socket con altri peer */
-
-        // --------> da fare ->basta uccidere il thread pool!!! se mai ci sara`
-
+        this.terminaConn();
         /* chiusura "connessione" con il server */
-
         ipServer = null;
         portarichieste = NULL;
         stub = null;
