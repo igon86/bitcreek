@@ -53,11 +53,11 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     public Connessione() {
         termina = false;
         //cosi sono proprio cattivo -> meglio di no
-        this.uploadable=true;
+        this.uploadable = true;
     }
 
     public synchronized void possoUploadare() {
-        while(this.uploadable==false){
+        while(!this.uploadable){
             try {
                 wait();
             } catch (InterruptedException ex) {
