@@ -38,7 +38,9 @@ public class Creek extends Descrittore implements Serializable {
     private static final int ENDGAME = 3;
     private static final int MINCHUNK = 20;
     private static final int END = 30;
-
+    
+    private static int countNext=0;
+    
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
@@ -129,9 +131,9 @@ public class Creek extends Descrittore implements Serializable {
         while (k.hasNext()) {
             Connessione temp = (Connessione) k.next();
             if (temp.getInteresseUp()) {
-                System.out.println("Connessione interessante verso " + temp.getIPVicino() + " con: " + temp.getDownloaded());
+                System.out.println("Connessione interessante verso " + temp.getIPVicino()+" ,"+temp.getPortaVicino() + " con: " + temp.getDownloaded());
             } else {
-                System.out.println("Connessione stupida verso " + temp.getIPVicino() + " con: " + temp.getDownloaded());
+                System.out.println("Connessione stupida verso " + temp.getIPVicino() + " ,"+temp.getPortaVicino() + " con: " + temp.getDownloaded());
             }
         }
 
@@ -392,7 +394,7 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public synchronized PIO getNext(
-            boolean[] bitfield) {
+        boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
         //questo controllo e` totalmente inutile
         if (this.statoDownload == INIT) {
@@ -407,8 +409,8 @@ public class Creek extends Descrittore implements Serializable {
             }
 
         } else if (this.statoDownload == RAREST) {
-            //ordino per rarita
-            Collections.sort(this.toDo);
+            //ordino per rarita, lo faccio solo ogni dieci pezzi per ridurre l'overhead
+            if(((countNext++)%10)==0) Collections.sort(this.toDo);
             PIO temp = this.next(bitfield);
             if (temp == null) {
                 System.out.println(Thread.currentThread().getName() + " RITORNO NULL e sono in RAREST");
