@@ -345,17 +345,15 @@ public class BitCreekPeer {
             ObjectOutputStream o = null;
             try {
                 System.out.println("INIZIO PEZZO TRAGICO");
-
                 c = new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek"));
-                //PROBLEMONE!!! non posso serializzare su file system file e randomAccessFile
                 Creek toBeWritten = creek.copia();
                 toBeWritten.setClean();
-                creek.testFile();
+                //creek.testFile();
                 o = new ObjectOutputStream(c);
                 System.out.println("CREATO LO STREAM");
                 o.writeObject(toBeWritten);
                 c.close();
-                o.close(); /* AGGIUNTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+                o.close();
                 System.out.println("FINE PEZZO TRAGICO");
             } catch (FileNotFoundException ex) {
                 File f = new File("./MetaInfo/" + creek.getName() + ".creek");
@@ -437,9 +435,7 @@ public class BitCreekPeer {
             } catch (InterruptedException ex) {
             }
         }
-        /* eventuale salvataggio  */
-
-        // già fatto durante la creazione ddel creek, vedere per file in download
+        /* eventuale salvataggio vedere per file in download */
 
         /* cancellazione del file di avvio del programma */
 
@@ -452,11 +448,24 @@ public class BitCreekPeer {
     }
 
     /**
-     * Chiude tutte le connessioni in upload e in download
+     * Chiude tutte le connessioni in upload e in download e salva lo stato
+     * sui file
      */
     private synchronized void terminaConn() {
-        for (Creek c : arraydescr) {
-            c.chiudi();
+        for (Creek creek : arraydescr) {
+            creek.chiudi();
+            ObjectOutputStream o = null;
+            try {
+                o = new ObjectOutputStream(new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek")));
+                o.writeObject(creek);
+                o.close();
+            } catch (FileNotFoundException ex) {
+                File f = new File("./MetaInfo/" + creek.getName() + ".creek");
+                f.delete();
+            } catch (IOException e) {
+                File f = new File("./MetaInfo/" + creek.getName() + ".creek");
+                f.delete();
+            }
         }
     }
 
