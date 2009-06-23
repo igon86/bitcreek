@@ -35,7 +35,7 @@ public class Uploader implements Runnable {
             Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Creek.stampaDebug(output, " SONO UN NUOVO THREAD UPLOADER \n verso "+this.conn.getIPVicino());
+        Creek.stampaDebug(output, " SONO UN NUOVO THREAD UPLOADER \n verso " + this.conn.getIPVicino());
         int count = 0;
         while (true) {
 
@@ -49,15 +49,15 @@ public class Uploader implements Runnable {
 
             Messaggio m = this.conn.receiveUp();
             if (m == null) {
-                Creek.stampaDebug(output,"Uploader: Timeout da connessione -> dormo un pochetto");
+                Creek.stampaDebug(output, "Uploader: Timeout da connessione -> dormo un pochetto");
                 continue;
             }
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
-                    //Creek.stampaDebug(output,"TESTO IL SEMAFORO....");
+                    //Creek.stampaDebug(output, "TESTO IL SEMAFORO....");
                     //this.conn.possoUploadare();
-                    //Creek.stampaDebug(output,"...TESTATO");
+                    //Creek.stampaDebug(output, "...TESTATO");
                     int pezzo;
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
@@ -73,35 +73,34 @@ public class Uploader implements Runnable {
                         //gestione endgame -> glieli mando tutti (se li possiedo)
                         for (int i = 0; i < idPezzo.length; i++) {
                             pezzo = idPezzo[i];
-                            Creek.stampaDebug(output," Mando chunk con id " + pezzo);
+                            Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                             //creo il chunk corretto da mandare
                             Chunk pezzoRichiesto = c.getChunk(pezzo);
-                            
-                            if(pezzoRichiesto!=null){
+
+                            if (pezzoRichiesto != null) {
                                 Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
                                 this.conn.sendUp(nuovo);
                             }
-                            
-                            //riempio il buffer
-                            
+
+                        //riempio il buffer
+
                         }
                         break;
                     }
                 }
                 case Messaggio.INTERESTED: {
-                    Creek.stampaDebug(output," L'altro peer e` interessato");
+                    Creek.stampaDebug(output, " L'altro peer e` interessato");
                     this.conn.setInteresseUp(true);
-                    //FAKE A BESTIA
                     this.conn.sendUp(new Messaggio(Messaggio.UNCHOKE, null));
                     break;
                 }
                 case Messaggio.NOT_INTERESTED: {
-                    Creek.stampaDebug(output," L'altro peer NON e` interessato");
+                    Creek.stampaDebug(output, " L'altro peer NON e` interessato");
                     this.conn.setInteresseUp(false);
                     break;
                 }
                 case Messaggio.CLOSE: {
-                    Creek.stampaDebug(output," Mi e` arrivata una close");
+                    Creek.stampaDebug(output, " Mi e` arrivata una close");
                     break;
                 }
             }
@@ -110,7 +109,7 @@ public class Uploader implements Runnable {
             }
             //CONTROLLO RESET STREAM
             if (++count % 100 == 0) {
-                Creek.stampaDebug(output,"\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
+                Creek.stampaDebug(output, "\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
                 this.conn.ResetUp();
             }
             //CONTROLLO/INVIO MESSAGGI DI HAVE
@@ -120,11 +119,11 @@ public class Uploader implements Runnable {
                 Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
                 this.puntatoreHave++;
                 this.conn.sendUp(have);
-                Creek.stampaDebug(output," Invio la notifica del pezzo:  " + daNotificare);
+                Creek.stampaDebug(output, " Invio la notifica del pezzo:  " + daNotificare);
             }
         }
 
-        Creek.stampaDebug(output,"Uploader: sto morendo perche` me l'ha detto l'altro");
+        Creek.stampaDebug(output, "Uploader: sto morendo perche` me l'ha detto l'altro");
         // decremento il numero di connessioni
         peer.decrConnessioni();
         // setto il flag di chiusura
