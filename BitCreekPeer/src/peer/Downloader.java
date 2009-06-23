@@ -114,15 +114,14 @@ public class Downloader implements Runnable {
                     Creek.stampaDebug(output, "Ricevuto Messaggio CHUNK: " + ((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
                     try {
-                        c.scriviChunk(chunk);
+                        if(c.scriviChunk(chunk)) conn.incrDown();
                     } catch (ErrorException ex) {
                         System.out.println("Lo sha non torna : " + ex.getMessage());
                         // lo sha non torna : richiedo il pezzo
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(chunk.getOffset())));
                         continue;
                     }
-                    /* incremento il numero dei pezzi ricevuti settando la percentuale nel creek */
-                    conn.incrDown();
+                    
                     c.settaPerc();
                     /* resetto il canale per evitare di impallare tutto -> nel downloader e` probabilmente inutile
                      */

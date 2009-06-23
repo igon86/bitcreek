@@ -122,6 +122,42 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println(Thread.currentThread().getName() + ": " + s);
         output.println(s);
     }
+    
+    
+    //che furbata ragazzi
+    public synchronized void ordinaConnessioni(){
+        Collections.sort(this.connessioni);
+        //TEST
+        Iterator k = this.connessioni.iterator();
+        while (k.hasNext()){
+            Connessione temp = (Connessione) k.next();
+            if(temp.getInteresseUp()) System.out.println("Connessione interessante con: "+temp.getDownloaded());
+            else System.out.println("Connessione stupida con: "+temp.getDownloaded());
+        }
+        
+        
+        int count=0;
+        int index=0;
+        Iterator h = this.connessioni.iterator();
+        while(count<UploadManager.UPLOADLIMIT && h.hasNext() ){
+            index++;
+            Connessione temp = (Connessione) h.next();
+            temp.puoiUploadare();
+        }
+        //se rimane spazio per il peer random
+        if(count==UploadManager.UPLOADLIMIT){
+            //scelta peer random
+            int random = (int) (UploadManager.UPLOADLIMIT + Math.floor(Math.random() * (this.connessioni.size() - UploadManager.UPLOADLIMIT + 1)));
+            while(h.hasNext()){
+                index++;
+                Connessione temp = (Connessione) h.next();
+                if(index==random) temp.puoiUploadare();
+                else temp.nonPuoiUploadare();
+            }
+            //scelta peer random
+            
+        }
+    }
 
     //METODI PER IL P2P
     /**
@@ -129,45 +165,47 @@ public class Creek extends Descrittore implements Serializable {
      * FileOutputStream per file.... la file channel pero` pare essere thread safe...
      * @param c
      */
-    public synchronized void scriviChunk(Chunk c) throws ErrorException {
-        // controllo SHA
+    public synchronized boolean scriviChunk(Chunk c) throws ErrorException {
+
         int offset = c.getOffset();
-        byte[] stringa = this.getHash();
-        byte[] sha = new byte[DIMSHA];
-        int i = DIMSHA * offset;
-        for (int j = 0; j < DIMSHA; j++) {
-            sha[j] = stringa[i + j];
-        }
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-1");
-        } catch (NoSuchAlgorithmException ex) {
-            throw new ErrorException("No such Algorithm");
-        }
-        md.update(c.getData());
-        byte[] ris = new byte[DIMSHA];
-        ris = md.digest();
-        for (i = 0; i < ris.length; i++) {
-            System.out.println("ris : " + ris[i] + " , sha : " + sha[i]);
-            if (ris[i] != sha[i]) {
-                float temp = (float) this.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
-                int dim = (int) Math.ceil(temp);
-                if (c.getOffset() != dim - 1) {
-                    throw new ErrorException("SHA non corretto");
-                }
-            }
-        }
-        //come prima cosa rendo consistente lo statoDownload
-        if (this.statoDownload == INIT) {
-            this.statoDownload = RAREST;
-            System.out.println("Siamo passati in rarest");
-        }
-        if (this.toDo.size() < MINCHUNK && this.statoDownload != ENDGAME) {
-            this.statoDownload = ENDGAME;
-            System.out.println("Sono passato in endgame");
-        }
+
 
         if (this.have[offset] == false) {
+            // controllo SHA
+            byte[] stringa = this.getHash();
+            byte[] sha = new byte[DIMSHA];
+            int i = DIMSHA * offset;
+            for (int j = 0; j < DIMSHA; j++) {
+                sha[j] = stringa[i + j];
+            }
+            MessageDigest md = null;
+            try {
+                md = MessageDigest.getInstance("SHA-1");
+            } catch (NoSuchAlgorithmException ex) {
+                throw new ErrorException("No such Algorithm");
+            }
+            md.update(c.getData());
+            byte[] ris = new byte[DIMSHA];
+            ris = md.digest();
+            for (i = 0; i < ris.length; i++) {
+                System.out.println("ris : " + ris[i] + " , sha : " + sha[i]);
+                if (ris[i] != sha[i]) {
+                    float temp = (float) this.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
+                    int dim = (int) Math.ceil(temp);
+                    if (c.getOffset() != dim - 1) {
+                        throw new ErrorException("SHA non corretto");
+                    }
+                }
+            }
+            //come prima cosa rendo consistente lo statoDownload
+            if (this.statoDownload == INIT) {
+                this.statoDownload = RAREST;
+                System.out.println("Siamo passati in rarest");
+            }
+            if (this.toDo.size() < MINCHUNK && this.statoDownload != ENDGAME) {
+                this.statoDownload = ENDGAME;
+                System.out.println("Sono passato in endgame");
+            }
             //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
             this.removePIO(offset);
 
@@ -187,11 +225,15 @@ public class Creek extends Descrittore implements Serializable {
             } catch (IOException ex) {
                 Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
             }
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
-    public synchronized void chiudi(){
-        for(Connessione c : connessioni){
+    public synchronized void chiudi() {
+        for (Connessione c : connessioni) {
             c.setTermina();
         }
     }
@@ -327,26 +369,25 @@ public class Creek extends Descrittore implements Serializable {
                 temp.setBusy();
                 return temp;
             }
-        }
-        else if (this.statoDownload == ENDGAME){
+        } else if (this.statoDownload == ENDGAME) {
             //PIO fittizio per avvisare il downloader dell'endgame
             return new PIO(Downloader.ENDGAME);
         }
         return null;
     }
-    
+
     /**
      * metodo per ottenere gli id di tutti gli ultimi chunk da scaricare
      * @return
      */
-    public synchronized int[] getLast(){
+    public synchronized int[] getLast() {
         //inizializzazione
         int[] ret = new int[this.toDo.size()];
-        int count=0;
+        int count = 0;
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
-            ret[count++]=temp.getId();
+            ret[count++] = temp.getId();
         }
         return ret;
     }
