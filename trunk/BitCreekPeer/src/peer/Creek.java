@@ -34,9 +34,7 @@ public class Creek extends Descrittore implements Serializable {
     private static final int DIMSHA = 20;
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
-
     private boolean situazione; // true se attivo, false altrimenti
-
     private static final int ENDED = 0;
     private static final int INIT = 1;
     private static final int RAREST = 2;
@@ -50,7 +48,6 @@ public class Creek extends Descrittore implements Serializable {
     private int peercercano;
     private InetAddress ind;
     private boolean[] have; //false se non posseduto true se posseduto
-
     private ArrayList<PIO> toDo;
     private ArrayList<Connessione> connessioni;
     //Strutture per la gestione del file
@@ -122,40 +119,44 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println(Thread.currentThread().getName() + ": " + s);
         output.println(s);
     }
-    
-    
+
     //che furbata ragazzi
-    public synchronized void ordinaConnessioni(){
+    public synchronized void ordinaConnessioni() {
         Collections.sort(this.connessioni);
         //TEST
         Iterator k = this.connessioni.iterator();
-        while (k.hasNext()){
+        while (k.hasNext()) {
             Connessione temp = (Connessione) k.next();
-            if(temp.getInteresseUp()) System.out.println("Connessione interessante con: "+temp.getDownloaded());
-            else System.out.println("Connessione stupida con: "+temp.getDownloaded());
+            if (temp.getInteresseUp()) {
+                System.out.println("Connessione interessante con: " + temp.getDownloaded());
+            } else {
+                System.out.println("Connessione stupida con: " + temp.getDownloaded());
+            }
         }
-        
-        
-        int count=0;
-        int index=0;
+
+
+        int count = 0;
+        int index = 0;
         Iterator h = this.connessioni.iterator();
-        while(count<UploadManager.UPLOADLIMIT && h.hasNext() ){
+        while (count < UploadManager.UPLOADLIMIT && h.hasNext()) {
             index++;
+            //count++;  QUA non ci vuole count++ e non index++ ???????????????????
             Connessione temp = (Connessione) h.next();
             temp.puoiUploadare();
         }
         //se rimane spazio per il peer random
-        if(count==UploadManager.UPLOADLIMIT){
+        if (count == UploadManager.UPLOADLIMIT) {
             //scelta peer random
             int random = (int) (UploadManager.UPLOADLIMIT + Math.floor(Math.random() * (this.connessioni.size() - UploadManager.UPLOADLIMIT + 1)));
-            while(h.hasNext()){
+            while (h.hasNext()) {
                 index++;
                 Connessione temp = (Connessione) h.next();
-                if(index==random) temp.puoiUploadare();
-                else temp.nonPuoiUploadare();
+                if (index == random) {
+                    temp.puoiUploadare();
+                } else {
+                    temp.nonPuoiUploadare();
+                }
             }
-            //scelta peer random
-            
         }
     }
 
@@ -226,8 +227,7 @@ public class Creek extends Descrittore implements Serializable {
                 Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
             }
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

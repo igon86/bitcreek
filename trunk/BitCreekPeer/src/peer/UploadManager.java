@@ -1,5 +1,8 @@
 package peer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,30 +23,40 @@ public class UploadManager implements Runnable{
 
     public UploadManager(BitCreekPeer peer, Creek c){
         this.peer = peer;
-        this.c= c;
+        this.c = c;
     }
 
     public void run() {
-        System.out.println(Thread.currentThread().getName()+"UploadManager del creek "+c.getName()+" avviato");
+
+        //INIZIALIZZAZIONE STAMPA DI DEBUG
+        FileOutputStream file = null;
+        PrintStream output = null;
+        try {
+            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
+            output = new PrintStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Creek.stampaDebug(output,"UploadManager del creek "+c.getName()+" avviato");
         try {
             
             //giusto per dare il tempo di riprendersi
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Logger.getLogger(UploadManager.class.getName()).log(Level.SEVERE, null, ex);
+            Creek.stampaDebug(output,"UploadManager : sono stato ainterrotto");
         }
 
         /* ciclo infinito */
         while ( true ){
-            System.out.println("\n\nARRIVA l'UPLOAD MANAGER :D\n\n");
+            Creek.stampaDebug(output,"\n\nARRIVA l'UPLOAD MANAGER :D\n\n");
             /*sort delle connessioni*/
             this.c.ordinaConnessioni();
-            System.out.println("HO FINITO :D \n\n");
+            Creek.stampaDebug(output,"HO FINITO :D \n\n");
             /* dormo */
             try {
                 Thread.sleep(ATTESA);
             } catch (InterruptedException ex) {
-                System.out.println("UploadManager : sono stato interrotto");
+                Creek.stampaDebug(output,"UploadManager : sono stato interrotto");
             }
         }
     }
