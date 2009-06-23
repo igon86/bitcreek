@@ -128,9 +128,9 @@ public class Creek extends Descrittore implements Serializable {
         while (k.hasNext()) {
             Connessione temp = (Connessione) k.next();
             if (temp.getInteresseUp()) {
-                System.out.println("Connessione interessante con: " + temp.getDownloaded());
+                System.out.println("Connessione interessante verso "+temp.getIPVicino()+ " con: " + temp.getDownloaded());
             } else {
-                System.out.println("Connessione stupida con: " + temp.getDownloaded());
+                System.out.println("Connessione stupida verso "+temp.getIPVicino()+" con: " + temp.getDownloaded());
             }
         }
 
