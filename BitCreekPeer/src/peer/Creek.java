@@ -56,7 +56,7 @@ public class Creek extends Descrittore implements Serializable {
     private File file;
     private RandomAccessFile raf;
     private int scaricati;
-    private int [] scaricatiId;
+    private int[] scaricatiId;
 
     /**
      * Costruttore
@@ -239,8 +239,10 @@ public class Creek extends Descrittore implements Serializable {
      * su file
      */
     public synchronized void chiudi() {
-        for (Connessione c : connessioni) {
-            c.setTermina(true);
+        if (!connessioni.isEmpty()) {
+            for (Connessione c : connessioni) {
+                c.setTermina(true);
+            }
         }
         // stato iniziale
         this.situazione = NOTSTARTED;
@@ -255,7 +257,7 @@ public class Creek extends Descrittore implements Serializable {
                     connessioni.remove(c);
                 }
             }
-            if(++count == END){
+            if (++count == END) {
                 // terminazione forzata
                 break;
             }
@@ -268,7 +270,7 @@ public class Creek extends Descrittore implements Serializable {
         } catch (IOException ex) {
             System.out.println("IOexception su randon file");
         }
-        // this.scaricatiId ????
+    // this.scaricatiId ????
     }
 
     /**
@@ -316,14 +318,13 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     /*public synchronized void testFile() {
-        if (this.raf == null) {
-            System.out.println("E` PURGATO ERRORE");
-        } else {
-            System.out.println("E` L'ORIGINALE!! DI LUSSO");
-        }
+    if (this.raf == null) {
+    System.out.println("E` PURGATO ERRORE");
+    } else {
+    System.out.println("E` L'ORIGINALE!! DI LUSSO");
+    }
 
     }*/
-
     /**
      * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PIO
      * @param bitfield
