@@ -23,7 +23,7 @@ public class Uploader implements Runnable {
         this.c = c;
         this.puntatoreHave = numPieces;
         this.peer = peer;
-        this.failed=0;
+        this.failed = 0;
     }
 
     public void run() {
@@ -42,7 +42,7 @@ public class Uploader implements Runnable {
         while (true) {
 
             // GESTIONE TERMINAZIONE
-            if (this.conn.getTermina()||this.failed>Downloader.MAXFAILURE) {
+            if (this.conn.getTermina() || this.failed > Downloader.MAXFAILURE) {
                 // invio msg CLOSE al downloader associato
                 Messaggio nuovo = new Messaggio(Messaggio.CLOSE, null);
                 this.conn.sendUp(nuovo);
@@ -55,18 +55,17 @@ public class Uploader implements Runnable {
                 Creek.stampaDebug(output, "Uploader: Timeout da connessione");
                 this.failed++;
                 continue;
+            } else {
+                this.failed = 0;
             }
-            else{
-                this.failed=0;
-            }
-            
-            
+
+
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
-                    Creek.stampaDebug(output,"TESTO IL SEMAFORO....");
+                    Creek.stampaDebug(output, "TESTO IL SEMAFORO....");
                     this.conn.possoUploadare();
-                    Creek.stampaDebug(output,"...TESTATO");
+                    Creek.stampaDebug(output, "...TESTATO");
                     int pezzo;
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
@@ -74,21 +73,30 @@ public class Uploader implements Runnable {
                         Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                         //creo il chunk corretto da mandare
                         Chunk pezzoRichiesto = c.getChunk(pezzo);
-                        Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
-                        //riempio il buffer
-                        this.conn.sendUp(nuovo);
+                        if (pezzoRichiesto != null) {
+                            Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
+                            //riempio il buffer
+                            this.conn.sendUp(nuovo);
+                        } else {
+                            Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: "+pezzo);
+                            //io non gli mando nulla e lui prima o poi mi mandera in culo
+                        }
+
                         break;
                     } else {
                         //gestione endgame -> glieli mando tutti (se li possiedo)
                         for (int i = 0; i < idPezzo.length; i++) {
                             pezzo = idPezzo[i];
-                            Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
+
                             //creo il chunk corretto da mandare
                             Chunk pezzoRichiesto = c.getChunk(pezzo);
 
                             if (pezzoRichiesto != null) {
+                                Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                                 Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
                                 this.conn.sendUp(nuovo);
+                            } else {
+                                Creek.stampaDebug(output, "NON CE L'HOOOOO il " + pezzo);
                             }
 
                         //riempio il buffer
