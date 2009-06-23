@@ -19,6 +19,7 @@ public class Downloader implements Runnable {
     private Connessione conn;
     private BitCreekPeer peer;
     private boolean pendingRequest;
+    private boolean endgame;
 
     public Downloader(Creek c, Connessione conn, BitCreekPeer peer) {
         this.c = c;
@@ -114,7 +115,9 @@ public class Downloader implements Runnable {
                     } catch (ErrorException ex) {
                         System.out.println("Lo sha non torna : " + ex.getMessage());
                         // lo sha non torna : richiedo il pezzo
-                        conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(chunk.getOffset())));
+                        int[] richiesta = new int[1];
+                        richiesta[0]=chunk.getOffset();
+                        conn.sendDown(new Messaggio(Messaggio.REQUEST, richiesta));
                         continue;
                     }
 
@@ -140,19 +143,21 @@ public class Downloader implements Runnable {
             } else {
                 output.println("Non ho una pending Request");
             }
-
-            if (!pendingRequest) {
+            
+            //se siamo in endgame niente piu` richieste
+            if (!pendingRequest && !endgame) {
                 p = c.getNext(this.conn.getBitfield());
                 if (p != null) {
                     int id = p.getId();
                     if (id == Downloader.ENDGAME) {
                         //sono passato in endgame, chiedo tutti i PIO
                         int[] ultimi = c.getLast();
-                        if (ultimi.length > 0) {
+                        if(ultimi.length>0){
                             Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
                             conn.sendDown(new Messaggio(Messaggio.REQUEST, ultimi));
                             Creek.stampaDebug(output, " Downloader : REQUEST inviato per endgame : ");
                         }
+                        this.endgame = true;
                         this.pendingRequest = true;
                     } else {
                         //invio normale
