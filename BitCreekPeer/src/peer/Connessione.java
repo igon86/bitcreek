@@ -172,8 +172,8 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     /**
      * Setta il flag di terminazione
      */
-    public synchronized void setTermina() {
-        this.termina = true;
+    public synchronized void setTermina(boolean valore) {
+        this.termina = valore;
     }
 
     /**

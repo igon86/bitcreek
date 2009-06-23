@@ -66,12 +66,6 @@ public class Downloader implements Runnable {
             if (!this.c.getStato() || this.conn.getTermina()) {
                 Creek.stampaDebug(output, "Ho terminato");
                 conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
-                // decremento il numero di connessioni
-                peer.decrConnessioni();
-                // rilascio il PIO se sono stato chiuso
-                if (p != null) {
-                    p.setFree();
-                }
                 break;
             }
 
@@ -114,14 +108,16 @@ public class Downloader implements Runnable {
                     Creek.stampaDebug(output, "Ricevuto Messaggio CHUNK: " + ((Chunk) m.getObj()).getOffset());
                     Chunk chunk = (Chunk) m.getObj();
                     try {
-                        if(c.scriviChunk(chunk)) conn.incrDown();
+                        if (c.scriviChunk(chunk)) {
+                            conn.incrDown();
+                        }
                     } catch (ErrorException ex) {
                         System.out.println("Lo sha non torna : " + ex.getMessage());
                         // lo sha non torna : richiedo il pezzo
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, new Integer(chunk.getOffset())));
                         continue;
                     }
-                    
+
                     c.settaPerc();
                     /* resetto il canale per evitare di impallare tutto -> nel downloader e` probabilmente inutile
                      */
@@ -136,12 +132,6 @@ public class Downloader implements Runnable {
             }
             if (tipo == Messaggio.CLOSE) {
                 Creek.stampaDebug(output, "Ho terminato");
-                // decremento il numero di connessioni
-                peer.decrConnessioni();
-                // rilascio il PIO se sono stato chiuso
-                if (p != null) {
-                    p.setFree();
-                }
                 break;
             }
             //debug perverso
@@ -158,10 +148,10 @@ public class Downloader implements Runnable {
                     if (id == Downloader.ENDGAME) {
                         //sono passato in endgame, chiedo tutti i PIO
                         int[] ultimi = c.getLast();
-                        if(ultimi.length>0){
-                        Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
-                        conn.sendDown(new Messaggio(Messaggio.REQUEST, ultimi));
-                        Creek.stampaDebug(output, " Downloader : REQUEST inviato per endgame : ");
+                        if (ultimi.length > 0) {
+                            Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
+                            conn.sendDown(new Messaggio(Messaggio.REQUEST, ultimi));
+                            Creek.stampaDebug(output, " Downloader : REQUEST inviato per endgame : ");
                         }
                         this.pendingRequest = true;
                     } else {
@@ -184,6 +174,13 @@ public class Downloader implements Runnable {
                 }
             }
         }
+        // decremento il numero di connessioni
+        peer.decrConnessioni();
+        // rilascio il PIO se sono stato chiuso
+        if (p != null) {
+            p.setFree();
+        }
+        conn.setTermina(false);
         Creek.stampaDebug(output, " Downloader terminato");
     }
 }
