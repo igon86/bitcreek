@@ -426,9 +426,14 @@ public class BitCreekPeer {
         /* chiusura connessioni */
         disconnetti();
         /* attendo terminazione thread */
+        int count = 0;
         while (connessioni > 0) {
             try {
                 Thread.sleep(200);
+                if (count++ == 25) {
+                    // terminazione forzata
+                    break;
+                }
             } catch (InterruptedException ex) {
             }
         }
