@@ -15,17 +15,21 @@ public class Downloader implements Runnable {
 
     //Messaggio utilizzato per comunicare il passaggio in endgame
     protected static final int ENDGAME = -1;
+    protected static final int MAXFAILURE=10;
     private Creek c;
     private Connessione conn;
     private BitCreekPeer peer;
     private boolean pendingRequest;
     private boolean endgame;
+    private int failed;
 
     public Downloader(Creek c, Connessione conn, BitCreekPeer peer) {
         this.c = c;
         this.conn = conn;
         this.peer = peer;
         this.pendingRequest = false;
+        this.endgame = false;
+        this.failed =0;      
     }
 
     public void run() {
@@ -64,7 +68,10 @@ public class Downloader implements Runnable {
         while (true) {
             //come prima cosa controllo se e` terminato il download oppure
             // se devo uscire
-            if (!this.c.getStato() || this.conn.getTermina()) {
+            if (!this.c.getStato() || this.conn.getTermina() || this.failed > MAXFAILURE ) {
+                if(this.failed > MAXFAILURE){
+                    Creek.stampaDebug(output, "MUOIO PERCHE E MORTO L'ALTRO");
+                }
                 Creek.stampaDebug(output, "Ho terminato");
                 conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
                 break;
@@ -76,7 +83,11 @@ public class Downloader implements Runnable {
             // non cancellare : importante
             if (m == null) {
                 Creek.stampaDebug(output, "TIMEOUT sulla receiveDOwn ho ricevuto null come messaggio");
+                this.failed++;
                 continue;
+            }
+            else{
+                this.failed=0;
             }
             int tipo = m.getTipo();
             switch (tipo) {

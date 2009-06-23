@@ -15,6 +15,7 @@ public class UploadManager implements Runnable{
 
     /* Costanti */
     private final int ATTESA = 10000;
+ 
     protected static final int UPLOADLIMIT = 4;
 
     /* Variabili d'istanza */

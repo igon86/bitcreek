@@ -16,12 +16,14 @@ public class Uploader implements Runnable {
     private Creek c;
     private BitCreekPeer peer;
     private int puntatoreHave;
+    private int failed;
 
     public Uploader(Connessione conn, Creek c, int numPieces, BitCreekPeer peer) {
         this.conn = conn;
         this.c = c;
         this.puntatoreHave = numPieces;
         this.peer = peer;
+        this.failed=0;
     }
 
     public void run() {
@@ -39,19 +41,26 @@ public class Uploader implements Runnable {
         int count = 0;
         while (true) {
 
-            // controllo se sono stato chiuso
-            if (this.conn.getTermina()) {
+            // GESTIONE TERMINAZIONE
+            if (this.conn.getTermina()||this.failed>Downloader.MAXFAILURE) {
                 // invio msg CLOSE al downloader associato
                 Messaggio nuovo = new Messaggio(Messaggio.CLOSE, null);
                 this.conn.sendUp(nuovo);
                 break;
             }
 
+            //LETTURA MESSAGGIO
             Messaggio m = this.conn.receiveUp();
             if (m == null) {
-                Creek.stampaDebug(output, "Uploader: Timeout da connessione -> dormo un pochetto");
+                Creek.stampaDebug(output, "Uploader: Timeout da connessione");
+                this.failed++;
                 continue;
             }
+            else{
+                this.failed=0;
+            }
+            
+            
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
