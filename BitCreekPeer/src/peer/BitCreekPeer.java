@@ -720,6 +720,7 @@ public class BitCreekPeer {
 
         if (ipServer != null && !problema) {
             mioip = s.getLocalAddress();
+            System.out.println("\n\nIO SONO: "+s.getLocalAddress().getHostAddress()+"\n\n");
             try {
                 DataOutputStream out = new DataOutputStream(s.getOutputStream());
                 out.writeInt(portarichieste);

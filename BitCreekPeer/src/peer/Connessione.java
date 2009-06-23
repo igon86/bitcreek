@@ -57,6 +57,9 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     public synchronized void possoUploadare() {
+        if(!this.uploadable){
+            System.out.println("\n\nNON VA BENE ASSOLUTAMENTE CHE MI SCATTI IL MONITOR\n\n");
+        }
         while(!this.uploadable){
             try {
                 wait();

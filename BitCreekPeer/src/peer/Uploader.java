@@ -55,9 +55,9 @@ public class Uploader implements Runnable {
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
-                    //Creek.stampaDebug(output, "TESTO IL SEMAFORO....");
-                    //this.conn.possoUploadare();
-                    //Creek.stampaDebug(output, "...TESTATO");
+                    Creek.stampaDebug(output,"TESTO IL SEMAFORO....");
+                    this.conn.possoUploadare();
+                    Creek.stampaDebug(output,"...TESTATO");
                     int pezzo;
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
