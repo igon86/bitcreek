@@ -435,6 +435,8 @@ public class Creek extends Descrittore implements Serializable {
         //inizializzazione
         int[] ret = new int[this.toDo.size()];
         int count = 0;
+        //AUMENTA LA PROBABILITA DI TERMINARE PRIMA
+        Collections.shuffle(this.toDo);
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
             PIO temp = (PIO) h.next();
