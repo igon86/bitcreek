@@ -1,5 +1,11 @@
 package peer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author andrea
@@ -19,7 +25,17 @@ public class Uploader implements Runnable {
     }
 
     public void run() {
-        System.out.println("\n\n" + Thread.currentThread().getName() + " SONO UN NUOVO THREAD UPLOADER \n");
+        //INIZIALIZZAZIONE STAMPA DI DEBUG
+        FileOutputStream file = null;
+        PrintStream output = null;
+        try {
+            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
+            output = new PrintStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Creek.stampaDebug(output, " SONO UN NUOVO THREAD UPLOADER \n");
         int count = 0;
         while (true) {
 
@@ -33,20 +49,20 @@ public class Uploader implements Runnable {
 
             Messaggio m = this.conn.receiveUp();
             if (m == null) {
-                System.out.println(Thread.currentThread().getName() + "Uploader: Timeout da connessione -> dormo un pochetto");
+                Creek.stampaDebug(output,"Uploader: Timeout da connessione -> dormo un pochetto");
                 continue;
             }
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
-                    System.out.print("TESTO IL SEMAFORO....");
+                    Creek.stampaDebug(output,"TESTO IL SEMAFORO....");
                     this.conn.possoUploadare();
-                    System.out.println("...TESTATO");
+                    Creek.stampaDebug(output,"...TESTATO");
                     int pezzo;
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
                         pezzo = idPezzo[0];
-                        System.out.println("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
+                        Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                         //creo il chunk corretto da mandare
                         Chunk pezzoRichiesto = c.getChunk(pezzo);
                         Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
@@ -57,7 +73,7 @@ public class Uploader implements Runnable {
                         //gestione endgame -> glieli mando tutti (se li possiedo)
                         for (int i = 0; i < idPezzo.length; i++) {
                             pezzo = idPezzo[i];
-                            System.out.println("THREAD " + Thread.currentThread().getName() + " Mando chunk con id " + pezzo);
+                            Creek.stampaDebug(output," Mando chunk con id " + pezzo);
                             //creo il chunk corretto da mandare
                             Chunk pezzoRichiesto = c.getChunk(pezzo);
                             
@@ -73,19 +89,19 @@ public class Uploader implements Runnable {
                     }
                 }
                 case Messaggio.INTERESTED: {
-                    System.out.println(Thread.currentThread().getName() + " L'altro peer e` interessato");
+                    Creek.stampaDebug(output," L'altro peer e` interessato");
                     this.conn.setInteresseUp(true);
                     //FAKE A BESTIA
                     this.conn.sendUp(new Messaggio(Messaggio.UNCHOKE, null));
                     break;
                 }
                 case Messaggio.NOT_INTERESTED: {
-                    System.out.println(Thread.currentThread().getName() + " L'altro peer NON e` interessato");
+                    Creek.stampaDebug(output," L'altro peer NON e` interessato");
                     this.conn.setInteresseUp(false);
                     break;
                 }
                 case Messaggio.CLOSE: {
-                    System.out.println(Thread.currentThread().getName() + " Mi e` arrivata una close");
+                    Creek.stampaDebug(output," Mi e` arrivata una close");
                     break;
                 }
             }
@@ -94,7 +110,7 @@ public class Uploader implements Runnable {
             }
             //CONTROLLO RESET STREAM
             if (++count % 100 == 0) {
-                System.out.println("\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
+                Creek.stampaDebug(output,"\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
                 this.conn.ResetUp();
             }
             //CONTROLLO/INVIO MESSAGGI DI HAVE
@@ -104,11 +120,11 @@ public class Uploader implements Runnable {
                 Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
                 this.puntatoreHave++;
                 this.conn.sendUp(have);
-                System.out.println(Thread.currentThread().getName() + " Invio la notifica del pezzo:  " + daNotificare);
+                Creek.stampaDebug(output," Invio la notifica del pezzo:  " + daNotificare);
             }
         }
 
-        System.out.println(Thread.currentThread().getName() + "Uploader: sto morendo perche` me l'ha detto l'altro");
+        Creek.stampaDebug(output,"Uploader: sto morendo perche` me l'ha detto l'altro");
         // decremento il numero di connessioni
         peer.decrConnessioni();
     }
