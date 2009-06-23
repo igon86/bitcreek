@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Classe che virtualizza la Connessione tra 2 peer facenti parte di uno swarm
  * @author andrea
  */
-public class Connessione implements Serializable {
+public class Connessione implements Serializable, Comparable<Connessione> {
 
     public static final long serialVersionUID = 45;
     //codici mnemonici per lo stato
@@ -42,12 +42,37 @@ public class Connessione implements Serializable {
     private boolean interesseDown;
     private boolean interesseUp;
     private boolean[] bitfield;
+    //flag settato dall'Upload Manager che determina se si puo uploadare
+    private boolean uploadable;
     private int downloaded; /* numero pezzi scaricati su questa connessione */
+
     private boolean termina; /* flag che indica di terminare */
+
 
     /** Costruttore */
     public Connessione() {
         termina = false;
+        //cosi sono proprio cattivo -> meglio di no
+        this.uploadable=true;
+    }
+
+    public synchronized void possoUploadare() {
+        while(this.uploadable==false){
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public synchronized void puoiUploadare() {
+        this.uploadable = true;
+        notify();
+    }
+
+    public synchronized void nonPuoiUploadare() {
+        this.uploadable = false;
     }
 
     /**
@@ -147,7 +172,7 @@ public class Connessione implements Serializable {
     /**
      * Setta il flag di terminazione
      */
-    public synchronized void setTermina(){
+    public synchronized void setTermina() {
         this.termina = true;
     }
 
@@ -155,7 +180,7 @@ public class Connessione implements Serializable {
      * Restituisce il flag di terminazione
      * @return termina
      */
-    public synchronized boolean getTermina(){
+    public synchronized boolean getTermina() {
         return this.termina;
     }
 
@@ -189,7 +214,9 @@ public class Connessione implements Serializable {
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    
+    
     public synchronized Messaggio receiveDown() {
         try {
             if (inDown == null) {
@@ -247,13 +274,15 @@ public class Connessione implements Serializable {
     public synchronized void setBitfield(boolean[] b) {
         this.bitfield = b;
     }
-    
-    public synchronized void setIndexBitfield(int id){
+
+    public synchronized void setIndexBitfield(int id) {
         this.bitfield[id] = true;
     }
 
     //GETTER
-
+    public synchronized int getDownloaded(){
+        return this.downloaded;
+    }
     public synchronized boolean[] getBitfield() {
         return this.bitfield;
     }
@@ -321,5 +350,22 @@ public class Connessione implements Serializable {
 
     public synchronized int incrDown() {
         return ++this.downloaded;
+    }
+
+    public int compareTo(Connessione arg0) {
+        if (this.getInteresseUp()) {
+            if (arg0.getInteresseUp()) {
+                return arg0.downloaded - this.downloaded;
+            } else {
+                return (arg0.downloaded - this.downloaded) - 3000;
+            }
+
+        } else {
+            if (arg0.getInteresseUp()) {
+                return (arg0.downloaded - this.downloaded) + 3000;
+            } else {
+                return arg0.downloaded - this.downloaded;
+            }
+        }
     }
 }

@@ -39,6 +39,9 @@ public class Uploader implements Runnable {
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
+                    System.out.print("TESTO IL SEMAFORO....");
+                    this.conn.possoUploadare();
+                    System.out.println("...TESTATO");
                     int pezzo;
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
