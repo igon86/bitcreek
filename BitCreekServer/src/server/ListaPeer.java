@@ -71,7 +71,7 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
             long test = Calendar.getInstance().getTimeInMillis() - a.getTouch().getTimeInMillis();
             if (test > TrackerUDP.TIMEOUT) {
                 h.remove();
-                System.out.println("Rimosso net record con porta : " + a.getPorta());
+                System.out.println("Rimosso net record con ip: "+a.getIp().getHostAddress()+" e porta : " + a.getPorta());
             } else {
                 if (a.getStato() == false) seeders++;
                 else leechers ++;

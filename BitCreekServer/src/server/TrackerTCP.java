@@ -12,24 +12,23 @@ import javax.net.ssl.SSLSocket;
  * Task che implementa il tracker TCP
  * @author bande
  */
-
-public class TrackerTCP implements Runnable{
+public class TrackerTCP implements Runnable {
 
     private SSLServerSocket ss;
     private ListaPeer lista;
     private Descrittore d;
-    
+
     /** la serverSocket viene passata dall'implementazione RMI, 
      * il descrittore viene passato per permettere le modifiche sul numero di peer aderenti allo swarm
      */
-    public TrackerTCP(SSLServerSocket ss,ListaPeer lista, Descrittore d){
+    public TrackerTCP(SSLServerSocket ss, ListaPeer lista, Descrittore d) {
         this.ss = ss;
         this.lista = lista;
         this.d = d;
     }
-    
+
     public void run() {
-        while(true){
+        while (true) {
             /* accetto connessioni TCP/SSL */
             SSLSocket s = null;
             ObjectOutputStream out = null;
@@ -40,18 +39,19 @@ public class TrackerTCP implements Runnable{
                 /* invio al client la dimensione */
                 out.writeInt(lista.size());
                 /* invio al client tutti i netrecord della lista */
-                Iterator<NetRecord> i = lista.iterator();
-                while(i.hasNext()){
-                    System.out.println("Sto scrivendo");
-                    out.writeObject(i.next());
+                synchronized (this.lista) {
+                    Iterator<NetRecord> i = lista.iterator();
+                    while (i.hasNext()) {
+                        System.out.println("Sto scrivendo");
+                        out.writeObject(i.next());
+                    }
+                    out.flush();
+                    s.close();
                 }
-                out.flush();
-                s.close();
             } catch (IOException ex) {
                 System.err.print("Errore ssl\n");
                 ex.printStackTrace();
             }
         }
     }
-
 }
