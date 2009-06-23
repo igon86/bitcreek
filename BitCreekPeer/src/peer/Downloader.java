@@ -19,7 +19,7 @@ public class Downloader implements Runnable {
     private Creek c;
     private Connessione conn;
     private BitCreekPeer peer;
-    private boolean pendingRequest;
+    private int pendingRequest;
     private boolean endgame;
     private int failed;
 
@@ -27,7 +27,7 @@ public class Downloader implements Runnable {
         this.c = c;
         this.conn = conn;
         this.peer = peer;
-        this.pendingRequest = false;
+        this.pendingRequest = -1;
         this.endgame = false;
         this.failed =0;      
     }
@@ -71,6 +71,16 @@ public class Downloader implements Runnable {
             if (!this.c.getStato() || this.conn.getTermina() || this.failed > MAXFAILURE ) {
                 if(this.failed > MAXFAILURE){
                     Creek.stampaDebug(output, "MUOIO PERCHE E MORTO L'ALTRO");
+                }
+                else if(this.conn.getTermina()){
+                    Creek.stampaDebug(output,"MUOIO PER UN FLAG IN CONNESSIONE");
+                }
+                else{
+                    Creek.stampaDebug(output, "DOVEVO MORIRE DAVVERO....");
+                }
+                //rilascio PIO
+                if(pendingRequest>-1){
+                    this.c.liberaPio(pendingRequest);
                 }
                 Creek.stampaDebug(output, "Ho terminato");
                 conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
@@ -141,42 +151,53 @@ public class Downloader implements Runnable {
                     }
                     /*  controllare lo SHA del pezzo ------> da fare !!!!  */
 
-                    this.pendingRequest = false;
+                    this.pendingRequest = -1;
                 }
             }
-            if (tipo == Messaggio.CLOSE) {
-                Creek.stampaDebug(output, "Ho terminato");
-                break;
-            }
+            //MA CHE CAZZO!!!!
+            //if (tipo == Messaggio.CLOSE) {
+           //     Creek.stampaDebug(output, "Ho terminato");
+             //   break;
+            //}
             //debug perverso
-            if (pendingRequest) {
+            if (pendingRequest  > -1) {
                 output.println("Ho una pending Request");
             } else {
                 output.println("Non ho una pending Request");
             }
             
+            
+            
+            
             //se siamo in endgame niente piu` richieste
-            if (!pendingRequest && !endgame) {
+            if (pendingRequest == -1 && !endgame) {
                 p = c.getNext(this.conn.getBitfield());
                 if (p != null) {
                     int id = p.getId();
                     if (id == Downloader.ENDGAME) {
                         //sono passato in endgame, chiedo tutti i PIO
                         int[] ultimi = c.getLast();
+                        Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
+                        this.endgame = true;
                         if(ultimi.length>0){
-                            Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
+                            
                             conn.sendDown(new Messaggio(Messaggio.REQUEST, ultimi));
                             Creek.stampaDebug(output, " Downloader : REQUEST inviato per endgame : ");
+                            for (int i=1;i<ultimi.length;i++){
+                                System.out.println(ultimi[i]+" ," );
+                                output.println(ultimi[i]+" ," );
+                            }
+                            this.pendingRequest = ultimi[0];
                         }
-                        this.endgame = true;
-                        this.pendingRequest = true;
+                        
+                        
                     } else {
                         //invio normale
                         int[] toSend = new int[1];
                         toSend[0] = id;
                         //System.out.println("Downloader : Sto per fare sendDown perchè p != null");
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, toSend));
-                        this.pendingRequest = true;
+                        this.pendingRequest = toSend[0];
                         Creek.stampaDebug(output, " Downloader : REQUEST inviato for chunk : " + p.getId());
                     }
                 } else {

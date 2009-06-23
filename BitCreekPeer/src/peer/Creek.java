@@ -213,9 +213,7 @@ public class Creek extends Descrittore implements Serializable {
             }
             //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
             this.removePIO(offset);
-
-            //poi modifico anche l'array have
-            this.have[offset] = true;
+            
 
             //in questo fortissimo ordine sequenziale mi arraccomando bande
             this.scaricatiId[this.scaricati] = offset;
@@ -230,6 +228,8 @@ public class Creek extends Descrittore implements Serializable {
             } catch (IOException ex) {
                 Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
             }
+            //poi modifico anche l'array have
+            this.have[offset] = true;
             return true;
         } else {
             return false;
@@ -274,7 +274,19 @@ public class Creek extends Descrittore implements Serializable {
         }
     // this.scaricatiId ????
     }
-
+    
+    public synchronized void liberaPio(int id){
+        Iterator h = this.toDo.iterator();
+        while(h.hasNext()){
+            PIO temp =(PIO) h.next();
+            if(temp.getId() == id){
+                temp.setFree();
+                System.out.println("liberato il PIO");
+                return;
+            }
+        }
+    }
+    
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * utilizzato dall'uploader
@@ -293,13 +305,16 @@ public class Creek extends Descrittore implements Serializable {
             try {
                 if (raf == null) {
                     System.out.println("E` successa una tragedia al RAF");
+                    return null;
                 }
 
                 long indice = offset * BitCreekPeer.DIMBLOCCO;
-                raf.seek(indice);
+                //try{
+                    raf.seek(indice);
+                    ridden = raf.read(buffer, 0, buffer.length);
+                
                 //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
-                ridden =
-                        raf.read(buffer, 0, buffer.length);
+                
             //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
             } catch (IOException ex) {
                 System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
