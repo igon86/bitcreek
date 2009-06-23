@@ -39,7 +39,7 @@ public class Creek extends Descrittore implements Serializable {
     private static final int INIT = 1;
     private static final int RAREST = 2;
     private static final int ENDGAME = 3;
-    private static final int MINCHUNK = 5;
+    private static final int MINCHUNK = 20;
     //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
     private int statoDownload;
     private int percentuale;
@@ -140,6 +140,7 @@ public class Creek extends Descrittore implements Serializable {
         Iterator h = this.connessioni.iterator();
         while (count < UploadManager.UPLOADLIMIT && h.hasNext()) {
             index++;
+            count++;
             //count++;  QUA non ci vuole count++ e non index++ ???????????????????
             Connessione temp = (Connessione) h.next();
             temp.puoiUploadare();

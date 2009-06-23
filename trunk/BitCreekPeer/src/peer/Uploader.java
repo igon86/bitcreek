@@ -35,7 +35,7 @@ public class Uploader implements Runnable {
             Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Creek.stampaDebug(output, " SONO UN NUOVO THREAD UPLOADER \n");
+        Creek.stampaDebug(output, " SONO UN NUOVO THREAD UPLOADER \n verso "+this.conn.getIPVicino());
         int count = 0;
         while (true) {
 
