@@ -41,7 +41,7 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
         while (h.hasNext() && !trovato) {
             /** se il netrecord e` gia presente lo toucho*/
             r = (NetRecord) h.next();
-            if (r.getIp().equals(ip) && r.getPorta() == porta && r.getStato() == stato) {
+            if (r.getIp().getHostAddress().compareTo(ip.getHostAddress()) == 0 && r.getPorta() == porta && r.getStato() == stato) {
                 //System.out.println("Touchato peer con ip " + ip.getHostAddress() + ", porta : " + porta);
                 r.touch();
                 trovato = true;
