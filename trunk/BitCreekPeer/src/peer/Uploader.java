@@ -41,8 +41,8 @@ public class Uploader implements Runnable {
         int count = 0;
         while (true) {
 
-            // GESTIONE TERMINAZIONE
-            if (this.conn.getTermina() || this.failed > Downloader.MAXFAILURE) {
+            // GESTIONE TERMINAZIONE, la MAXFAILURE non puo funzionare con i mille ritardi che abbiamo
+            if (this.conn.getTermina() /*|| this.failed > Downloader.MAXFAILURE*/) {
                 // invio msg CLOSE al downloader associato
                 Messaggio nuovo = new Messaggio(Messaggio.CLOSE, null);
                 this.conn.sendUp(nuovo);
@@ -70,13 +70,14 @@ public class Uploader implements Runnable {
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
                         pezzo = idPezzo[0];
-                        Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
+                        
                         //creo il chunk corretto da mandare
                         Chunk pezzoRichiesto = c.getChunk(pezzo);
                         if (pezzoRichiesto != null) {
                             Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
                             //riempio il buffer
                             this.conn.sendUp(nuovo);
+                            Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                         } else {
                             Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: "+pezzo);
                             //io non gli mando nulla e lui prima o poi mi mandera in culo

@@ -21,7 +21,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     //codici mnemonici per lo stato
     protected static final boolean CHOKED = false;
     protected static final boolean UNCHOKED = true;
-    private static final int TIMEOUT = 300;
+    private static final int TIMEOUT = 1000;
     //l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socket
     private Socket down;
     private Socket up;

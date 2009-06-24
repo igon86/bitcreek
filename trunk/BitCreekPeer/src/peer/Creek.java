@@ -193,7 +193,7 @@ public class Creek extends Descrittore implements Serializable {
             byte[] ris = new byte[DIMSHA];
             ris = md.digest();
             for (i = 0; i < ris.length; i++) {
-                System.out.println("ris : " + ris[i] + " , sha : " + sha[i]);
+                //System.out.println("ris : " + ris[i] + " , sha : " + sha[i]);
                 if (ris[i] != sha[i]) {
                     float temp = (float) this.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
                     int dim = (int) Math.ceil(temp);
@@ -270,7 +270,7 @@ public class Creek extends Descrittore implements Serializable {
             this.raf.close();
             this.raf = null;
         } catch (IOException ex) {
-            System.out.println("IOexception su randon file");
+            System.out.println("IOexception su random file");
         }
     // this.scaricatiId ????
     }

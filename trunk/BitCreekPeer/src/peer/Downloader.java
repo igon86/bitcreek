@@ -68,7 +68,7 @@ public class Downloader implements Runnable {
         while (true) {
             //come prima cosa controllo se e` terminato il download oppure
             // se devo uscire
-            if (!this.c.getStato() || this.conn.getTermina() || this.failed > MAXFAILURE ) {
+            if (!this.c.getStato() || this.conn.getTermina() /*|| this.failed > MAXFAILURE*/ ) {
                 if(this.failed > MAXFAILURE){
                     Creek.stampaDebug(output, "MUOIO PERCHE E MORTO L'ALTRO");
                 }
@@ -155,10 +155,10 @@ public class Downloader implements Runnable {
                 }
             }
             //MA CHE CAZZO!!!!
-            //if (tipo == Messaggio.CLOSE) {
-           //     Creek.stampaDebug(output, "Ho terminato");
-             //   break;
-            //}
+            if (tipo == Messaggio.CLOSE) {
+                Creek.stampaDebug(output, "Ho terminato");
+                break;
+            }
             //debug perverso
             if (pendingRequest  > -1) {
                 output.println("Ho una pending Request");
