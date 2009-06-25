@@ -277,7 +277,14 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     public synchronized void setBitfield(boolean[] b) {
         this.bitfield = b;
     }
-
+    
+    public synchronized void setArrayBitfield(int[] toSet){
+        for (int i=0;i<toSet.length;i++){
+            this.bitfield[toSet[i]]=true;
+        }
+    }
+    
+    @Deprecated
     public synchronized void setIndexBitfield(int id) {
         this.bitfield[id] = true;
     }

@@ -124,7 +124,7 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     //che furbata ragazzi
-    public synchronized void ordinaConnessioni() {
+    public synchronized int ordinaConnessioni(int id,int random) {
         Collections.sort(this.connessioni);
         //TEST
         Iterator k = this.connessioni.iterator();
@@ -151,7 +151,9 @@ public class Creek extends Descrittore implements Serializable {
         //se rimane spazio per il peer random
         if (count == UploadManager.UPLOADLIMIT) {
             //scelta peer random
-            int random = (int) (UploadManager.UPLOADLIMIT + Math.floor(Math.random() * (this.connessioni.size() - UploadManager.UPLOADLIMIT + 1)));
+            if(id%3==0){
+                random = (int) (UploadManager.UPLOADLIMIT + Math.floor(Math.random() * (this.connessioni.size() - UploadManager.UPLOADLIMIT + 1)));
+            }
             while (h.hasNext()) {
                 index++;
                 Connessione temp = (Connessione) h.next();
@@ -162,6 +164,7 @@ public class Creek extends Descrittore implements Serializable {
                 }
             }
         }
+        return random;
     }
 
     //METODI PER IL P2P
