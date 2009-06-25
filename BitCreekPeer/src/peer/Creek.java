@@ -38,9 +38,7 @@ public class Creek extends Descrittore implements Serializable {
     private static final int ENDGAME = 3;
     private static final int MINCHUNK = 20;
     private static final int END = 30;
-    
-    private static int countNext=0;
-    
+    private static int countNext = 0;
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
     private boolean situazione; // true se attivo, false altrimenti
@@ -124,18 +122,22 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     //che furbata ragazzi
-    public synchronized int ordinaConnessioni(int id,int random) {
-        Collections.sort(this.connessioni);
+    public synchronized int ordinaConnessioni(int id, int random) throws ErrorException {
+        try {
+            Collections.sort(this.connessioni);
+        } catch (NullPointerException ex) {
+            throw new ErrorException("Conn null");
+        }
         //TEST
-        Iterator k = this.connessioni.iterator();
+        /*Iterator k = this.connessioni.iterator();
         while (k.hasNext()) {
             Connessione temp = (Connessione) k.next();
             if (temp.getInteresseUp()) {
-                System.out.println("Connessione interessante verso " + temp.getIPVicino()+" ,"+temp.getPortaVicino() + " con: " + temp.getDownloaded());
+                System.out.println("Connessione interessante verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
             } else {
-                System.out.println("Connessione stupida verso " + temp.getIPVicino() + " ,"+temp.getPortaVicino() + " con: " + temp.getDownloaded());
+                System.out.println("Connessione stupida verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
             }
-        }
+        }*/
 
 
         int count = 0;
@@ -144,14 +146,13 @@ public class Creek extends Descrittore implements Serializable {
         while (count < UploadManager.UPLOADLIMIT && h.hasNext()) {
             index++;
             count++;
-            //count++;  QUA non ci vuole count++ e non index++ ???????????????????
             Connessione temp = (Connessione) h.next();
             temp.puoiUploadare();
         }
         //se rimane spazio per il peer random
         if (count == UploadManager.UPLOADLIMIT) {
             //scelta peer random
-            if(id%3==0){
+            if (id % 3 == 0) {
                 random = (int) (UploadManager.UPLOADLIMIT + Math.floor(Math.random() * (this.connessioni.size() - UploadManager.UPLOADLIMIT + 1)));
             }
             while (h.hasNext()) {
@@ -216,7 +217,7 @@ public class Creek extends Descrittore implements Serializable {
             }
             //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
             this.removePIO(offset);
-            
+
 
             //in questo fortissimo ordine sequenziale mi arraccomando bande
             this.scaricatiId[this.scaricati] = offset;
@@ -260,10 +261,17 @@ public class Creek extends Descrittore implements Serializable {
             for (Connessione c : connessioni) {
                 if (!c.getTermina()) {
                     connessioni.remove(c);
+                } else {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Creek sono stato interrotto");
+                    }
                 }
             }
             if (++count == END) {
                 // terminazione forzata
+                System.out.println("Terminazione forzata nel creek");
                 break;
             }
         }
@@ -275,21 +283,20 @@ public class Creek extends Descrittore implements Serializable {
         } catch (IOException ex) {
             System.out.println("IOexception su random file");
         }
-    // this.scaricatiId ????
     }
-    
-    public synchronized void liberaPio(int id){
+
+    public synchronized void liberaPio(int id) {
         Iterator h = this.toDo.iterator();
-        while(h.hasNext()){
-            PIO temp =(PIO) h.next();
-            if(temp.getId() == id){
+        while (h.hasNext()) {
+            PIO temp = (PIO) h.next();
+            if (temp.getId() == id) {
                 temp.setFree();
                 System.out.println("liberato il PIO");
                 return;
             }
         }
     }
-    
+
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * utilizzato dall'uploader
@@ -313,11 +320,11 @@ public class Creek extends Descrittore implements Serializable {
 
                 long indice = offset * BitCreekPeer.DIMBLOCCO;
                 //try{
-                    raf.seek(indice);
-                    ridden = raf.read(buffer, 0, buffer.length);
-                
-                //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
-                
+                raf.seek(indice);
+                ridden = raf.read(buffer, 0, buffer.length);
+
+            //System.out.println(Thread.currentThread().getName() + " MI SONO SPOSTATO AL BYTE : " + indice);
+
             //System.out.println(Thread.currentThread().getName() + " HO LETTO " + ridden + " BYTE");
             } catch (IOException ex) {
                 System.out.println(Thread.currentThread().getName() + " ERRORE IN LETTURA");
@@ -412,7 +419,7 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public synchronized PIO getNext(
-        boolean[] bitfield) {
+            boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
         //questo controllo e` totalmente inutile
         if (this.statoDownload == INIT) {
@@ -428,7 +435,9 @@ public class Creek extends Descrittore implements Serializable {
 
         } else if (this.statoDownload == RAREST) {
             //ordino per rarita, lo faccio solo ogni dieci pezzi per ridurre l'overhead
-            if(((countNext++)%10)==0) Collections.sort(this.toDo);
+            if (((countNext++) % 10) == 0) {
+                Collections.sort(this.toDo);
+            }
             PIO temp = this.next(bitfield);
             if (temp == null) {
                 System.out.println(Thread.currentThread().getName() + " RITORNO NULL e sono in RAREST");
@@ -467,13 +476,18 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     public void addConnessione(Connessione conn) {
+        if(this.connessioni == null){
+            this.connessioni = new ArrayList<Connessione>();
+        }
         this.connessioni.add(conn);
-        //ma perche`???
         this.situazione = STARTED;
     }
 
-    public Connessione presenzaConnessione(
-            InetAddress ip, int porta) {
+    public Connessione presenzaConnessione(InetAddress ip, int porta) {
+        if(this.connessioni == null){
+            return null;
+        }
+
         for (Connessione c : this.connessioni) {
             if (c.confronta(ip, porta)) {
                 return c;
@@ -482,12 +496,6 @@ public class Creek extends Descrittore implements Serializable {
         }
         return null;
     }
-    /*
-    public synchronized void closeFile() {
-    }
-
-    public synchronized void closeAndDeleteFile() {
-    }*/
 
     //metodo chiamato al momento della creazione del creek (in Download)
     public synchronized void setToDo() {

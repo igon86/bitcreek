@@ -1,5 +1,6 @@
 package peer;
 
+import condivisi.ErrorException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -52,8 +53,13 @@ public class UploadManager implements Runnable{
         /* ciclo infinito */
         while ( true ){
             Creek.stampaDebug(output,"\n\nARRIVA l'UPLOAD MANAGER :D\n\n");
-            /*sort delle connessioni*/
-            random = this.c.ordinaConnessioni(countOrdina,random);
+            try {
+                /*sort delle connessioni*/
+                random = this.c.ordinaConnessioni(countOrdina, random);
+            } catch (ErrorException ex) {
+                System.out.println("Esco perchè mi hanno chiuso : " + ex.getMessage());
+                break;
+            }
             Creek.stampaDebug(output,"HO FINITO :D \n\n");
             /* dormo */
             try {
