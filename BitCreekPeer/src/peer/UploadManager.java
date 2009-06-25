@@ -66,6 +66,7 @@ public class UploadManager implements Runnable{
                 Thread.sleep(ATTESA);
             } catch (InterruptedException ex) {
                 Creek.stampaDebug(output,"UploadManager : sono stato interrotto");
+                break;
             }
         }
     }
