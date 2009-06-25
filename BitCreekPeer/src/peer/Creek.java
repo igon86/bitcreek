@@ -244,39 +244,41 @@ public class Creek extends Descrittore implements Serializable {
      * su file
      */
     public synchronized void chiudi() {
+        // stato iniziale
+        this.situazione = NOTSTARTED;
+        this.statoDownload = INIT;
+        this.peer = 0;
+        this.peercercano = 0;
         try {
             if (!connessioni.isEmpty()) {
                 for (Connessione c : connessioni) {
                     c.setTermina(true);
                 }
             }
-        } catch (NullPointerException ex) {
+        }    
+
+            // le connessioni sono state chiuse : le elimino
+            //int count = 0;
+            //while (!connessioni.isEmpty()) {
+            //    for (Connessione c : connessioni) {
+            //        if (!c.getTermina()) {
+            //            connessioni.remove(c);
+           //         } /*else {
+             //           try {
+             //               Thread.sleep(200);
+             //           } catch (InterruptedException ex) {
+             //               System.out.println("Creek sono stato interrotto");
+             //           }
+             //       }*/
+         //       }
+           //     if (++count == END) {
+           //         // terminazione forzata
+           //         System.out.println("Terminazione forzata nel creek");
+           //         break;
+           //     }
+           // }
+        catch (NullPointerException ex) {
             System.out.println("Connessioni e` gia null");
-        }
-        // stato iniziale
-        this.situazione = NOTSTARTED;
-        this.statoDownload = INIT;
-        this.peer = 0;
-        this.peercercano = 0;
-        // le connessioni sono state chiuse : le elimino
-        int count = 0;
-        while (!connessioni.isEmpty()) {
-            for (Connessione c : connessioni) {
-                if (!c.getTermina()) {
-                    connessioni.remove(c);
-                } else {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException ex) {
-                        System.out.println("Creek sono stato interrotto");
-                    }
-                }
-            }
-            if (++count == END) {
-                // terminazione forzata
-                System.out.println("Terminazione forzata nel creek");
-                break;
-            }
         }
         connessioni = null;
         try {
@@ -285,6 +287,9 @@ public class Creek extends Descrittore implements Serializable {
             this.raf = null;
         } catch (IOException ex) {
             System.out.println("IOexception su random file");
+        }
+        catch (NullPointerException ex){
+            System.out.println("il raf era gia null");
         }
     }
 
