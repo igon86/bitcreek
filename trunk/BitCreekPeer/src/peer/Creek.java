@@ -244,10 +244,14 @@ public class Creek extends Descrittore implements Serializable {
      * su file
      */
     public synchronized void chiudi() {
-        if (!connessioni.isEmpty()) {
-            for (Connessione c : connessioni) {
-                c.setTermina(true);
+        try {
+            if (!connessioni.isEmpty()) {
+                for (Connessione c : connessioni) {
+                    c.setTermina(true);
+                }
             }
+        } catch (NullPointerException ex) {
+            System.out.println("Connessioni e` gia null");
         }
         // stato iniziale
         this.situazione = NOTSTARTED;
@@ -349,7 +353,6 @@ public class Creek extends Descrittore implements Serializable {
     } else {
     System.out.println("E` L'ORIGINALE!! DI LUSSO");
     }
-
     }*/
     /**
      * Metodo invocato dall'avvia per aggiungere un nuovo bitfield alla lista PIO
@@ -476,7 +479,7 @@ public class Creek extends Descrittore implements Serializable {
 
     public synchronized void addConnessione(Connessione conn) {
         /*if (this.connessioni == null) {
-            this.connessioni = new ArrayList<Connessione>();
+        this.connessioni = new ArrayList<Connessione>();
         }*/
         this.connessioni.add(conn);
         this.situazione = STARTED;
@@ -575,7 +578,6 @@ public class Creek extends Descrittore implements Serializable {
         return this.scaricatiId[index];
     }
 //SETTER
-
     public void settaPeerCerca() {
         if (this.peercercano != NONATTIVO) {
             this.peercercano++;
