@@ -478,14 +478,17 @@ public class BitCreekPeer {
         stub = null;
         stubcb = null;
         callback = null;
+        System.out.println("MESSE A NULL LE VARIABILI");
         try {
             if (welcome != null) {
                 /* chiudo la socket solo se è inizializzata */
                 welcome.close();
             }
         } catch (IOException ex) {
+            System.out.println("WELCOME gia chiusa");
         }
         /* chiusura socket con altri peer */
+        System.out.println("CHIAMO LA TERMINACONN");
         this.terminaConn();
     }
 
