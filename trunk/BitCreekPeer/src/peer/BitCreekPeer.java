@@ -415,8 +415,8 @@ public class BitCreekPeer {
         /* chiusura connessioni */
         disconnetti();
         /* attendo terminazione thread */
-        int count = 0;
-        while (connessioni > 0) {
+        //int count = 0;
+        /*while (connessioni > 0) {
             try {
                 Thread.sleep(200);
                 if (count++ == 25) {
@@ -425,27 +425,13 @@ public class BitCreekPeer {
                 }
             } catch (InterruptedException ex) {
             }
-        }
+        }*/
         /* cancellazione del file di avvio del programma */
 
         File conf = new File("./avviato.on");
         conf.delete();
 
-        /* termino il processo */
-
-        System.exit(0);
-    }
-
-    /**
-     * Chiude tutte le connessioni in upload e in download e salva lo stato
-     * sui file
-     */
-    private synchronized void terminaConn() {
-        for (Creek creek : arraydescr) {
-            creek.chiudi();
-        }
-        this.TP.shutdownNow();
-        this.TP = null;
+        /* salvataggio */
         for (Creek creek : arraydescr) {
             ObjectOutputStream o = null;
             try {
@@ -460,6 +446,24 @@ public class BitCreekPeer {
                 f.delete();
             }
         }
+        /* termino il processo */
+
+        System.exit(0);
+    }
+
+    /**
+     * Chiude tutte le connessioni in upload e in download e salva lo stato
+     * sui file
+     */
+    private synchronized void terminaConn() {
+        for (Creek creek : arraydescr) {
+            creek.chiudi();
+        }
+        this.TP.shutdownNow();
+        if(TP.isShutdown()){
+            System.out.println("TUTTO A POSTO AMICCI IL THREAD POOL E MORTO");
+        }
+        this.TP = null;
     }
 
     /**
