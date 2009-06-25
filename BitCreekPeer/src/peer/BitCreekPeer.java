@@ -31,8 +31,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Parte client del protocollo BitCreek
@@ -231,18 +229,11 @@ public class BitCreekPeer {
     }
 
     /**
-     * Restituisce tutti i creek in un array di copia TOLTA LA COPIA
+     * Restituisce tutti i creek
      * @return arraydescr
      */
     public synchronized ArrayList<Creek> getDescr() throws ErrorException {
-        //System.out.println("GETDESCR");
-        //ArrayList<Creek> ris = new ArrayList<Creek>();
-        //for (Creek c : arraydescr) {
-        //    Creek nuovo = c.copia();
-        //    ris.add(nuovo);
-        //}
-        return this.arraydescr; // -----------> da fare ammodo !!!!!!!!!!!!
-    //return ris;
+        return this.arraydescr;
     }
 
     //SETTER
@@ -623,6 +614,9 @@ public class BitCreekPeer {
         } else {
             /* avviso l'interfaccia che la connetti è stata effettuata con successo */
             gui.connettiDone();
+            /* faccio partire i thread in download se ci sono */
+            Thread t = new Thread(new Riavvia(this));
+            t.start();
         }
 
     }

@@ -64,12 +64,10 @@ public class Avvia implements Runnable {
             }
 
             /* contatto gli altri e creo i thread solo se non ho già in download quel file */
-            //NON DOVREMMO CONTROLLARLO PRIMA???
             if (presenza) {
                 //recupero della lista Peer dal tracker
                 int portatracker = d.getTCP();
-
-
+                
                 //CONTATTO SSL
                 System.out.println(Thread.currentThread().getName() + " : Avvia : !presenza --> Contatto tracker sulla porta : " + portatracker);
                 try {
@@ -162,12 +160,6 @@ public class Avvia implements Runnable {
                             System.out.println(Thread.currentThread().getName() + " Avvia : Classnotfound");
                             Logger.getLogger(Avvia.class.getName()).log(Level.SEVERE, null, ex);
                         }
-
-                        //aggiungo l'oggetto connessione
-                        System.out.println(Thread.currentThread().getName() + " Avvia : Aggiungo connessione in download");
-                        //Connessione conn = new Connessione(sock, null, b.getBitfield(), n.getPorta());
-
-
                         System.out.println(Thread.currentThread().getName() + " Avvia : Creo Downloader");
                         //creo il thread per il download e lo aggiungo al ThreadPool
                         peer.addTask(new Downloader(c, conn, peer));
