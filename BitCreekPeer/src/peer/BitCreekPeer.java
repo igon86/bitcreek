@@ -426,8 +426,6 @@ public class BitCreekPeer {
             } catch (InterruptedException ex) {
             }
         }
-        /* eventuale salvataggio vedere per file in download */
-
         /* cancellazione del file di avvio del programma */
 
         File conf = new File("./avviato.on");
@@ -574,7 +572,6 @@ public class BitCreekPeer {
             try {
 
                 /* attivazione rmi parte client e attivazione callback */
-
                 Registry reg = LocateRegistry.getRegistry(ipServer.getHostAddress(), PORTARMI);
                 stub = (InterfacciaRMI) reg.lookup("MetodiRMI");
                 callback = new ImplementazioneCallback(this);

@@ -140,7 +140,7 @@ public class Downloader implements Runnable {
                         richiesta[0]=chunk.getOffset();
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, richiesta));
                         continue;
-                    } catch(NullPointerException ex){
+                    } catch( NullPointerException ex ){
                         System.out.println("devo terminare");
                         tipo = Messaggio.CLOSE;
                         break;
@@ -161,6 +161,7 @@ public class Downloader implements Runnable {
             //MA CHE CAZZO!!!!
             if (tipo == Messaggio.CLOSE) {
                 Creek.stampaDebug(output, "Ho terminato");
+                conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
                 break;
             }
             //debug perverso

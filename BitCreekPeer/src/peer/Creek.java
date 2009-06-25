@@ -104,15 +104,7 @@ public class Creek extends Descrittore implements Serializable {
             }
         }
         this.toDo = new ArrayList<PIO>();
-        this.connessioni = new ArrayList<Connessione>();
-
-
-        file = new File("./FileCondivisi/" + this.getName());
-        try {
-            raf = new RandomAccessFile(file, "rw");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.init();
         System.out.println("CREEK COSTRUITO");
     }
 
@@ -131,12 +123,12 @@ public class Creek extends Descrittore implements Serializable {
         //TEST
         /*Iterator k = this.connessioni.iterator();
         while (k.hasNext()) {
-            Connessione temp = (Connessione) k.next();
-            if (temp.getInteresseUp()) {
-                System.out.println("Connessione interessante verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
-            } else {
-                System.out.println("Connessione stupida verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
-            }
+        Connessione temp = (Connessione) k.next();
+        if (temp.getInteresseUp()) {
+        System.out.println("Connessione interessante verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
+        } else {
+        System.out.println("Connessione stupida verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
+        }
         }*/
 
 
@@ -175,10 +167,7 @@ public class Creek extends Descrittore implements Serializable {
      * @param c
      */
     public synchronized boolean scriviChunk(Chunk c) throws ErrorException {
-
         int offset = c.getOffset();
-
-
         if (this.have[offset] == false) {
             // controllo SHA
             byte[] stringa = this.getHash();
@@ -237,6 +226,16 @@ public class Creek extends Descrittore implements Serializable {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public synchronized void init() {
+        this.connessioni = new ArrayList<Connessione>();
+        this.file = new File("./FileCondivisi/" + this.getName());
+        try {
+            this.raf = new RandomAccessFile(this.file, "rw");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -475,16 +474,16 @@ public class Creek extends Descrittore implements Serializable {
         return ret;
     }
 
-    public void addConnessione(Connessione conn) {
-        if(this.connessioni == null){
+    public synchronized void addConnessione(Connessione conn) {
+        /*if (this.connessioni == null) {
             this.connessioni = new ArrayList<Connessione>();
-        }
+        }*/
         this.connessioni.add(conn);
         this.situazione = STARTED;
     }
 
-    public Connessione presenzaConnessione(InetAddress ip, int porta) {
-        if(this.connessioni == null){
+    public synchronized Connessione presenzaConnessione(InetAddress ip, int porta) {
+        if (this.connessioni == null) {
             return null;
         }
 
