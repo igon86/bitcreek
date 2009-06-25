@@ -70,7 +70,7 @@ public class Uploader implements Runnable {
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
                         pezzo = idPezzo[0];
-                        
+
                         //creo il chunk corretto da mandare
                         Chunk pezzoRichiesto = c.getChunk(pezzo);
                         if (pezzoRichiesto != null) {
@@ -79,8 +79,8 @@ public class Uploader implements Runnable {
                             this.conn.sendUp(nuovo);
                             Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                         } else {
-                            Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: "+pezzo);
-                            //io non gli mando nulla e lui prima o poi mi mandera in culo
+                            Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: " + pezzo);
+                        //io non gli mando nulla e lui prima o poi mi mandera in culo
                         }
 
                         break;
@@ -131,13 +131,21 @@ public class Uploader implements Runnable {
                 this.conn.ResetUp();
             }
             //CONTROLLO/INVIO MESSAGGI DI HAVE
-            while (this.c.getScaricati() > this.puntatoreHave) {
-                int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
-                //ennino il wrapper automatico
-                Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
-                this.puntatoreHave++;
+            int dimHave = this.c.getScaricati() - this.puntatoreHave;
+            if (dimHave > 0) {
+                int[] newHave = new int[dimHave];
+                count=0;
+                while (this.c.getScaricati() > this.puntatoreHave) {
+                    int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
+                    newHave[count++] = daNotificare;
+                    //ennino il wrapper automatico
+                    //Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
+                    this.puntatoreHave++;
+                    //this.conn.sendUp(have);
+                    //Creek.stampaDebug(output, " Invio la notifica del pezzo:  " + daNotificare);
+                }
+                Messaggio have = new Messaggio(Messaggio.HAVE, newHave);
                 this.conn.sendUp(have);
-                Creek.stampaDebug(output, " Invio la notifica del pezzo:  " + daNotificare);
             }
         }
 

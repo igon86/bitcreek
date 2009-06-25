@@ -46,12 +46,14 @@ public class UploadManager implements Runnable{
         } catch (InterruptedException ex) {
             Creek.stampaDebug(output,"UploadManager : sono stato ainterrotto");
         }
-
+        
+        int countOrdina=0;
+        int random =-1;
         /* ciclo infinito */
         while ( true ){
             Creek.stampaDebug(output,"\n\nARRIVA l'UPLOAD MANAGER :D\n\n");
             /*sort delle connessioni*/
-            this.c.ordinaConnessioni();
+            random = this.c.ordinaConnessioni(countOrdina,random);
             Creek.stampaDebug(output,"HO FINITO :D \n\n");
             /* dormo */
             try {

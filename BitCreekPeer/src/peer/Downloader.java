@@ -102,10 +102,10 @@ public class Downloader implements Runnable {
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.HAVE: {
-                    int piece = (Integer) m.getObj();
+                    int[] pieces = (int[]) m.getObj();
                     //this.conn.bitfield[piece] = true;
-                    this.conn.setIndexBitfield(piece);
-                    Creek.stampaDebug(output, "HAVE ricevuto di " + piece);
+                    this.conn.setArrayBitfield(pieces);
+                    Creek.stampaDebug(output, "HAVE ricevuto!!!");
                     /* ma questo controllo serve ????..non va eseguito in ogni caso il corpo ??*/
                     if (this.conn.getInteresseDown() == false) {
                         this.conn.setInteresseDown(this.c.interested(this.conn.getBitfield()));
