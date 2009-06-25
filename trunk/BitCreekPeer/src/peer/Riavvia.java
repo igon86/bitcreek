@@ -38,12 +38,12 @@ public class Riavvia implements Runnable {
         }
         if (array != null) {
             for (Creek c : array) {
-
+                /* inizializzo il creek */
+                c.init();
                 /* se il file è in download */
                 if (c.getStato()) {
                     SSLSocket s = null;
                     ObjectInputStream oin = null;
-
                     //recupero della lista Peer dal tracker
                     int portatracker = c.getTCP();
 
