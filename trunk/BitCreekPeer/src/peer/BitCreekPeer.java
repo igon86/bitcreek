@@ -445,6 +445,10 @@ public class BitCreekPeer {
     private synchronized void terminaConn() {
         for (Creek creek : arraydescr) {
             creek.chiudi();
+        }
+        this.TP.shutdownNow();
+        this.TP = null;
+        for (Creek creek : arraydescr) {
             ObjectOutputStream o = null;
             try {
                 o = new ObjectOutputStream(new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek")));
@@ -615,6 +619,9 @@ public class BitCreekPeer {
             /* avviso l'interfaccia che la connetti è stata effettuata con successo */
             gui.connettiDone();
             /* faccio partire i thread in download se ci sono */
+            if(this.TP == null){
+                this.TP = Executors.newFixedThreadPool(NUMTHREAD);
+            }
             Thread t = new Thread(new Riavvia(this));
             t.start();
         }
@@ -714,7 +721,7 @@ public class BitCreekPeer {
 
         if (ipServer != null && !problema) {
             mioip = s.getLocalAddress();
-            System.out.println("\n\nIO SONO: "+s.getLocalAddress().getHostAddress()+"\n\n");
+            System.out.println("\n\nIO SONO: " + s.getLocalAddress().getHostAddress() + "\n\n");
             try {
                 DataOutputStream out = new DataOutputStream(s.getOutputStream());
                 out.writeInt(portarichieste);

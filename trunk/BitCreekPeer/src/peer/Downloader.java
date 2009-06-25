@@ -79,7 +79,7 @@ public class Downloader implements Runnable {
                     Creek.stampaDebug(output, "DOVEVO MORIRE DAVVERO....");
                 }
                 //rilascio PIO
-                if(pendingRequest>-1){
+                if(pendingRequest > -1){
                     this.c.liberaPio(pendingRequest);
                 }
                 Creek.stampaDebug(output, "Ho terminato");
@@ -97,7 +97,7 @@ public class Downloader implements Runnable {
                 continue;
             }
             else{
-                this.failed=0;
+                this.failed = 0;
             }
             int tipo = m.getTipo();
             switch (tipo) {
@@ -140,6 +140,10 @@ public class Downloader implements Runnable {
                         richiesta[0]=chunk.getOffset();
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, richiesta));
                         continue;
+                    } catch(NullPointerException ex){
+                        System.out.println("devo terminare");
+                        tipo = Messaggio.CLOSE;
+                        break;
                     }
 
                     c.settaPerc();
