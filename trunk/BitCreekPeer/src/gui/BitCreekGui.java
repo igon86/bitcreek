@@ -212,7 +212,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneprecedente = new javax.swing.JButton();
         bottonesuccessivo = new javax.swing.JButton();
         bottoneelimina = new javax.swing.JButton();
-        bottoneriparti = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         bottoneconnetti = new javax.swing.JButton();
         bottonedisconnetti = new javax.swing.JButton();
@@ -253,7 +252,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         trasferimenti = new javax.swing.JMenu();
         avvia = new javax.swing.JMenu();
         avviaselezionato = new javax.swing.JMenuItem();
-        avviatutti = new javax.swing.JMenuItem();
         avviatutticerca = new javax.swing.JMenuItem();
         elimina = new javax.swing.JMenu();
         eliminaselezionato = new javax.swing.JMenuItem();
@@ -390,19 +388,6 @@ public class BitCreekGui extends javax.swing.JFrame {
             }
         });
         barrastrumenti.add(bottoneelimina);
-
-        bottoneriparti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icone/gtk-media-play-ltr.png"))); // NOI18N
-        bottoneriparti.setToolTipText("Avvia");
-        bottoneriparti.setEnabled(false);
-        bottoneriparti.setFocusable(false);
-        bottoneriparti.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        bottoneriparti.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        bottoneriparti.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bottoneripartiMouseClicked(evt);
-            }
-        });
-        barrastrumenti.add(bottoneriparti);
         barrastrumenti.add(jSeparator2);
 
         bottoneconnetti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icone/network-wired.png"))); // NOI18N
@@ -651,15 +636,6 @@ public class BitCreekGui extends javax.swing.JFrame {
         });
         avvia.add(avviaselezionato);
 
-        avviatutti.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        avviatutti.setText("Tutti i miei creek");
-        avviatutti.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                avviatuttiActionPerformed(evt);
-            }
-        });
-        avvia.add(avviatutti);
-
         avviatutticerca.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
         avviatutticerca.setText("Tutti i file cercati");
         avviatutticerca.addActionListener(new java.awt.event.ActionListener() {
@@ -804,8 +780,8 @@ public class BitCreekGui extends javax.swing.JFrame {
                     .addComponent(pannellopubblicati, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pannellomieicreek, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                        .addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                         .addComponent(areacerca, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bottonecerca, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1157,7 +1133,6 @@ private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_
             bottoneelimina.setEnabled(false);
             eliminaselezionato.setEnabled(false);
             avviaselezionato.setEnabled(false);
-            bottoneriparti.setEnabled(false);
             bottonesalva.setEnabled(false);
             menusalva.setEnabled(false);
         }
@@ -1196,7 +1171,6 @@ private void tabellapubblicatiMouseClicked(java.awt.event.MouseEvent evt) {//GEN
                     eliminaselezionato.setEnabled(true);
                     bottoneelimina.setEnabled(true);
                     avviaselezionato.setEnabled(false);
-                    bottoneriparti.setEnabled(false);
                 }
             }
         }
@@ -1223,7 +1197,6 @@ private void tabellamieicreekMouseClicked(java.awt.event.MouseEvent evt) {//GEN-
                     eliminaselezionato.setEnabled(true);
                     avviaselezionato.setEnabled(true);
                     bottoneelimina.setEnabled(true);
-                    bottoneriparti.setEnabled(true);
                 }
             }
         }
@@ -1263,7 +1236,6 @@ private void tabellaricercaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                         eliminaselezionato.setEnabled(false);
                         eliminacercati.setEnabled(true);
                         avviaselezionato.setEnabled(true);
-                        bottoneriparti.setEnabled(true);
                     }
                 }
             } else {
@@ -1282,24 +1254,11 @@ private void eliminacercatiActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 }//GEN-LAST:event_eliminacercatiActionPerformed
 
-private void bottoneripartiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottoneripartiMouseClicked
-    if (bottoneriparti.isEnabled()) {
-        avvia();
-    }
-}//GEN-LAST:event_bottoneripartiMouseClicked
-
 private void avviaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_avviaselezionatoActionPerformed
     if (avviaselezionato.isEnabled()) {
         avvia();
     }
 }//GEN-LAST:event_avviaselezionatoActionPerformed
-
-private void avviatuttiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_avviatuttiActionPerformed
-    if (avviatutti.isEnabled()) {
-        tabellamieicreek.selectAll();
-        avvia();
-    }
-}//GEN-LAST:event_avviatuttiActionPerformed
 
 private void avviatutticercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_avviatutticercaActionPerformed
     if (avviatutticerca.isEnabled()) {
@@ -1395,13 +1354,7 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 PrintInformation("Impossibile avviare download : " + e.getMessage(), ERRORE);
             }
         }
-        //recupero la listaPeer
-
-        //manca la gestione di chi e` gia in arrayDescr
-
-        //thread avvia + thread Listener + Upload Manager
-        //i thread downloader e uploader vengono creti da listener o da avvia
-
+        
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -1410,7 +1363,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 tabellaricerca.clearSelection();
                 bottoneelimina.setEnabled(false);
                 eliminaselezionato.setEnabled(false);
-                bottoneriparti.setEnabled(false);
                 avviaselezionato.setEnabled(false);
                 bottonesuccessivo.setEnabled(false);
                 menusuccessivo.setEnabled(false);
@@ -1546,7 +1498,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 elimina.setEnabled(false);
                 apri.setEnabled(false);
                 avvia.setEnabled(false);
-                bottoneriparti.setEnabled(false);
                 bottonedisconnetti.setEnabled(false);
                 disconnetti.setEnabled(false);
                 bottonecerca.setEnabled(false);
@@ -1839,7 +1790,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 bottoneelimina.setEnabled(false);
                 eliminaselezionato.setEnabled(false);
                 avviaselezionato.setEnabled(false);
-                bottoneriparti.setEnabled(false);
             }
         });
     }
@@ -1924,7 +1874,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private javax.swing.JTextField areacerca;
     private javax.swing.JMenu avvia;
     private javax.swing.JMenuItem avviaselezionato;
-    private javax.swing.JMenuItem avviatutti;
     private javax.swing.JMenuItem avviatutticerca;
     private javax.swing.JCheckBoxMenuItem barra;
     private javax.swing.JToolBar barrastrumenti;
@@ -1939,7 +1888,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private javax.swing.JButton bottoneexit;
     private javax.swing.JButton bottonefortuna;
     private javax.swing.JButton bottoneprecedente;
-    private javax.swing.JButton bottoneriparti;
     private javax.swing.JButton bottonesalva;
     private javax.swing.JButton bottonesettaporta;
     private javax.swing.JButton bottonesuccessivo;
