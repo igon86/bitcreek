@@ -141,7 +141,7 @@ public class Downloader implements Runnable {
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, richiesta));
                         continue;
                     } catch( NullPointerException ex ){
-                        System.out.println("devo terminare");
+                        System.out.println("Devo terminare perche` ho beccato una NULPOINTEREXCEPTION");
                         tipo = Messaggio.CLOSE;
                         break;
                     }
@@ -160,8 +160,10 @@ public class Downloader implements Runnable {
             }
             //MA CHE CAZZO!!!!
             if (tipo == Messaggio.CLOSE) {
-                Creek.stampaDebug(output, "Ho terminato");
-                conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
+                Creek.stampaDebug(output, "Ho Beccato una close");
+                if(conn != null){
+                    conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
+                }
                 break;
             }
             //debug perverso
@@ -217,13 +219,13 @@ public class Downloader implements Runnable {
             }
         }
         // decremento il numero di connessioni
-        peer.decrConnessioni();
+        //peer.decrConnessioni();
         // rilascio il PIO se sono stato chiuso
         if (p != null) {
             p.setFree();
         }
-        conn.setTermina(false);
-        Creek.stampaDebug(output, " Downloader terminato");
+        //conn.setTermina(false);
+        Creek.stampaDebug(output, " Downloader MUOIO");
     }
 }
 

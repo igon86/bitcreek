@@ -31,6 +31,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Parte client del protocollo BitCreek
@@ -456,13 +458,24 @@ public class BitCreekPeer {
      * sui file
      */
     private synchronized void terminaConn() {
+        System.out.println("TerminaConn: CHIUDO I CREEK");
         for (Creek creek : arraydescr) {
             creek.chiudi();
         }
-        this.TP.shutdownNow();
-        if(TP.isShutdown()){
-            System.out.println("TUTTO A POSTO AMICCI IL THREAD POOL E MORTO");
+        System.out.println("TerminaConn: CHIUDO IL POOL");
+        if(TP!=null){
+            this.TP.shutdownNow();
         }
+        while(!TP.isTerminated()){
+            this.TP.shutdownNow();
+            System.out.println("ancora non TERMINATO");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                System.out.println("interrotto");
+            }
+        }
+        System.out.println("\nTERMINATO");
         this.TP = null;
     }
 
