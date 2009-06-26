@@ -15,7 +15,7 @@ public class Downloader implements Runnable {
 
     //Messaggio utilizzato per comunicare il passaggio in endgame
     protected static final int ENDGAME = -1;
-    protected static final int MAXFAILURE=10;
+    protected static final int MAXFAILURE = 10;
     private Creek c;
     private Connessione conn;
     private BitCreekPeer peer;
@@ -29,7 +29,7 @@ public class Downloader implements Runnable {
         this.peer = peer;
         this.pendingRequest = -1;
         this.endgame = false;
-        this.failed =0;      
+        this.failed = 0;
     }
 
     public void run() {
@@ -68,18 +68,16 @@ public class Downloader implements Runnable {
         while (true) {
             //come prima cosa controllo se e` terminato il download oppure
             // se devo uscire
-            if (!this.c.getStato() || this.conn.getTermina() /*|| this.failed > MAXFAILURE*/ ) {
-                if(this.failed > MAXFAILURE){
+            if (!this.c.getStato() || this.conn.getTermina() /*|| this.failed > MAXFAILURE*/) {
+                if (this.failed > MAXFAILURE) {
                     Creek.stampaDebug(output, "MUOIO PERCHE E MORTO L'ALTRO");
-                }
-                else if(this.conn.getTermina()){
-                    Creek.stampaDebug(output,"MUOIO PER UN FLAG IN CONNESSIONE");
-                }
-                else{
+                } else if (this.conn.getTermina()) {
+                    Creek.stampaDebug(output, "MUOIO PER UN FLAG IN CONNESSIONE");
+                } else {
                     Creek.stampaDebug(output, "DOVEVO MORIRE DAVVERO....");
                 }
                 //rilascio PIO
-                if(pendingRequest > -1){
+                if (pendingRequest > -1) {
                     this.c.liberaPio(pendingRequest);
                 }
                 Creek.stampaDebug(output, "Ho terminato");
@@ -95,8 +93,7 @@ public class Downloader implements Runnable {
                 Creek.stampaDebug(output, "TIMEOUT sulla receiveDOwn ho ricevuto null come messaggio");
                 this.failed++;
                 continue;
-            }
-            else{
+            } else {
                 this.failed = 0;
             }
             int tipo = m.getTipo();
@@ -137,10 +134,10 @@ public class Downloader implements Runnable {
                         System.out.println("Lo sha non torna : " + ex.getMessage());
                         // lo sha non torna : richiedo il pezzo
                         int[] richiesta = new int[1];
-                        richiesta[0]=chunk.getOffset();
+                        richiesta[0] = chunk.getOffset();
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, richiesta));
                         continue;
-                    } catch( NullPointerException ex ){
+                    } catch (NullPointerException ex) {
                         System.out.println("Devo terminare perche` ho beccato una NULPOINTEREXCEPTION");
                         tipo = Messaggio.CLOSE;
                         break;
@@ -161,21 +158,22 @@ public class Downloader implements Runnable {
             //MA CHE CAZZO!!!!
             if (tipo == Messaggio.CLOSE) {
                 Creek.stampaDebug(output, "Ho Beccato una close");
-                if(conn != null){
+                if (conn != null) {
                     conn.sendDown(new Messaggio(Messaggio.CLOSE, null));
+                    Creek.stampaDebug(output, "Fatta send di CLOSE");
                 }
                 break;
             }
             //debug perverso
-            if (pendingRequest  > -1) {
+            if (pendingRequest > -1) {
                 output.println("Ho una pending Request");
             } else {
                 output.println("Non ho una pending Request");
             }
-            
-            
-            
-            
+
+
+
+
             //se siamo in endgame niente piu` richieste
             if (pendingRequest == -1 && !endgame) {
                 p = c.getNext(this.conn.getBitfield());
@@ -186,18 +184,18 @@ public class Downloader implements Runnable {
                         int[] ultimi = c.getLast();
                         Creek.stampaDebug(output, "\n\nTEST ENDGAME: \n\n");
                         this.endgame = true;
-                        if(ultimi.length>0){
-                            
+                        if (ultimi.length > 0) {
+
                             conn.sendDown(new Messaggio(Messaggio.REQUEST, ultimi));
                             Creek.stampaDebug(output, " Downloader : REQUEST inviato per endgame : ");
-                            for (int i=1;i<ultimi.length;i++){
-                                System.out.println(ultimi[i]+" ," );
-                                output.println(ultimi[i]+" ," );
+                            for (int i = 1; i < ultimi.length; i++) {
+                                System.out.println(ultimi[i] + " ,");
+                                output.println(ultimi[i] + " ,");
                             }
                             this.pendingRequest = ultimi[0];
                         }
-                        
-                        
+
+
                     } else {
                         //invio normale
                         int[] toSend = new int[1];
@@ -219,12 +217,19 @@ public class Downloader implements Runnable {
             }
         }
         // decremento il numero di connessioni
-        //peer.decrConnessioni();
+        Creek.stampaDebug(output, "Decremento conn");
+        peer.decrConnessioni();
+        Creek.stampaDebug(output, "Ho Decrementato conn");
         // rilascio il PIO se sono stato chiuso
         if (p != null) {
+            Creek.stampaDebug(output, "P null");
             p.setFree();
+            Creek.stampaDebug(output, "Fatta setfree");
+        } else {
+            Creek.stampaDebug(output, "p null");
         }
-        //conn.setTermina(false);
+        Creek.stampaDebug(output, "setto termina a false");
+        conn.setTermina(false);
         Creek.stampaDebug(output, " Downloader MUOIO");
     }
 }
