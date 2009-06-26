@@ -148,7 +148,6 @@ public class Uploader implements Runnable {
                 this.conn.sendUp(have);
             }
         }
-
         Creek.stampaDebug(output, "Uploader: sto morendo perche` me l'ha detto l'altro");
         // decremento il numero di connessioni
         peer.decrConnessioni();
