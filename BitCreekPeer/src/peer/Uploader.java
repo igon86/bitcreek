@@ -137,11 +137,7 @@ public class Uploader implements Runnable {
                 for (int i=0; i<dimHave;i++) {
                     int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
                     newHave[i] = daNotificare;
-                    //ennino il wrapper automatico
-                    //Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
                     this.puntatoreHave++;
-                    //this.conn.sendUp(have);
-                    //Creek.stampaDebug(output, " Invio la notifica del pezzo:  " + daNotificare);
                 }
                 Messaggio have = new Messaggio(Messaggio.HAVE, newHave);
                 this.conn.sendUp(have);
