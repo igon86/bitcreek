@@ -255,29 +255,7 @@ public class Creek extends Descrittore implements Serializable {
                     c.setTermina(true);
                 }
             }
-        }    
-
-            // le connessioni sono state chiuse : le elimino
-            //int count = 0;
-            //while (!connessioni.isEmpty()) {
-            //    for (Connessione c : connessioni) {
-            //        if (!c.getTermina()) {
-            //            connessioni.remove(c);
-           //         } /*else {
-             //           try {
-             //               Thread.sleep(200);
-             //           } catch (InterruptedException ex) {
-             //               System.out.println("Creek sono stato interrotto");
-             //           }
-             //       }*/
-         //       }
-           //     if (++count == END) {
-           //         // terminazione forzata
-           //         System.out.println("Terminazione forzata nel creek");
-           //         break;
-           //     }
-           // }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             System.out.println("Connessioni e` gia null");
         }
         connessioni = null;

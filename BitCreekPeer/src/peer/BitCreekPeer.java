@@ -146,14 +146,14 @@ public class BitCreekPeer {
     /**
      * Incrementa il numero di connessioni
      */
-    public synchronized void incrConnessioni() {
+    public void incrConnessioni() {
         this.connessioni++;
     }
 
     /**
      * Incrementa il numero di connessioni
      */
-    public synchronized void decrConnessioni() {
+    public void decrConnessioni() {
         this.connessioni--;
     }
 

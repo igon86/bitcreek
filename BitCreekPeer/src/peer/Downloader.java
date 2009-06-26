@@ -228,8 +228,6 @@ public class Downloader implements Runnable {
         } else {
             Creek.stampaDebug(output, "p null");
         }
-        Creek.stampaDebug(output, "setto termina a false");
-        conn.setTermina(false);
         Creek.stampaDebug(output, " Downloader MUOIO");
     }
 }

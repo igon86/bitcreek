@@ -152,7 +152,5 @@ public class Uploader implements Runnable {
         Creek.stampaDebug(output, "Uploader: sto morendo perche` me l'ha detto l'altro");
         // decremento il numero di connessioni
         peer.decrConnessioni();
-        // setto il flag di chiusura
-        conn.setTermina(false);
     }
 }
