@@ -80,7 +80,6 @@ public class Creek extends Descrittore implements Serializable {
         } else {
             this.peercercano = NONATTIVO;
         }
-
         //aggiunte per il p2p
         float temp = (float) d.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
         System.out.println(Thread.currentThread().getName() + " NUMERO DI BLOCCHI: " + temp);
@@ -204,25 +203,21 @@ public class Creek extends Descrittore implements Serializable {
                 this.statoDownload = ENDGAME;
                 System.out.println("Sono passato in endgame");
             }
-            //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
-            this.removePIO(offset);
-
-
-            //in questo fortissimo ordine sequenziale mi arraccomando bande
-            this.scaricatiId[this.scaricati] = offset;
-            this.scaricati++;
             //la lunghezza serve perché il buffer passato ha sempre la dimensione
             //di 4K ma l'ultimo è zero-padded quindi non lo devo scrivere
-            int length = c.getDim();
-            System.out.println("Sto per scrivere un chunk di dimensione: " + length);
             try {
                 raf.seek(offset * BitCreekPeer.DIMBLOCCO);
-                raf.write(c.getData(), 0, length);
+                raf.write(c.getData(), 0, c.getDim());
+                //come prima cosa cancello dalla lista toDO il PIO relativo al chunk scritto
+                this.removePIO(offset);
+                //poi modifico anche l'array have
+                this.have[offset] = true;
+                this.scaricatiId[this.scaricati] = offset;
+                this.scaricati++;
             } catch (IOException ex) {
                 Logger.getLogger(Creek.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
             }
-            //poi modifico anche l'array have
-            this.have[offset] = true;
             return true;
         } else {
             return false;
