@@ -134,10 +134,9 @@ public class Uploader implements Runnable {
             int dimHave = this.c.getScaricati() - this.puntatoreHave;
             if (dimHave > 0) {
                 int[] newHave = new int[dimHave];
-                count=0;
-                while (this.c.getScaricati() > this.puntatoreHave) {
+                for (int i=0; i<dimHave;i++) {
                     int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
-                    newHave[count++] = daNotificare;
+                    newHave[i] = daNotificare;
                     //ennino il wrapper automatico
                     //Messaggio have = new Messaggio(Messaggio.HAVE, daNotificare);
                     this.puntatoreHave++;
