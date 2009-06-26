@@ -24,7 +24,7 @@ public class RigaTabellaMieiCreek {
      * @param file nome del file
      * @param dimensione dimensione del file
      */
-    public RigaTabellaMieiCreek(String file, long dimensione, boolean situazione, int percentuale) {
+    public RigaTabellaMieiCreek(String file, long dimensione, boolean situazione, int percentuale, int peer) {
         this.file = file;
         this.dimensione = this.Dim(dimensione);
         this.stato = "In download";
@@ -34,7 +34,7 @@ public class RigaTabellaMieiCreek {
             this.situazione = "Non Attivo";
         }
         this.percentuale = percentuale + "%";
-        this.peer = "0";
+        this.peer = "" + peer;
     }
 
     /**

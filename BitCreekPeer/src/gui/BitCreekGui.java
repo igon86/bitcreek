@@ -900,7 +900,7 @@ public class BitCreekGui extends javax.swing.JFrame {
                         if (c.getStato()) {
 
                             /* file in download */
-                            RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getSituazione(), c.getPercentuale());
+                            RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getSituazione(), c.getPercentuale(), c.getPeer());
                             try {
                                 modellomieicreek.addRiga(r);
                             } catch (ErrorException e) {
@@ -948,7 +948,6 @@ public class BitCreekGui extends javax.swing.JFrame {
                     if (tabellapubblicati.getSelectedRowCount() == 0) {
                         modellopubblicati.fireTableDataChanged();
                     }
-                //grafico.
                 }
             }
         });

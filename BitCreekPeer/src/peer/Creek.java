@@ -37,7 +37,6 @@ public class Creek extends Descrittore implements Serializable {
     private static final int RAREST = 2;
     private static final int ENDGAME = 3;
     private static final int MINCHUNK = 20;
-    private static final int END = 30;
     private static int countNext = 0;
     /* Variabili d'istanza */
     private boolean stato; // true leecher,false seeder
