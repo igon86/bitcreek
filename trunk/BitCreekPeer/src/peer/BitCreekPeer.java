@@ -419,14 +419,14 @@ public class BitCreekPeer {
         /* attendo terminazione thread */
         //int count = 0;
         /*while (connessioni > 0) {
-            try {
-                Thread.sleep(200);
-                if (count++ == 25) {
-                    // terminazione forzata
-                    break;
-                }
-            } catch (InterruptedException ex) {
-            }
+        try {
+        Thread.sleep(200);
+        if (count++ == 25) {
+        // terminazione forzata
+        break;
+        }
+        } catch (InterruptedException ex) {
+        }
         }*/
         /* cancellazione del file di avvio del programma */
 
@@ -463,16 +463,16 @@ public class BitCreekPeer {
             creek.chiudi();
         }
         System.out.println("TerminaConn: CHIUDO IL POOL");
-        if(TP!=null){
+        if (TP != null) {
             this.TP.shutdownNow();
-        }
-        while(!TP.isTerminated()){
-            this.TP.shutdownNow();
-            System.out.println("ancora non TERMINATO");
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                System.out.println("interrotto");
+            while (!TP.isTerminated()) {
+                this.TP.shutdownNow();
+                System.out.println("ancora non TERMINATO");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    System.out.println("interrotto");
+                }
             }
         }
         System.out.println("\nTERMINATO");
@@ -636,7 +636,7 @@ public class BitCreekPeer {
             /* avviso l'interfaccia che la connetti è stata effettuata con successo */
             gui.connettiDone();
             /* faccio partire i thread in download se ci sono */
-            if(this.TP == null){
+            if (this.TP == null) {
                 this.TP = Executors.newFixedThreadPool(NUMTHREAD);
             }
             Thread t = new Thread(new Riavvia(this));
