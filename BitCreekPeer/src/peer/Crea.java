@@ -128,7 +128,7 @@ public class Crea implements Runnable {
             }
 
             if (problema) {
-                System.out.println("AIA3");
+                System.out.println("PROBLEMA INVIO STUB");
             }
 
             if (!problema && p != null) {
@@ -160,7 +160,9 @@ public class Crea implements Runnable {
                 if (peer == null) {
                     System.out.println("il peer e` null");
                 }
-                peer.deleteCreek(c.getName());
+                else{
+                    peer.deleteCreek(c.getName());
+                }
             } catch (ErrorException ex) {
             }
             File f = new File("./FileCondivisi/" + nomefilesorgente);
