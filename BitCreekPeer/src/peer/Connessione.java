@@ -21,7 +21,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     //codici mnemonici per lo stato
     protected static final boolean CHOKED = false;
     protected static final boolean UNCHOKED = true;
-    private static final int TIMEOUT = 1000;
+    private static final int TIMEOUT = 100;
     //l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socket
     private Socket down;
     private Socket up;
@@ -202,7 +202,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     //Virtualizzazione
-    public /*synchronized*/ void sendDown(Messaggio m) {
+    public synchronized void sendDown(Messaggio m) {
         try {
             outDown.writeObject(m);
         } catch (IOException ex) {
@@ -210,7 +210,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
 
-    public /*synchronized*/ void sendUp(Messaggio m) {
+    public synchronized void sendUp(Messaggio m) {
         try {
             this.outUp.writeObject(m);
         } catch (IOException ex) {
@@ -220,7 +220,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     
     
     
-    public /*synchronized*/ Messaggio receiveDown() {
+    public synchronized Messaggio receiveDown() {
         try {
             if (inDown == null) {
                 System.out.println(Thread.currentThread().getName() + " inDown non inizializzata, sei un programmatore BUSTA");
@@ -239,7 +239,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         return null;
     }
 
-    public /*synchronized*/ Messaggio receiveUp() {
+    public synchronized Messaggio receiveUp() {
         try {
             if (inUp == null) {
                 System.out.println(Thread.currentThread().getName() + " inUp non inizializzata, sei un programmatore BUSTA");
