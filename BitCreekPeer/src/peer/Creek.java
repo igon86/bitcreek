@@ -644,7 +644,6 @@ public class Creek extends Descrittore implements Serializable {
      * @param np
      */
     public synchronized void settaPerc() {
-        //QUI per motivi incapibili al genere umano si aumentava il contatore dei chunk scaricati
         this.percentuale = (this.scaricati * 100) / have.length;
         /* se percentuale = 100 ho finito di scaricare quindi il file può andare in upload */
         if (this.percentuale == 100) {
