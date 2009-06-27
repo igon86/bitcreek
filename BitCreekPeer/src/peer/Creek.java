@@ -622,4 +622,8 @@ public class Creek extends Descrittore implements Serializable {
             this.peer = 0;
         }
     }
+
+    public synchronized void decrPeer() {
+        this.peer--;
+    }
 }
