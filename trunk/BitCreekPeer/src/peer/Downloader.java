@@ -15,6 +15,7 @@ public class Downloader implements Runnable {
 
     //Messaggio utilizzato per comunicare il passaggio in endgame
     protected static final int ENDGAME = -1;
+    private static final int PREQ = -1;
     protected static final int MAXFAILURE = 10;
     private Creek c;
     private Connessione conn;
@@ -27,7 +28,7 @@ public class Downloader implements Runnable {
         this.c = c;
         this.conn = conn;
         this.peer = peer;
-        this.pendingRequest = -1;
+        this.pendingRequest = PREQ;
         this.endgame = false;
         this.failed = 0;
     }
@@ -77,7 +78,7 @@ public class Downloader implements Runnable {
                     Creek.stampaDebug(output, "DOVEVO MORIRE DAVVERO....");
                 }
                 //rilascio PIO
-                if (pendingRequest > -1) {
+                if (pendingRequest > PREQ) {
                     this.c.liberaPio(pendingRequest);
                 }
                 Creek.stampaDebug(output, "Ho terminato");
@@ -152,7 +153,7 @@ public class Downloader implements Runnable {
                     }
                     /*  controllare lo SHA del pezzo ------> da fare !!!!  */
 
-                    this.pendingRequest = -1;
+                    this.pendingRequest = PREQ;
                 }
             }
             //MA CHE CAZZO!!!!
@@ -165,7 +166,7 @@ public class Downloader implements Runnable {
                 break;
             }
             //debug perverso
-            if (pendingRequest > -1) {
+            if (pendingRequest > PREQ) {
                 output.println("Ho una pending Request");
             } else {
                 output.println("Non ho una pending Request");
@@ -175,7 +176,7 @@ public class Downloader implements Runnable {
 
 
             //se siamo in endgame niente piu` richieste
-            if (pendingRequest == -1 && !endgame) {
+            if (pendingRequest == PREQ && !endgame) {
                 p = c.getNext(this.conn.getBitfield());
                 if (p != null) {
                     int id = p.getId();

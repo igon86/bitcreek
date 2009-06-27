@@ -246,7 +246,7 @@ public class Creek extends Descrittore implements Serializable {
         try {
             if (!connessioni.isEmpty()) {
                 for (Connessione c : connessioni) {
-                    c.setTermina(true);
+                    c.setTermina();
                 }
             }
         } catch (NullPointerException ex) {
@@ -466,12 +466,10 @@ public class Creek extends Descrittore implements Serializable {
         if (this.connessioni == null) {
             return null;
         }
-
         for (Connessione c : this.connessioni) {
             if (c.confronta(ip, porta)) {
                 return c;
             }
-
         }
         return null;
     }

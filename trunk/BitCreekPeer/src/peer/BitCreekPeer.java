@@ -416,18 +416,7 @@ public class BitCreekPeer {
     public void close() {
         /* chiusura connessioni */
         disconnetti();
-        /* attendo terminazione thread */
-        //int count = 0;
-        /*while (connessioni > 0) {
-        try {
-        Thread.sleep(200);
-        if (count++ == 25) {
-        // terminazione forzata
-        break;
-        }
-        } catch (InterruptedException ex) {
-        }
-        }*/
+
         /* cancellazione del file di avvio del programma */
 
         File conf = new File("./avviato.on");

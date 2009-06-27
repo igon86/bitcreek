@@ -51,8 +51,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
 
     /** Costruttore */
     public Connessione() {
-        termina = false;
-        //cosi sono proprio cattivo -> meglio di no
+        this.termina = false;
         this.uploadable = true;
     }
 
@@ -175,8 +174,8 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     /**
      * Setta il flag di terminazione
      */
-    public synchronized void setTermina(boolean valore) {
-        this.termina = valore;
+    public synchronized void setTermina() {
+        this.termina = true;
     }
 
     /**
