@@ -913,18 +913,14 @@ public class BitCreekGui extends javax.swing.JFrame {
                             if ((rigap = modellopubblicati.presenza(c.getName())) != null) {
 
                                 /* modifico riga */
-                                try {
-                                    if (c.getPeer() > 0) {
-                                        rigap.setSituazione("Attivo");
-                                    } else {
-                                        rigap.setSituazione("Non Attivo");
-                                    }
-                                    rigap.setPeer(c.getPeer());
-                                    rigap.setPeerCerca(c.getPeerCerca());
-                                    rigap.setIdentita(c.getIdentita());
-                                } catch (ErrorException e) {
-                                    System.err.println("Listener : invalid change in " + rigap.getFile() + ", " + e.getMessage());
+                                if (c.getPeer() > 0) {
+                                    rigap.setSituazione("Attivo");
+                                } else {
+                                    rigap.setSituazione("Non Attivo");
                                 }
+                                rigap.setPeer(c.getPeer());
+                                rigap.setPeerCerca(c.getPeerCerca());
+                                rigap.setIdentita(c.getIdentita());
 
                             } else {
 
@@ -1350,7 +1346,7 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
                 PrintInformation("Impossibile avviare download : " + e.getMessage(), ERRORE);
             }
         }
-        
+
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
