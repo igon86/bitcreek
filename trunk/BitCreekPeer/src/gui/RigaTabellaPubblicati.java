@@ -113,23 +113,18 @@ public class RigaTabellaPubblicati {
     /**
      * Setta la situazione del file
      * @param situazione
-     * @exception condivisi.ErrorException se situaizone è null
      */
-    public void setSituazione(String situazione) throws ErrorException {
-        if (situazione == null) {
-            throw new ErrorException("Param null");
-        }
+    public void setSituazione(String situazione) {
         this.situazione = situazione;
     }
 
     /**
      * Setta il numero dei peer
      * @param peer
-     * @exception condivisi.ErrorException se peer è minore di 0
      */
-    public void setPeer(int peer) throws ErrorException {
+    public void setPeer(int peer) {
         if (peer < 0) {
-            throw new ErrorException("Param invalid : peer è " + peer);
+            this.peer = 0;
         }
         this.peer = peer;
     }
