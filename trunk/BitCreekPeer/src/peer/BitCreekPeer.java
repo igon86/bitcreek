@@ -341,7 +341,6 @@ public class BitCreekPeer {
                 c = new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek"));
                 Creek toBeWritten = creek.copia();
                 toBeWritten.setClean();
-                //creek.testFile();
                 o = new ObjectOutputStream(c);
                 System.out.println("CREATO LO STREAM");
                 o.writeObject(toBeWritten);
@@ -650,7 +649,7 @@ public class BitCreekPeer {
             throw new ErrorException("Impossibile creare creek");
         }
         if (cerca) {
-            Descrittore d = getFileCerca(file);
+            Descrittore d = this.getFileCerca(file);
             if (d == null) {
                 percorso.delete();
                 throw new ErrorException("File non trovato");
@@ -661,7 +660,7 @@ public class BitCreekPeer {
                     output.close();
                 } catch (IOException ex) {
                     percorso.delete();
-                    throw new ErrorException("Impossibile leggere metainfo");
+                    throw new ErrorException("Impossibile leggere metainfo 1");
                 }
             }
         } else {
@@ -676,10 +675,10 @@ public class BitCreekPeer {
                 in.close();
             } catch (IOException e) {
                 percorso.delete();
-                throw new ErrorException("Impossibile leggere metainfo");
+                throw new ErrorException("Impossibile leggere metainfo 2");
             } catch (ClassNotFoundException e) {
                 percorso.delete();
-                throw new ErrorException("Impossibile leggere metainfo");
+                throw new ErrorException("Impossibile leggere metainfo 3");
             }
         }
     }
