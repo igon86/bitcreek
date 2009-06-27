@@ -217,9 +217,10 @@ public class Downloader implements Runnable {
                 }
             }
         }
-        // decremento il numero di connessioni
+        /* decremento il numero di connessioni e il numero dei peer */
         Creek.stampaDebug(output, "Decremento conn");
         peer.decrConnessioni();
+        c.decrPeer();
         Creek.stampaDebug(output, "Ho Decrementato conn");
         // rilascio il PIO se sono stato chiuso
         if (p != null) {

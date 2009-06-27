@@ -129,7 +129,7 @@ public class RigaTabellaPubblicati {
      */
     public void setPeer(int peer) throws ErrorException {
         if (peer < 0) {
-            throw new ErrorException("Param invalid");
+            throw new ErrorException("Param invalid : peer è " + peer);
         }
         this.peer = peer;
     }

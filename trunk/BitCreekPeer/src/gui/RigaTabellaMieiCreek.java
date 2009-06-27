@@ -24,11 +24,11 @@ public class RigaTabellaMieiCreek {
      * @param file nome del file
      * @param dimensione dimensione del file
      */
-    public RigaTabellaMieiCreek(String file, long dimensione, boolean situazione, int percentuale, int peer) {
+    public RigaTabellaMieiCreek(String file, long dimensione, int percentuale, int peer) {
         this.file = file;
         this.dimensione = this.Dim(dimensione);
         this.stato = "In download";
-        if (situazione) {
+        if (peer > 0) {
             this.situazione = "Attivo";
         } else {
             this.situazione = "Non Attivo";
