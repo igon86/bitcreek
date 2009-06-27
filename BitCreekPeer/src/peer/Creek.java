@@ -90,8 +90,6 @@ public class Creek extends Descrittore implements Serializable {
         scaricatiId = new int[dimArray];
 
         if (this.getStato() == LEECHER) {
-            //System.out.println(Thread.currentThread().getName()+" SONO LEECHER");
-            //SONO LEECHER
             for (int i = 0; i < dimArray; i++) {
                 have[i] = false;
             }
@@ -118,17 +116,6 @@ public class Creek extends Descrittore implements Serializable {
         } catch (NullPointerException ex) {
             throw new ErrorException("Conn null");
         }
-        //TEST
-        /*Iterator k = this.connessioni.iterator();
-        while (k.hasNext()) {
-        Connessione temp = (Connessione) k.next();
-        if (temp.getInteresseUp()) {
-        System.out.println("Connessione interessante verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
-        } else {
-        System.out.println("Connessione stupida verso " + temp.getIPVicino() + " ," + temp.getPortaVicino() + " con: " + temp.getDownloaded());
-        }
-        }*/
-
 
         int count = 0;
         int index = 0;
@@ -593,12 +580,15 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println("ESPORTA - CREEK");
         Descrittore temp = super.copia();
         Creek c = new Creek(temp, this.stato, this.pubblicato);
-        c.peer = 0;
-        c.percentuale = percentuale;
+        c.stato = LEECHER;
         c.situazione = NOTSTARTED;
-        /* controllare se va bene */
-        c.peercercano = this.peercercano;
-        c.ind = this.ind;
+        c.statoDownload = INIT;
+        c.peer = 0;
+        c.percentuale = 0;
+        c.scaricati = 0;
+        c.peercercano = NONATTIVO;
+        c.pubblicato = false;
+        c.ind = null;
         return c;
     }
 
