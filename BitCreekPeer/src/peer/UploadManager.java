@@ -59,7 +59,7 @@ public class UploadManager implements Runnable {
                 /*sort delle connessioni*/
                 random = this.c.ordinaConnessioni(countOrdina, random);
             } catch (ErrorException ex) {
-                System.out.println("Esco perchè mi hanno chiuso : " + ex.getMessage());
+                Creek.stampaDebug(output,"Esco perchè mi hanno chiuso : " + ex.getMessage());
                 break;
             }
             Creek.stampaDebug(output, "HO FINITO :D \n\n");

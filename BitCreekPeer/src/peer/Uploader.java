@@ -44,8 +44,7 @@ public class Uploader implements Runnable {
             // GESTIONE TERMINAZIONE, la MAXFAILURE non puo funzionare con i mille ritardi che abbiamo
             if (this.conn.getTermina() /*|| this.failed > Downloader.MAXFAILURE*/) {
                 // invio msg CLOSE al downloader associato
-                Messaggio nuovo = new Messaggio(Messaggio.CLOSE, null);
-                this.conn.sendUp(nuovo);
+                this.conn.sendUp(new Messaggio(Messaggio.CLOSE, null));
                 break;
             }
 
@@ -80,7 +79,7 @@ public class Uploader implements Runnable {
                             Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                         } else {
                             Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: " + pezzo);
-                        //io non gli mando nulla e lui prima o poi mi mandera in culo
+                            //io non gli mando nulla e lui prima o poi mi mandera in culo
                         }
 
                         break;
