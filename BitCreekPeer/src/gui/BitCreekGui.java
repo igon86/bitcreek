@@ -13,13 +13,16 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * BitCreekGui.java
  * Gui del protocollo client BitCreek
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreePeer 1.0
  */
 public class BitCreekGui extends javax.swing.JFrame {
 
-    /** Costruttore dell'interfaccia */
+    /** 
+     * Costruttore dell'interfaccia
+     */
     public BitCreekGui() {
         /* per emulare l'aspetto di vari sistemi operativi */
         try {
@@ -51,8 +54,8 @@ public class BitCreekGui extends javax.swing.JFrame {
     }
 
     /**
-     * Event-loop
-     * @param args
+     * Event-loop della GUI
+     * @param args non  utilizzato
      */
     public static void main(String args[]) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -155,9 +158,10 @@ public class BitCreekGui extends javax.swing.JFrame {
     }
 
     /**
-     * Esegue gli aggiornamenti in caso di test positivo
-     * @param bloc
-     * @param pr oprtarichieste
+     * Esegue gli aggiornamenti in caso di test firewall - NAT
+     * positivo
+     * @param bloc dice se il peer è bloccato da NAT o firewall
+     * @param pr portarichieste del peer
      */
     public void testDone(boolean bloc, int pr) {
         final boolean bloccato = bloc;
@@ -195,6 +199,7 @@ public class BitCreekGui extends javax.swing.JFrame {
 
     /** 
      * Metodo che inizializza i componenti grafici
+     * @see Questo codice è autogenerato dal tool per le interfacce grafiche di Netbeans
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -854,8 +859,8 @@ public class BitCreekGui extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Aggiorna il grafico
-     * @param evt
+     * Aggiorna il grafico presente nell'interfaccia
+     * @param evt evento non utilizzato
      */
     private void graficolistenerActionPerformed(ActionEvent evt) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -867,9 +872,8 @@ public class BitCreekGui extends javax.swing.JFrame {
         });
     }
 
-    /** Aggiornamento interfaccia grafica 
-     * delle tabelle mieicreek e pubblicati
-     * @param evt
+    /** Esegue l' aggiornamento delle tabelle dell' interfaccia grafica
+     * @param evt evento non utilizzato
      */
     private void tabellelistenerActionPerformed(ActionEvent evt) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -947,7 +951,7 @@ public class BitCreekGui extends javax.swing.JFrame {
 
     /**
      * Chiude l'applicazione chiamando l'handler pulizia
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void esciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_esciActionPerformed
     pulizia();
@@ -955,7 +959,7 @@ private void esciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
 
     /**
      * Chiude l'applicazione chiamando l'handler pulizia
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
     pulizia();
@@ -963,7 +967,7 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
 
     /**
      * Visualizza o non visualizza la barra degli strumenti
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void barraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraActionPerformed
     SwingUtilities.invokeLater(new Runnable() {
@@ -981,7 +985,7 @@ private void barraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
     /**
      * Crea, se possibile, un .creek chiamando l'handler crea
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void creaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creaActionPerformed
     if (crea.isEnabled()) {
@@ -991,7 +995,7 @@ private void creaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
 
     /**
      * Crea,se possibile,un .creek chiamando l'handler crea
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void bottonecreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonecreaMouseClicked
     if (bottonecrea.isEnabled()) {
@@ -1001,7 +1005,7 @@ private void bottonecreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST
 
     /**
      * Apre,se possibile, un .creek chiamando l'handler apri
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void apriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apriActionPerformed
     if (apri.isEnabled()) {
@@ -1011,7 +1015,7 @@ private void apriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
 
     /**
      * Apre,se possibile, un .creek chiamando l'handler apri
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void bottoneapriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottoneapriMouseClicked
     if (bottoneapri.isEnabled()) {
@@ -1021,7 +1025,7 @@ private void bottoneapriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST
 
     /**
      * Apre le informazioni
-     * @param evt
+     * @param evt evento non utilizzato
      */
 private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoActionPerformed
     SwingUtilities.invokeLater(new Runnable() {
@@ -1037,24 +1041,39 @@ private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
     });
 }//GEN-LAST:event_infoActionPerformed
 
+    /**
+     * Elimina le informazioni selezionate
+     * @param evt evento non utilizzato
+     */
 private void bottoneeliminaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottoneeliminaMouseClicked
     if (bottoneelimina.isEnabled()) {
         elimina();
     }
 }//GEN-LAST:event_bottoneeliminaMouseClicked
-
+    /**
+     * Elimina l' informazione selezionata
+     * @param evt evento non utilizzato
+     */
 private void eliminaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminaselezionatoActionPerformed
     if (elimina.isEnabled()) {
         elimina();
     }
 }//GEN-LAST:event_eliminaselezionatoActionPerformed
 
+    /**
+     * Seleziona la riga precedente chiamando l'handler precedente
+     * @param evt evento non utilizzato
+     */
 private void bottoneprecedenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bottoneprecedenteActionPerformed
     if (bottoneprecedente.isEnabled()) {
         precedente();
     }
 }//GEN-LAST:event_bottoneprecedenteActionPerformed
 
+    /**
+     * Elimina tutti i creek nella prima tabella
+     * @param evt evento non utilizzato
+     */
 private void bottoneeliminatutticreekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bottoneeliminatutticreekActionPerformed
     if (elimina.isEnabled()) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -1066,7 +1085,10 @@ private void bottoneeliminatutticreekActionPerformed(java.awt.event.ActionEvent 
         });
     }
 }//GEN-LAST:event_bottoneeliminatutticreekActionPerformed
-
+    /**
+     * Elimina tutti i creek nella seconda tabella
+     * @param evt evento non utilizzato
+     */
 private void bottoneeliminapubblicatiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bottoneeliminapubblicatiActionPerformed
     if (elimina.isEnabled()) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -1079,36 +1101,61 @@ private void bottoneeliminapubblicatiActionPerformed(java.awt.event.ActionEvent 
     }
 }//GEN-LAST:event_bottoneeliminapubblicatiActionPerformed
 
+    /**
+     * Seleziona la riga precedente chiamando l'handler precedente
+     * @param evt evento non utilizzato
+     */
 private void menuprecedenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuprecedenteActionPerformed
     if (menuprecedente.isEnabled()) {
         precedente();
     }
 }//GEN-LAST:event_menuprecedenteActionPerformed
 
+    /**
+     * Seleziona la riga successiva chiamando l'handler successivo
+     * @param evt evento non utilizzato
+     */
 private void menusuccessivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menusuccessivoActionPerformed
     if (menusuccessivo.isEnabled()) {
         successivo();
     }
 }//GEN-LAST:event_menusuccessivoActionPerformed
 
+    /**
+     * Seleziona la riga successiva chiamando l'handler successivo
+     * @param evt evento non utilizzato
+     */
 private void bottonesuccessivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonesuccessivoMouseClicked
     if (bottonesuccessivo.isEnabled()) {
         successivo();
     }
 }//GEN-LAST:event_bottonesuccessivoMouseClicked
 
+    /**
+     * Tenta di connettersi chiamando l' handler connetti
+     * @param evt evento non utilizzato
+     */
 private void bottoneconnettiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottoneconnettiMouseClicked
     if (bottoneconnetti.isEnabled()) {
         connetti();
     }
 }//GEN-LAST:event_bottoneconnettiMouseClicked
 
+    /**
+     * Tenta di connettersi chiamando l' handler connetti
+     * @param evt evento non utilizzato
+     */
 private void connettiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connettiActionPerformed
     if (connetti.isEnabled()) {
         connetti();
     }
 }//GEN-LAST:event_connettiActionPerformed
 
+    /**
+     * Pulisce lo stato; chiamato quando si clicca sulla finestra
+     * ma non su un particolare bottone o menu
+     * @param evt evento non utilizzato
+     */
 private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
     SwingUtilities.invokeLater(new Runnable() {
 
@@ -1130,18 +1177,30 @@ private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_
     });
 }//GEN-LAST:event_formMouseClicked
 
+    /**
+     * Tenta di disconnettersi chiamando l' handler disconnetti
+     * @param evt evento non utilizzato
+     */
 private void bottonedisconnettiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonedisconnettiMouseClicked
     if (bottonedisconnetti.isEnabled()) {
         disconnetti();
     }
 }//GEN-LAST:event_bottonedisconnettiMouseClicked
 
+    /**
+     * Tenta di disconnettersi chiamando l' handler disconnetti
+     * @param evt evento non utilizzato
+     */
 private void disconnettiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnettiActionPerformed
     if (disconnetti.isEnabled()) {
         disconnetti();
     }
 }//GEN-LAST:event_disconnettiActionPerformed
 
+    /**
+     * Gestisce il click sulla seconda tabella
+     * @param evt evento non utilizzato
+     */
 private void tabellapubblicatiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabellapubblicatiMouseClicked
     SwingUtilities.invokeLater(new Runnable() {
 
@@ -1168,6 +1227,10 @@ private void tabellapubblicatiMouseClicked(java.awt.event.MouseEvent evt) {//GEN
     });
 }//GEN-LAST:event_tabellapubblicatiMouseClicked
 
+    /**
+     * Gestisce il click sulla prima tabella
+     * @param evt evento non utilizzato
+     */
 private void tabellamieicreekMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabellamieicreekMouseClicked
     SwingUtilities.invokeLater(new Runnable() {
 
@@ -1194,18 +1257,30 @@ private void tabellamieicreekMouseClicked(java.awt.event.MouseEvent evt) {//GEN-
     });
 }//GEN-LAST:event_tabellamieicreekMouseClicked
 
+    /**
+     * Tenta di effettuare una ricerca chiamando l' handler cerca
+     * @param evt evento non utilizzato
+     */
 private void bottonecercaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonecercaMouseClicked
     if (bottonecerca.isEnabled()) {
         cerca();
     }
 }//GEN-LAST:event_bottonecercaMouseClicked
 
+    /**
+     * Tenta di effettuare una ricerca chiamando l' handler cerca
+     * @param evt evento non utilizzato
+     */
 private void cercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cercaActionPerformed
     if (cerca.isEnabled()) {
         cerca();
     }
 }//GEN-LAST:event_cercaActionPerformed
 
+    /**
+     *  Gestisce il click sulla tabella dei file cercati
+     * @param evt evento non utilizzato
+     */
 private void tabellaricercaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabellaricercaMouseClicked
     SwingUtilities.invokeLater(new Runnable() {
 
@@ -1238,6 +1313,10 @@ private void tabellaricercaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     });
 }//GEN-LAST:event_tabellaricercaMouseClicked
 
+    /**
+     * Elimina tutti i creek tabella dei file cercati
+     * @param evt evento non utilizzato
+     */
 private void eliminacercatiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminacercatiActionPerformed
     if (elimina.isEnabled()) {
         modellocerca.removeall();
@@ -1245,12 +1324,22 @@ private void eliminacercatiActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 }//GEN-LAST:event_eliminacercatiActionPerformed
 
+    /**
+     * Tenta di avviare il download sul creek selezionato chiamando
+     * l' handler avvia
+     * @param evt evento non utilizzato
+     */
 private void avviaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_avviaselezionatoActionPerformed
     if (avviaselezionato.isEnabled()) {
         avvia();
     }
 }//GEN-LAST:event_avviaselezionatoActionPerformed
 
+    /**
+     * Tenta di avviare il download su tutti i creek chiamando
+     * l' handler avvia
+     * @param evt evento non utilizzato
+     */
 private void avviatutticercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_avviatutticercaActionPerformed
     if (avviatutticerca.isEnabled()) {
         tabellaricerca.selectAll();
@@ -1258,18 +1347,33 @@ private void avviatutticercaActionPerformed(java.awt.event.ActionEvent evt) {//G
     }
 }//GEN-LAST:event_avviatutticercaActionPerformed
 
+    /**
+     * Tenta di avviare il test NAT-firewall chiamando
+     * l' handler test
+     * @param evt evento non utilizzato
+     */
 private void menutestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menutestActionPerformed
     if (menutest.isEnabled()) {
         test();
     }
 }//GEN-LAST:event_menutestActionPerformed
 
+    /**
+     * Tenta di avviare il test NAT-firewall chiamando
+     * l' handler test
+     * @param evt evento non utilizzato
+     */
 private void bottonetestMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonetestMouseClicked
     if (bottonetest.isEnabled()) {
         test();
     }
 }//GEN-LAST:event_bottonetestMouseClicked
 
+    /**
+     * Tenta di settare la porta chiamando
+     * l' handler settaporta
+     * @param evt evento non utilizzato
+     */
 private void bottonesettaportaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonesettaportaMouseClicked
     if (bottonesettaporta.isEnabled()) {
         try {
@@ -1280,6 +1384,11 @@ private void bottonesettaportaMouseClicked(java.awt.event.MouseEvent evt) {//GEN
     }
 }//GEN-LAST:event_bottonesettaportaMouseClicked
 
+    /**
+     * Tenta di settare la porta chiamando
+     * l' handler settaporta
+     * @param evt evento non utilizzato
+     */
 private void menusettaportaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menusettaportaActionPerformed
     if (menusettaporta.isEnabled()) {
         try {
@@ -1290,28 +1399,52 @@ private void menusettaportaActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 }//GEN-LAST:event_menusettaportaActionPerformed
 
+    /**
+     * Tenta di chiudere l'applicazione chiamando
+     * l' handler pulizia
+     * @param evt evento non utilizzato
+     */
 private void bottoneexitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottoneexitMouseClicked
     pulizia();
 }//GEN-LAST:event_bottoneexitMouseClicked
 
+    /**
+     * Tenta di salvare un .creek chiamando
+     * l' handler salva
+     * @param evt evento non utilizzato
+     */
 private void bottonesalvaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonesalvaMouseClicked
     if (bottonesalva.isEnabled()) {
         salva();
     }
 }//GEN-LAST:event_bottonesalvaMouseClicked
 
+    /**
+     * Tenta di salvare un .creek chiamando
+     * l' handler salva
+     * @param evt evento non utilizzato
+     */
 private void menusalvaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menusalvaActionPerformed
     if (menusalva.isEnabled()) {
         salva();
     }
 }//GEN-LAST:event_menusalvaActionPerformed
 
+    /**
+     * Visualizza le informazioni riguardanti
+     * i file scaricati
+     * @param evt evento non utilizzato
+     */
 private void menudownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menudownloadActionPerformed
     if (menudownload.isEnabled()) {
         PrintInformation("I file completi sono presenti in 'File Condivisi'\nnella cartella del programma", AIUTO);
     }
 }//GEN-LAST:event_menudownloadActionPerformed
 
+    /**
+     * Esegue la ricerca 'Mi sento fortunato'
+     * @param evt evento non utilizzato
+     */
 private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bottonefortunaMouseClicked
     if (bottonefortuna.isEnabled()) {
         /* rimuovo i vecchi risultati della ricerca*/
@@ -1329,23 +1462,17 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
 
     /**
      * Handler che si occupa di far partire uno o più download 
-     * tutti gli handler degli eventi/bottoni collegati ad avvia
-     * si occupano solamente di selezionare nelle tabelle le entrate
-     * corrette
      */
     private void avvia() {
         int[] arraycerca = tabellaricerca.getSelectedRows();
-
-        //qui siamo sempre neel'eventLoop, sposto i file cercati in arraydescr, va messo come thread!!
         if (arraycerca.length != 0) {
             try {
-                //effettua l'aggiunta dei descrittori nell'arraydescr della logica del peer
+                /* effettua l'aggiunta dei descrittori nell'arraydescr della logica del peer */
                 peer.avviaDescr(arraycerca);
             } catch (ErrorException e) {
                 PrintInformation("Impossibile avviare download : " + e.getMessage(), ERRORE);
             }
         }
-
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -1449,8 +1576,9 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     }
 
     /**
-     *
-     * @param cerca
+     * Aggiornamento dell' interfaccia in seguito all'
+     * esecuzione di una ricerca
+     * @param cerca array di descrittori risultato della ricerca
      */
     public void ricercaDone(ArrayList<Descrittore> cerca) {
         for (Descrittore d : cerca) {
@@ -1531,7 +1659,6 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
      */
     private void crea() {
         File sorgente = null; // file da pubblicare
-
         JFileChooser scelta = new JFileChooser(); // finestra di selezione
 
         scelta.setDialogTitle("Open file");
@@ -1616,8 +1743,8 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
 
     /**
      * Esegue la chiamata a connetti nel protocollo
-     * @param server
-     * @throws condivisi.ErrorException
+     * @param server IP del server
+     * @throws condivisi.ErrorException se il parametro è null
      */
     private void eseguiConnetti(InetAddress server) throws ErrorException {
         if (server == null) {
@@ -1743,6 +1870,10 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
         }
     }
 
+    /**
+     * Handler che si occupa di eliminare
+     * i file selezionati nele tabelle
+     */
     private void elimina() {
         /* pulisco le tabelle, le metainfo e aggiorno l'interfaccia grafica */
         SwingUtilities.invokeLater(new Runnable() {
@@ -1929,29 +2060,42 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private javax.swing.JMenu visualizza;
     // End of variables declaration//GEN-END:variables
     /* Variabili d'istanza */
+    /** Modello della prima tabella */
     private ModelloTabellaMieiCreek modellomieicreek;
+    /** Modello della seconda tabella */
     private ModelloTabellaPubblicati modellopubblicati;
+    /** Modello della tabella dei file crecati */
     private ModelloTabellaCerca modellocerca;
-    private boolean tabellacercaclicked; /* per emulare 2-click */
-
-    private BitCreekPeer peer; /* logica del programma */
+    /** Per emulare 2-click sulla tabella dei file crecati */
+    private boolean tabellacercaclicked;
+    /** Logica del programma */
+    private BitCreekPeer peer;
 
     /* Costanti */
+    /**
+     * Millisecondi che ci sono tra un aggiornamento e l'altro
+     * dell' interfaccia grafica
+     */
     private final int AGGIORNAMENTO = 500; /* 500 ms */
 
+    /**
+     * Millisecondi che ci sono tra un aggiornamento e l'altro
+     * del grafico
+     */
     private final int AGGIORNAMENTOGRAFICO = 1200; /* 1,2 secondi */
 
+    /** Definisce la costante NULL */
     private final int NULL = -1;
-    private final int PORTAMIN = 0;
-    private final int PORTAMAX = 65536;
-    /**
-     *
-     */
+    /** Definisce la costante porta + piccola */
+    private final int PORTAMIN = 1;
+    /** Definisce la costante porta più grande */
+    private final int PORTAMAX = 65535;
+    /** Definisce la costante ERRORE */
     public final char ERRORE = 1;
+    /** Definisce la costante INFORMATION */
     private final char INFORMATION = 2;
+    /** Definisce la costante AIUTO */
     private final char AIUTO = 3;
-    /**
-     *
-     */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 10;
 }
