@@ -589,6 +589,7 @@ public class Creek extends Descrittore implements Serializable {
         c.peercercano = NONATTIVO;
         c.pubblicato = false;
         c.ind = null;
+        c.raf = null;
         return c;
     }
 
