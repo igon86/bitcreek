@@ -31,6 +31,7 @@ public class RigaTabellaMieiCreek {
         if (peer > 0) {
             this.situazione = "Attivo";
         } else {
+            peer = 0;
             this.situazione = "Non Attivo";
         }
         this.percentuale = percentuale + "%";

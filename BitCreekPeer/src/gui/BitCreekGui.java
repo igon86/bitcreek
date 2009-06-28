@@ -891,7 +891,6 @@ public class BitCreekGui extends javax.swing.JFrame {
 
                     /* rimuovo vecchi modelli */
                     modellomieicreek.removeTutti();
-                    /* EVENTUALMENTE FARLO ANCHE PER GLI UPLOAD --> DA VEDERE !!!!! */
 
                     //RigaTabellaMieiCreek riga = null;
                     RigaTabellaPubblicati rigap = null;
