@@ -408,7 +408,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Component id="grafico" pref="161" max="32767" attributes="1"/>
-                  <Component id="jPanel1" alignment="1" max="32767" attributes="1"/>
+                  <Component id="jPanel1" alignment="1" pref="161" max="32767" attributes="1"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
@@ -854,7 +854,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="132" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="136" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
