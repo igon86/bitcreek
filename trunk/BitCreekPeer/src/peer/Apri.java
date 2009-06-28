@@ -1,5 +1,6 @@
 package peer;
 
+import condivisi.Descrittore;
 import condivisi.ErrorException;
 import condivisi.NetRecord;
 import gui.BitCreekGui;
@@ -51,7 +52,7 @@ public class Apri implements Runnable {
 
         String nome = creek.getName();
         ObjectInputStream in = null;
-        Creek c = null;
+        Creek c = null, cr = null;
 
         boolean problema = false;
 
@@ -60,7 +61,12 @@ public class Apri implements Runnable {
         if (nome.length() > 6 && nome.substring(nome.length() - 6, nome.length()).compareTo(".creek") == 0) {
             try {
                 in = new ObjectInputStream(new FileInputStream(creek));
-                c = (Creek) in.readObject();
+                cr = (Creek) in.readObject();
+                try {
+                    c = new Creek((Descrittore) cr, cr.getStato(), cr.getPubblicato());
+                } catch (ErrorException ex) {
+                    Logger.getLogger(Apri.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 in.close();
             } catch (IOException ex) {
                 problema = true;
@@ -71,7 +77,7 @@ public class Apri implements Runnable {
             /* se il file non è già presente ed è da downlodare lo inizializzo e poi  lo aggiungo */
 
             if (!problema && c.getStato()) {
-                c.init();
+                //c.init();
                 try {
                     if (!peer.addCreek(c)) {
                         problema = true;
