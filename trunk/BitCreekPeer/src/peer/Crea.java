@@ -68,11 +68,11 @@ public class Crea implements Runnable {
 
         System.out.println(Thread.currentThread().getName() + " INIZIO CREA");
         //QUESTO CONTROLLO LO DEVE FARE IL SERVER ... E A REGOLA ERA IMPLEMENTATO
-        try {
+        //try {
             presenza = peer.presenza(nomefilesorgente);
-        } catch (ErrorException ex) {
-            problema = true;
-        }
+        //} catch (ErrorException ex) {
+        //    problema = true;
+        //}
 
         Creek c = null;
 
