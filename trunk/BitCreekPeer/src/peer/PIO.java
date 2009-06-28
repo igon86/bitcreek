@@ -9,6 +9,9 @@ import java.io.Serializable;
  */
 public class PIO implements Serializable, Comparable<PIO>{
     
+    /**
+     *
+     */
     public static final long serialVersionUID = 45;
 
     
@@ -16,6 +19,10 @@ public class PIO implements Serializable, Comparable<PIO>{
     private int rarita;
     private boolean busy;
     
+    /**
+     *
+     * @param id
+     */
     public PIO(int id){
         this.id = id;
         this.rarita = 0;
@@ -23,27 +30,49 @@ public class PIO implements Serializable, Comparable<PIO>{
     }
     
     //getter
+    /**
+     *
+     * @return
+     */
     public int getId(){
         return this.id;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean getBusy(){
         return this.busy;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getRarita(){
         return this.rarita;
     }
     
     //setter
+    /**
+     *
+     * @param rarita
+     */
     public void setRarita(int rarita){
         this.rarita = rarita;
     }
     
+    /**
+     *
+     */
     public void setFree(){
         this.busy = false;
     }
     
+    /**
+     *
+     */
     public void setBusy(){
         this.busy = true;
     }

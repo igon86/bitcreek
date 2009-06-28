@@ -26,6 +26,9 @@ public class Creek extends Descrittore implements Serializable {
 
     /* Costanti */
     private final int NONATTIVO = -1;
+    /**
+     *
+     */
     public static final long serialVersionUID = 45;
     private static final boolean LEECHER = true;
     private static final boolean SEEDER = false;
@@ -61,6 +64,7 @@ public class Creek extends Descrittore implements Serializable {
      * @param d descrittore file
      * @param stato del file
      * @param pubblicato : true se il peer ha pubblicato il file, false altrimenti
+     * @throws ErrorException
      */
     public Creek(Descrittore d, boolean stato, boolean pubblicato) throws ErrorException {
         super(d.getName(), d.getDimensione(), d.getHash(), d.getCallback());
@@ -103,12 +107,24 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println("CREEK COSTRUITO");
     }
 
+    /**
+     *
+     * @param output
+     * @param s
+     */
     public static void stampaDebug(PrintStream output, String s) {
         System.out.println(Thread.currentThread().getName() + ": " + s);
         output.println(s);
     }
 
     //che furbata ragazzi
+    /**
+     *
+     * @param id
+     * @param random
+     * @return
+     * @throws condivisi.ErrorException
+     */
     public synchronized int ordinaConnessioni(int id, int random) throws ErrorException {
         try {
             Collections.sort(this.connessioni);
@@ -149,6 +165,8 @@ public class Creek extends Descrittore implements Serializable {
      * Ci vuole questo metodo in quanto in alcune piattaforme puo` esistere un solo
      * FileOutputStream per file.... la file channel pero` pare essere thread safe...
      * @param c
+     * @return
+     * @throws ErrorException
      */
     public synchronized boolean scriviChunk(Chunk c) throws ErrorException {
         int offset = c.getOffset();
@@ -209,6 +227,9 @@ public class Creek extends Descrittore implements Serializable {
         }
     }
 
+    /**
+     *
+     */
     public synchronized void init() {
         this.connessioni = new ArrayList<Connessione>();
         this.file = new File("./FileCondivisi/" + this.getName());
@@ -251,6 +272,10 @@ public class Creek extends Descrittore implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param id
+     */
     public synchronized void liberaPio(int id) {
         Iterator h = this.toDo.iterator();
         while (h.hasNext()) {
@@ -266,7 +291,8 @@ public class Creek extends Descrittore implements Serializable {
     /**
      * ritorna un chunk bello caldo per l'offset specificato --> da fare per bene !!!!
      * utilizzato dall'uploader
-     * @param id
+     * @param offset
+     * @return
      */
     public synchronized Chunk getChunk(
             int offset) {
@@ -366,6 +392,12 @@ public class Creek extends Descrittore implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @param bitfield
+     * @return
+     * @deprecated
+     */
     @Deprecated
     public synchronized PIO orderedNext(
             boolean[] bitfield) {
@@ -382,6 +414,11 @@ public class Creek extends Descrittore implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @param bitfield
+     * @return
+     */
     public synchronized PIO getNext(
             boolean[] bitfield) {
         System.out.print(Thread.currentThread().getName() + " getNext: La lista toDO contiene " + this.toDo.size() + " elementi ->");
@@ -439,6 +476,10 @@ public class Creek extends Descrittore implements Serializable {
         return ret;
     }
 
+    /**
+     *
+     * @param conn
+     */
     public synchronized void addConnessione(Connessione conn) {
         /*if (this.connessioni == null) {
         this.connessioni = new ArrayList<Connessione>();
@@ -447,6 +488,12 @@ public class Creek extends Descrittore implements Serializable {
         this.situazione = STARTED;
     }
 
+    /**
+     *
+     * @param ip
+     * @param porta
+     * @return
+     */
     public synchronized Connessione presenzaConnessione(InetAddress ip, int porta) {
         if (this.connessioni == null) {
             return null;
@@ -460,6 +507,9 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     //metodo chiamato al momento della creazione del creek (in Download)
+    /**
+     *
+     */
     public synchronized void setToDo() {
         int count = 0;
         if (stato == LEECHER) {
@@ -484,6 +534,10 @@ public class Creek extends Descrittore implements Serializable {
         System.out.println(Thread.currentThread().getName() + " ToDo ha dimensione: " + this.toDo.size());
     }
 
+    /**
+     *
+     * @param p
+     */
     public synchronized void removePIO(int p) {
         PIO temp = null;
         Iterator h = this.toDo.iterator();
@@ -502,42 +556,82 @@ public class Creek extends Descrittore implements Serializable {
     }
 
     //GETTER
+    /**
+     *
+     * @return
+     */
     public boolean getStato() {
         return this.stato;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPercentuale() {
         return this.percentuale;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getPubblicato() {
         return this.pubblicato;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getSituazione() {
         return this.situazione;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPeer() {
         return this.peer;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPeerCerca() {
         return this.peercercano;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean[] getHave() {
         return this.have;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScaricati() {
         return this.scaricati;
     }
 
+    /**
+     *
+     * @param index
+     * @return
+     */
     public int getScaricatiIndex(int index) {
         return this.scaricatiId[index];
     }
 //SETTER
+    /**
+     *
+     */
     public void settaPeerCerca() {
         if (this.peercercano != NONATTIVO) {
             this.peercercano++;
@@ -545,6 +639,10 @@ public class Creek extends Descrittore implements Serializable {
 
     }
 
+    /**
+     *
+     * @param ind
+     */
     public void settaIdentita(InetAddress ind) {
         if (this.peercercano != NONATTIVO && ind != null) {
             this.ind = ind;
@@ -552,10 +650,19 @@ public class Creek extends Descrittore implements Serializable {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public InetAddress getIdentita() {
         return this.ind;
     }
 
+    /**
+     *
+     * @return
+     * @throws condivisi.ErrorException
+     */
     @Override
     public synchronized Creek copia() throws ErrorException {
         //System.out.println("COPIA CREEK");
@@ -600,7 +707,6 @@ public class Creek extends Descrittore implements Serializable {
 
     /**
      * Setta la percentuale in base al parametro passato
-     * @param np
      */
     public synchronized void settaPerc() {
         this.percentuale = (this.scaricati * 100) / have.length;
@@ -612,6 +718,9 @@ public class Creek extends Descrittore implements Serializable {
         }
     }
 
+    /**
+     *
+     */
     public synchronized void decrPeer() {
         this.peer--;
     }

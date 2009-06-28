@@ -17,9 +17,18 @@ import java.util.logging.Logger;
  */
 public class Connessione implements Serializable, Comparable<Connessione> {
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 45;
     //codici mnemonici per lo stato
+    /**
+     *
+     */
     protected static final boolean CHOKED = false;
+    /**
+     *
+     */
     protected static final boolean UNCHOKED = true;
     private static final int TIMEOUT = 100;
     //l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socket
@@ -55,6 +64,9 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         this.uploadable = true;
     }
 
+    /**
+     *
+     */
     public synchronized void possoUploadare() {
         if(!this.uploadable){
             System.out.println("\n\nNON VA BENE ASSOLUTAMENTE CHE MI SCATTI IL MONITOR\n\n");
@@ -68,11 +80,17 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
     
+    /**
+     *
+     */
     public synchronized void puoiUploadare() {
         this.uploadable = true;
         notify();
     }
 
+    /**
+     *
+     */
     public synchronized void nonPuoiUploadare() {
         this.uploadable = false;
     }
@@ -124,6 +142,14 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
 
+    /**
+     *
+     * @param down
+     * @param up
+     * @param bitfield
+     * @param portaVicino
+     * @deprecated
+     */
     @Deprecated
     public Connessione(Socket down, Socket up, boolean[] bitfield, int portaVicino) {
         System.out.println(Thread.currentThread().getName() + "COSTRUTTORE CONNESSIONE");
@@ -201,6 +227,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     //Virtualizzazione
+    /**
+     *
+     * @param m
+     */
     public synchronized void sendDown(Messaggio m) {
         try {
             outDown.writeObject(m);
@@ -209,6 +239,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
 
+    /**
+     *
+     * @param m
+     */
     public synchronized void sendUp(Messaggio m) {
         try {
             this.outUp.writeObject(m);
@@ -219,6 +253,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     
     
     
+    /**
+     *
+     * @return
+     */
     public synchronized Messaggio receiveDown() {
         try {
             if (inDown == null) {
@@ -238,6 +276,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized Messaggio receiveUp() {
         try {
             if (inUp == null) {
@@ -256,6 +298,9 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         return null;
     }
 
+    /**
+     *
+     */
     public synchronized void ResetDown() {
         try {
             outDown.reset();
@@ -264,6 +309,9 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
 
+    /**
+     *
+     */
     public synchronized void ResetUp() {
         try {
             outUp.reset();
@@ -273,90 +321,175 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     //chiamato in seguito ad un messaggio di have
+    /**
+     *
+     * @param b
+     */
     public synchronized void setBitfield(boolean[] b) {
         this.bitfield = b;
     }
     
+    /**
+     *
+     * @param toSet
+     */
     public synchronized void setArrayBitfield(int[] toSet){
         for (int i=0;i<toSet.length;i++){
             this.bitfield[toSet[i]]=true;
         }
     }
     
+    /**
+     *
+     * @param id
+     * @deprecated
+     */
     @Deprecated
     public synchronized void setIndexBitfield(int id) {
         this.bitfield[id] = true;
     }
 
     //GETTER
+    /**
+     *
+     * @return
+     */
     public synchronized int getDownloaded(){
         return this.downloaded;
     }
+    /**
+     *
+     * @return
+     */
     public synchronized boolean[] getBitfield() {
         return this.bitfield;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized int getPortaVicino() {
         return this.portaVicino;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized InetAddress getIPVicino() {
         return this.ipVicino;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized boolean getStatoDown() {
         return this.statoDown;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized boolean getStatoUp() {
         return this.statoUp;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized boolean getInteresseDown() {
         return this.interesseDown;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized boolean getInteresseUp() {
         return this.interesseUp;
     }
 
     //SETTER
+    /**
+     *
+     * @param up
+     * @param in
+     * @param out
+     */
     public synchronized void setUp(Socket up, ObjectInputStream in, ObjectOutputStream out) {
         this.up = up;
         this.inUp = in;
         this.outUp = out;
     }
 
+    /**
+     *
+     * @param down
+     * @param in
+     * @param out
+     */
     public synchronized void setDown(Socket down, ObjectInputStream in, ObjectOutputStream out) {
         this.down = down;
         this.inDown = in;
         this.outDown = out;
     }
 
+    /**
+     *
+     * @param stato
+     */
     public synchronized void setStatoDown(boolean stato) {
         this.statoDown = stato;
     }
 
+    /**
+     *
+     * @param stato
+     */
     public synchronized void setStatoUp(boolean stato) {
         this.statoUp = stato;
     }
 
+    /**
+     *
+     * @param up
+     */
     public synchronized void setSocketUp(Socket up) {
         this.up = up;
     }
 
+    /**
+     *
+     * @param down
+     */
     public synchronized void setSocketDown(Socket down) {
         this.down = down;
     }
 
+    /**
+     *
+     * @param b
+     */
     public synchronized void setInteresseDown(boolean b) {
         this.interesseDown = b;
     }
 
+    /**
+     *
+     * @param b
+     */
     public synchronized void setInteresseUp(boolean b) {
         this.interesseUp = b;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized int incrDown() {
         return ++this.downloaded;
     }

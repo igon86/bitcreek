@@ -24,6 +24,10 @@ public class ThreadSaver implements Runnable {
     
     private MetaInfo tabella;
 
+    /**
+     *
+     * @param tabella
+     */
     public ThreadSaver(MetaInfo tabella) {
         this.tabella = tabella;
     }

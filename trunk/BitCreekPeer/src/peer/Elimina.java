@@ -14,6 +14,12 @@ public class Elimina implements Runnable {
     private String nome;
     private BitCreekPeer peer;
 
+    /**
+     *
+     * @param nome
+     * @param peer
+     * @throws condivisi.ErrorException
+     */
     public Elimina(String nome, BitCreekPeer peer) throws ErrorException {
         if (nome == null || peer == null) {
             throw new ErrorException("Param null");

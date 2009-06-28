@@ -48,8 +48,17 @@ public class BitCreekPeer {
     private final int FINITO = 100;
     private final int NUMTHREAD = 100;
     /*dimensione del blocco*/
+    /**
+     *
+     */
     public static final int DIMBLOCCO = 4096;
+    /**
+     *
+     */
     protected static final int MAXCONNESSIONI = 100;
+    /**
+     *
+     */
     protected static final int TIMEOUTCONNESSIONE = 500;
     /* Variabili d'istanza */
     /** Mio ip */
@@ -221,6 +230,11 @@ public class BitCreekPeer {
         return this.stub;
     }
 
+    /**
+     *
+     * @return
+     * @throws condivisi.ErrorException
+     */
     public synchronized ArrayList<Descrittore> getCercati() throws ErrorException {
         ArrayList<Descrittore> ris = new ArrayList<Descrittore>();
         for (Descrittore d : cercati) {
@@ -233,12 +247,17 @@ public class BitCreekPeer {
     /**
      * Restituisce tutti i creek
      * @return arraydescr
+     * @throws ErrorException
      */
     public synchronized ArrayList<Creek> getDescr() throws ErrorException {
         return this.arraydescr;
     }
 
     //SETTER
+    /**
+     *
+     * @param results
+     */
     public synchronized void setCercati(ArrayList<Descrittore> results) {
         this.cercati = results;
     }
@@ -246,6 +265,7 @@ public class BitCreekPeer {
     /**
      * Controllas se la porta speceficata è libera
      * @param porta
+     * @return
      */
     public boolean settaporta(int porta) {
         boolean ris = true;
@@ -313,6 +333,7 @@ public class BitCreekPeer {
     /**
      * Avvia il download dei file selezionati nella ricerca per lo scaricamento
      * @param array indici dei file da scaricare
+     * @throws ErrorException
      */
     public synchronized void avviaDescr(int[] array) throws ErrorException {
         Thread t = new Thread(new Avvia(this, array));
@@ -321,7 +342,7 @@ public class BitCreekPeer {
 
     /**
      * Aggiunge ad arraydescr un creek se non è già presente
-     * @param c creek da aggiungere
+     * @param creek
      * @return true se tutto ok, false se è già presente
      * @throws condivisi.ErrorException se c è null
      */
@@ -365,7 +386,7 @@ public class BitCreekPeer {
 
     /**
      * Aggiunge ad arraydescr un creek se non è già presente
-     * @param c creek da aggiungere
+     * @param nome
      * @return true se tutto ok, false se è già presente
      * @throws condivisi.ErrorException se c è null
      */
@@ -469,7 +490,6 @@ public class BitCreekPeer {
 
     /**
      * Disconnette il peer
-     * @throws condivisi.ErrorException
      */
     public void disconnetti() {
 
@@ -493,6 +513,12 @@ public class BitCreekPeer {
         this.terminaConn();
     }
 
+    /**
+     *
+     * @param nome
+     * @param gui
+     * @throws condivisi.ErrorException
+     */
     public void cerca(String nome, BitCreekGui gui) throws ErrorException {
         if (nome == null || gui == null) {
             throw new ErrorException("Param null");
@@ -504,6 +530,7 @@ public class BitCreekPeer {
     /**
      * Fa partire un task che si occupa di creare e pubblicare un creek
      * @param sorgente file da pubblicare
+     * @param gui 
      * @exception condivisi.ErrorException se sorgente è null
      */
     public void crea(File sorgente, BitCreekGui gui) throws ErrorException {
@@ -517,6 +544,7 @@ public class BitCreekPeer {
     /**
      * Fa partire un task che si occupa ci aprire un .creek su disco
      * @param creek file .creek
+     * @param gui
      * @throws condivisi.ErrorException se creek è null
      */
     public void apri(File creek, BitCreekGui gui) throws ErrorException {
@@ -543,6 +571,7 @@ public class BitCreekPeer {
     /**
      * Tenta di stabilire una connessione con il server
      * @param server ip del server
+     * @param gui
      * @throws condivisi.ErrorException se server è null
      */
     public void connetti(InetAddress server, BitCreekGui gui) throws ErrorException {
@@ -633,6 +662,13 @@ public class BitCreekPeer {
 
     }
 
+    /**
+     *
+     * @param path
+     * @param file
+     * @param cerca
+     * @throws condivisi.ErrorException
+     */
     public void salva(String path, String file, boolean cerca) throws ErrorException {
         if (path == null || file == null) {
             throw new ErrorException("Param null");
@@ -706,6 +742,8 @@ public class BitCreekPeer {
 
     /**
      * Effettua il test NAT - Firewall
+     * @param gui 
+     * @throws ErrorException
      */
     public void test(BitCreekGui gui) throws ErrorException {
 

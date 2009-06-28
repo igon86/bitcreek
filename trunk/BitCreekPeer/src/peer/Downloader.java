@@ -14,8 +14,14 @@ import java.util.logging.Logger;
 public class Downloader implements Runnable {
 
     //Messaggio utilizzato per comunicare il passaggio in endgame
+    /**
+     *
+     */
     protected static final int ENDGAME = -1;
     private static final int PREQ = -1;
+    /**
+     *
+     */
     protected static final int MAXFAILURE = 10;
     private Creek c;
     private Connessione conn;
@@ -24,6 +30,12 @@ public class Downloader implements Runnable {
     private boolean endgame;
     private int failed;
 
+    /**
+     *
+     * @param c
+     * @param conn
+     * @param peer
+     */
     public Downloader(Creek c, Connessione conn, BitCreekPeer peer) {
         this.c = c;
         this.conn = conn;

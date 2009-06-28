@@ -18,6 +18,14 @@ public class RigaTabellaCerca {
     private int numeroLeechers;
     
     
+    /**
+     *
+     * @param nome
+     * @param dimensione
+     * @param numseeders
+     * @param numleechers
+     * @throws condivisi.ErrorException
+     */
     public RigaTabellaCerca(String nome, long dimensione, int numseeders, int numleechers) throws ErrorException{
         if( nome == null || dimensione <= 0 || numseeders < 0 || numleechers < 0 ) throw new ErrorException("Param null");
         this.nome = nome;
@@ -27,18 +35,34 @@ public class RigaTabellaCerca {
         
     }
     
+    /**
+     *
+     * @return
+     */
     public String getNome(){
         return this.nome;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDimensione(){
         return this.dimensione;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getSeeders(){
         return this.numeroSeeders;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getLeechers(){
         return this.numeroLeechers;
     }

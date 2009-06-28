@@ -9,6 +9,9 @@ public class ErrorException extends Exception {
 
     /* Costanti */
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 28;
 
     /** Costruttore vuoto */

@@ -11,6 +11,9 @@ import java.io.Serializable;
 public class Porte implements Serializable{
 
     /* Costanti */
+    /**
+     *
+     */
     public static final long serialVersionUID = 17;
 
     /* Variabili d'istanza */
@@ -20,6 +23,13 @@ public class Porte implements Serializable{
     private int id;
 
 
+    /**
+     *
+     * @param portatcp
+     * @param portaudp
+     * @param id
+     * @throws condivisi.ErrorException
+     */
     public Porte(int portatcp,int portaudp, int id) throws ErrorException{
         if( portatcp <= 0 || portaudp <= 0){
             throw new ErrorException("param null");
@@ -55,6 +65,10 @@ public class Porte implements Serializable{
         return this.pubblicato;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getId(){
         return this.id;
     }

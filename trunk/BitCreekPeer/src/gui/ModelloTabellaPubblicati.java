@@ -11,10 +11,17 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
+/**
+ *
+ * @author bande
+ */
 public class ModelloTabellaPubblicati extends AbstractTableModel{
     
     /* Costanti */
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 11;
     private final String [] headers = {"Id","File","Dimensione","Stato","Situazione","Peer in scarimento","Peer che cercano","Identita' ultimo peer"};
     private final Class [] tipi = {"".getClass(),"".getClass(),"".getClass(),"".getClass(),"".getClass(),"".getClass(),"".getClass(),"".getClass()};

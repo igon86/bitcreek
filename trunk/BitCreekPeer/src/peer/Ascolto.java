@@ -25,6 +25,8 @@ public class Ascolto implements Runnable {
 
     /**
      * Costruttore
+     * @param peer 
+     * @throws ErrorException
      */
     public Ascolto(BitCreekPeer peer) throws ErrorException {
         if (peer == null) {

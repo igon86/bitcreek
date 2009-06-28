@@ -8,6 +8,9 @@ import java.io.Serializable;
  */
 public class Chunk implements Serializable{
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 45;
 
     private byte[] data;
@@ -17,20 +20,38 @@ public class Chunk implements Serializable{
     private int dim;
     
 
+    /**
+     *
+     * @param data
+     * @param offset
+     * @param dim
+     */
     public Chunk(byte[] data,int offset,int dim){
         this.data = data;
         this.offset = offset;
         this.dim = dim;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getOffset(){
         return this.offset;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getDim(){
         return this.dim;
     }
 
+    /**
+     *
+     * @return
+     */
     public byte[] getData(){
         return this.data;
     }

@@ -16,6 +16,11 @@ public class Trimmer extends TimerTask {
     ListaPeer lista;
     Descrittore d;
 
+    /**
+     *
+     * @param lista
+     * @param d
+     */
     public Trimmer(ListaPeer lista, Descrittore d) {
         this.lista = lista;
         this.d = d;

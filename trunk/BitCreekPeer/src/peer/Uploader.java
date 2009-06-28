@@ -18,6 +18,13 @@ public class Uploader implements Runnable {
     private int puntatoreHave;
     private int failed;
 
+    /**
+     *
+     * @param conn
+     * @param c
+     * @param numPieces
+     * @param peer
+     */
     public Uploader(Connessione conn, Creek c, int numPieces, BitCreekPeer peer) {
         this.conn = conn;
         this.c = c;

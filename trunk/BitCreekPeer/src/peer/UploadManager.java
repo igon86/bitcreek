@@ -16,12 +16,20 @@ public class UploadManager implements Runnable {
 
     /* Costanti */
     private final int ATTESA = 10000;
+    /**
+     *
+     */
     protected static final int UPLOADLIMIT = 4;
 
     /* Variabili d'istanza */
     private BitCreekPeer peer;
     private Creek c;
 
+    /**
+     *
+     * @param peer
+     * @param c
+     */
     public UploadManager(BitCreekPeer peer, Creek c) {
         this.peer = peer;
         this.c = c;

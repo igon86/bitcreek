@@ -4,28 +4,40 @@ import java.io.Serializable;
 
 /**
  * Classe che definisce il descrittore di un file
- * @author Bandettini Lottarini
+ * @author Bandettini Alberto, Lottarini Andrea
+ * @version 1.0
  */
 public class Descrittore implements Serializable {
 
     /* Costanti */
+    /** Costante che definisce la versione */
     public static final long serialVersionUID = 13;
+    /** Costante che definisce NULL */
     private final int NULL = -1;
     /* Variabili d'istanza */
+    /** Id dello swarm */
     private int id;
     /* campi riguardanti il file descritto */
+    /** Nome del file */
     private String nomefile;
+    /** Dimensione del file */
     private long dimensione;
+    /** Stringa hash */
     private byte[] hash;
     /* campi utili a chi usa il descrittore */
+    /** Porta del tracker TCP */
     private int portaTCP;
+    /** Porta del tracker UDP */
     private int portaUDP;
+    /** Interfaccia per le callback */
     private InterfacciaCallback stubcb;
+    /** Numero di seeder nello swarm */
     private int numSeeders;
+    /** Numero di leecher nello swarm */
     private int numLeechers;
 
     /**
-     * Costruttore vuoto
+     * Costruttore vuoto di Descrittore
      */
     public Descrittore() {
     }
@@ -54,20 +66,32 @@ public class Descrittore implements Serializable {
         this.id = -1;
     }
 
-    /**metodo che ritorna il numero di Seeders attualmente sul descrittore*/
+    /**metodo che ritorna il numero di Seeders attualmente sul descrittore
+     * @return
+     */
     public synchronized int getNumSeeders() {
         return this.numSeeders;
     }
 
-    /**metodo che ritorna il numero di leechers attualmente sul descrittore*/
+    /**metodo che ritorna il numero di leechers attualmente sul descrittore
+     * @return
+     */
     public synchronized int getNumLeechers() {
         return this.numLeechers;
     }
 
+    /**
+     *
+     * @param num
+     */
     public synchronized void setNumSeeders(int num) {
         this.numSeeders = num;
     }
 
+    /**
+     *
+     * @param num
+     */
     public synchronized void setNumLeechers(int num) {
         this.numLeechers = num;
     }
@@ -80,10 +104,18 @@ public class Descrittore implements Serializable {
         return this.nomefile;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
@@ -139,6 +171,11 @@ public class Descrittore implements Serializable {
         this.portaTCP = porta;
     }
 
+    /**
+     *
+     * @return
+     * @throws condivisi.ErrorException
+     */
     public Descrittore copia() throws ErrorException {
         Descrittore d = null;
         try {

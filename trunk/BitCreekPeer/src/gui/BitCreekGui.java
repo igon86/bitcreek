@@ -1448,6 +1448,10 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
         doubleclick();
     }
 
+    /**
+     *
+     * @param cerca
+     */
     public void ricercaDone(ArrayList<Descrittore> cerca) {
         for (Descrittore d : cerca) {
             try {
@@ -1940,8 +1944,14 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private final int NULL = -1;
     private final int PORTAMIN = 0;
     private final int PORTAMAX = 65536;
+    /**
+     *
+     */
     public final char ERRORE = 1;
     private final char INFORMATION = 2;
     private final char AIUTO = 3;
+    /**
+     *
+     */
     public static final long serialVersionUID = 10;
 }

@@ -11,6 +11,9 @@ import javax.swing.table.AbstractTableModel;
 
 public class ModelloTabellaCerca extends AbstractTableModel{
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 12;
     
     private ArrayList<RigaTabellaCerca> vettore = new ArrayList<RigaTabellaCerca>();
@@ -29,11 +32,20 @@ public class ModelloTabellaCerca extends AbstractTableModel{
         vettore.add(r);
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     * @throws condivisi.ErrorException
+     */
     public RigaTabellaCerca getRiga(int i) throws ErrorException{
         if(i < 0 || i >= vettore.size()) throw new ErrorException("Param invalid");
         return vettore.get(i);
     }
     
+    /**
+     *
+     */
     public void removeall(){
         vettore.clear();
     }

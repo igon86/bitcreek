@@ -23,6 +23,10 @@ public class Riavvia implements Runnable {
     private BitCreekPeer peer;
 
     //array e` l'array di indici dei descrittori da avviare
+    /**
+     *
+     * @param peer
+     */
     public Riavvia(BitCreekPeer peer) {
         this.peer = peer;
     }
