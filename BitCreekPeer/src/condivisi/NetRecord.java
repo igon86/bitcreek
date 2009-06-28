@@ -6,20 +6,27 @@ import java.util.Calendar;
 
 /**
  * Classe che definisce Ip e porta in ascolto di un determinato peer
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class NetRecord implements Serializable {
 
     /* Costanti */
     /**
-     *
+     * Costante che definisce la versione della classe
      */
     public static final long serialVersionUID = 18;
     /* Variabili d'istanza */
+    /** IP del peer */
     private InetAddress ip;
+    /** Porta del peer */
     private int porta;
+    /** Istante in cui si è fatto l'ultimo keep-alive */
     private Calendar ultimoaccesso;
+    /** Stato del netrecord */
     private boolean stato;
+
     /**
      * Costruttore
      * @param ip
@@ -34,19 +41,20 @@ public class NetRecord implements Serializable {
         this.ip = ip;
         this.porta = porta;
         this.ultimoaccesso = Calendar.getInstance();
-        /**stato viene sempre inizializzato dal tracker UDP tramite touchPeer di ListaPeer per evitare problemi*/
+        /* stato viene sempre inizializzato dal tracker UDP tramite touchPeer di ListaPeer per evitare problemi*/
         this.stato = stato;
     }
-    
+
     /**
-     * restituisce lo stato del peer associato al netrecord
-     * @return stato del peer associato al netrecord
+     * Restituisce lo stato del peer associato al netrecord
+     * @return stato
      */
-    public boolean getStato(){
+    public boolean getStato() {
         return this.stato;
     }
+
     /**
-     * restituisce la porta
+     * Restituisce la porta
      * @return porta
      */
     public int getPorta() {
