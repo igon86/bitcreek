@@ -4,24 +4,32 @@ import java.net.InetAddress;
 
 /**
  * Definisce una riga della tabella dei file in upload
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class RigaTabellaPubblicati {
 
     /* Costanti */
-    /**
-     *
-     */
+    /** Definisce la costante NONATTIVO */
     public static final int NONATTIVO = -1;
+    /** Definisce la costante K */
     private final int K = 1024;
 
     /* Variabili d'istanza */
+    /** Nome del file */
     private String file;
+    /** Dimensione del file */
     private String dimensione;
+    /** Stato del file */
     private String stato;
+    /** Situazione del file */
     private String situazione;
+    /** Peer che scaricano */
     private int peer;
+    /** Peer che hanno cercato quel file; se visibile */
     private int peercercano;
+    /** Identità di chi ha cercato per ultimo quel file, se visibile */
     private InetAddress identita;
 
     /**
@@ -77,7 +85,7 @@ public class RigaTabellaPubblicati {
     }
 
     /**
-     * Restituisce i peer del file
+     * Restituisce i peer che stanno scaricando il file
      * @return peer
      */
     public int getPeer() {
@@ -86,14 +94,14 @@ public class RigaTabellaPubblicati {
 
     /**
      * Restituisce il numero dei peer che hanno cercato il file
-     * @return peercercano, -1 se il file non è sttao publicato dal peer
+     * @return peercercano, NONATTIVO se il file non è stato publicato dal peer
      */
     public int getPeerCerca() {
         return this.peercercano;
     }
 
     /**
-     * restituisce l' ip di chi ha cercato per ultimo il file
+     * Restituisce l' ip di chi ha cercato per ultimo il file
      * @return identita, null se il peer non ha pubblicato il file
      */
     public InetAddress getIdentita() {
@@ -101,7 +109,7 @@ public class RigaTabellaPubblicati {
     }
 
     /**
-     * Setta la situazione del file
+     * Setta la situazione del file al parametro passato
      * @param situazione
      */
     public void setSituazione(String situazione) {
@@ -109,7 +117,8 @@ public class RigaTabellaPubblicati {
     }
 
     /**
-     * Setta il numero dei peer
+     * Setta il numero dei peer a peer;
+     * se peer è minore di 0 lo setta a 0
      * @param peer
      */
     public void setPeer(int peer) {
@@ -140,19 +149,34 @@ public class RigaTabellaPubblicati {
             this.identita = ind;
         }
     }
-    
-    private String Dim(long dimensione){
+
+    /**
+     * Restituisce la dimensione in byte, Kbyte, Mbyte,...
+     * a seconda della rappresentazione migliore
+     * @param dimensione
+     * @return stringa rappresentate la dimensione
+     */
+    private String Dim(long dimensione) {
         int i = 0;
-        for (i = 0; ; i++){
-            if( (dimensione / K) < 1)
+        for (i = 0;; i++) {
+            if ((dimensione / K) < 1) {
                 break;
-            else
+            } else {
                 dimensione = dimensione / K;
+            }
         }
-        if(i == 1)return dimensione + " Kbyte";
-        if(i == 2)return dimensione + " Mbyte";
-        if(i == 3)return dimensione + " Gbyte";
-        if(i == 4)return dimensione + " Tbyte";
+        if (i == 1) {
+            return dimensione + " Kbyte";
+        }
+        if (i == 2) {
+            return dimensione + " Mbyte";
+        }
+        if (i == 3) {
+            return dimensione + " Gbyte";
+        }
+        if (i == 4) {
+            return dimensione + " Tbyte";
+        }
         return dimensione + " byte";
     }
 }
