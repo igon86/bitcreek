@@ -884,12 +884,8 @@ public class BitCreekGui extends javax.swing.JFrame {
 
                 ArrayList<Creek> array = null;
 
-                try {
-                    array = peer.getDescr();
-                } catch (ErrorException e) {
-                    problema = true;
-                    PrintInformation("Impossibile aggiornamento grafico : " + e.getMessage(), ERRORE);
-                }
+                //QUI C"ERA UN TRY
+                array = peer.getDescr();
 
                 if (!problema) {
 
@@ -1466,12 +1462,11 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FI
     private void avvia() {
         int[] arraycerca = tabellaricerca.getSelectedRows();
         if (arraycerca.length != 0) {
-            try {
+            //QUI C'ERA UN TRY
+            
                 /* effettua l'aggiunta dei descrittori nell'arraydescr della logica del peer */
                 peer.avviaDescr(arraycerca);
-            } catch (ErrorException e) {
-                PrintInformation("Impossibile avviare download : " + e.getMessage(), ERRORE);
-            }
+            
         }
         SwingUtilities.invokeLater(new Runnable() {
 
