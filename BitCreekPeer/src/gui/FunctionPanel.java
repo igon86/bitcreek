@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 /**
- * Clase che crea e aggiorna il grafico
+ * Classe che crea e aggiorna il grafico
  * @author Bandettini Alberto
  * @author Lottarini Andrea
  * @version BitcreekPeer 1.0
