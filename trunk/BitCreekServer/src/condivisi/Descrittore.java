@@ -4,37 +4,47 @@ import java.io.Serializable;
 
 /**
  * Classe che definisce il descrittore di un file
- * @author Bandettini Lottarini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Descrittore implements Serializable {
 
     /* Costanti */
-    /**
-     *
-     */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 13;
+    /** Costante che definisce NULL */
     private final int NULL = -1;
     /* Variabili d'istanza */
+    /** Identificatore dello swarm */
     private int id;
     /* campi riguardanti il file descritto */
+    /** Nome del file */
     private String nomefile;
+    /** Dimensione del file */
     private long dimensione;
+    /** Stringa hash del file */
     private byte[] hash;
     /* campi utili a chi usa il descrittore */
+    /** Porta del tracker TCP */
     private int portaTCP;
+    /** Porta del tracker UDP */
     private int portaUDP;
+    /** Interfaccia per la callback */
     private InterfacciaCallback stubcb;
+    /** Numero di seeder del file */
     private int numSeeders;
+    /** Numero di leecher del file */
     private int numLeechers;
 
     /**
-     * Costruttore vuoto
+     * Costruttore vuoto di Descrittore
      */
     public Descrittore() {
     }
 
     /**
-     * Costruttore
+     * Costruttore di Descrittore
      * @param nomefile nome del file
      * @param dimensione dimensione del file
      * @param hash stringa hash del file
@@ -51,44 +61,56 @@ public class Descrittore implements Serializable {
         this.portaTCP = NULL;
         this.portaUDP = NULL;
         this.stubcb = stubcb;
-        /* il descrittore si crea solo a partire da un seeder*/
+        /* il descrittore si crea solo a partire da un seeder */
         this.numSeeders = 1;
         this.numLeechers = 0;
-        this.id = -1;
+        this.id = NULL;
     }
 
-    /**metodo che ritorna il numero di Seeders attualmente sul descrittore
-     * @return
+    /**
+     * Metodo che ritorna il numero di Seeders attualmente presente
+     * sul descrittore
+     * @return numSeeders
      */
     public synchronized int getNumSeeders() {
         return this.numSeeders;
     }
 
-    /**metodo che ritorna il numero di leechers attualmente sul descrittore
-     * @return
+    /**
+     * Metodo che ritorna il numero di leechers attualmente presente
+     * sul descrittore
+     * @return numLeechers
      */
     public synchronized int getNumLeechers() {
         return this.numLeechers;
     }
 
     /**
-     *
-     * @param num
+     * Setta il numero di seeder al numero passato come parametro.
+     * Se num minore di 0 il numero di seeder prende 0
+     * @param num numero seeder
      */
     public synchronized void setNumSeeders(int num) {
+        if (num < 0) {
+            num = 0;
+        }
         this.numSeeders = num;
     }
 
     /**
-     *
-     * @param num
+     * Setta il numero di leecher al numero passato come parametro.
+     * Se num minore di 0 il numero di leecher prende 0
+     * @param num numero leecher
      */
     public synchronized void setNumLeechers(int num) {
+        if (num < 0) {
+            num = 0;
+        }
         this.numLeechers = num;
     }
 
     /**
-     * Restituisce il nome del file presente nel descrittore
+     * Restituisce il nome del file
      * @return nomefile
      */
     public String getName() {
@@ -96,15 +118,16 @@ public class Descrittore implements Serializable {
     }
 
     /**
-     *
-     * @return
+     * Restituisce l'id dello swarm
+     * @return id
      */
     public int getId() {
         return this.id;
     }
 
     /**
-     *
+     * Setta l' id dello swarm al parametro id passato
+     * come argomento
      * @param id
      */
     public void setId(int id) {
@@ -112,7 +135,7 @@ public class Descrittore implements Serializable {
     }
 
     /**
-     * Restituisce la dimensione del file presente nel descrittore
+     * Restituisce la dimensione del file
      * @return dimensione
      */
     public long getDimensione() {
@@ -120,7 +143,7 @@ public class Descrittore implements Serializable {
     }
 
     /**
-     * restituisce la stringa hash del file presente nel descrittore
+     * restituisce la stringa hash del file
      * @return hash
      */
     public byte[] getHash() {
@@ -129,7 +152,7 @@ public class Descrittore implements Serializable {
 
     /**
      * Restituisce il numero della porta del tracker TCP
-     * @return portaTCP, -1 se non impostata
+     * @return portaTCP, vale NULL se non impostata
      */
     public int getTCP() {
         return this.portaTCP;
@@ -137,7 +160,7 @@ public class Descrittore implements Serializable {
 
     /**
      * Restituisce il numero della porta del tracker UDP
-     * @return portaUDP, -1 se non impostata
+     * @return portaUDP, vale NULL se non impostata
      */
     public int getUDP() {
         return this.portaUDP;
@@ -163,14 +186,13 @@ public class Descrittore implements Serializable {
     }
 
     /**
-     *
-     * @return
-     * @throws condivisi.ErrorException
+     * Effettua una copia del descrittore
+     * @return d Descrittore copiato
+     * @throws condivisi.ErrorException se non è opssibile copiare
      */
     public Descrittore copia() throws ErrorException {
         Descrittore d = null;
         try {
-            //System.out.println("COPIA - DESCRITTORE");
             d = new Descrittore(nomefile, dimensione, hash, stubcb);
         } catch (ErrorException e) {
             throw new ErrorException(e.getMessage());
@@ -192,23 +214,5 @@ public class Descrittore implements Serializable {
             porta = NULL;
         }
         this.portaUDP = porta;
-    }
-
-    /**
-     * Metodo override
-     * @return nomefile.hahsCode
-     */
-    @Override
-    public int hashCode() {
-        return this.nomefile.hashCode();
-    }
-
-    /**
-     * Metodo override
-     * @param obj
-     * @return false
-     */
-    public boolean equals(Object obj) {
-        return false;
     }
 }
