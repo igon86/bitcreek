@@ -77,7 +77,6 @@ public class Apri implements Runnable {
             /* se il file non è già presente ed è da downlodare lo inizializzo e poi  lo aggiungo */
 
             if (!problema && c.getStato()) {
-                //c.init();
                 try {
                     if (!peer.addCreek(c)) {
                         problema = true;

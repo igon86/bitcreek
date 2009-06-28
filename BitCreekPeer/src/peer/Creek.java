@@ -32,7 +32,6 @@ public class Creek extends Descrittore implements Serializable {
     private static final boolean NOTSTARTED = false;
     private static final boolean STARTED = true;
     private static final int DIMSHA = 20;
-    //private static final int ENDED = 0;
     private static final int INIT = 1;
     private static final int RAREST = 2;
     private static final int ENDGAME = 3;
@@ -344,7 +343,6 @@ public class Creek extends Descrittore implements Serializable {
             if (bitfield[p.getId()] == true) {
                 return true;
             }
-
         }
         return false;
     }
