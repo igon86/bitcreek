@@ -4,19 +4,28 @@ import condivisi.ErrorException;
 
 /**
  * Definisce una riga della tabella dei file in download
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class RigaTabellaMieiCreek {
 
     /* Costanti */
+    /** Definisce il valore di un K */
     private final int K = 1024;
 
     /* Variabili d'istanza */
+    /** Nome del file */
     private String file;
+    /** Dimensione del file */
     private String dimensione;
+    /** Stato del file */
     private String stato;
+    /** Situazione del file */
     private String situazione;
+    /** Percentuale del download del file */
     private String percentuale;
+    /** Numero dei peer da cui si fa download */
     private String peer;
 
     /**
@@ -49,7 +58,7 @@ public class RigaTabellaMieiCreek {
     }
 
     /**
-     * restituisce la dimensione del file
+     * Restituisce la dimensione del file
      * @return dimensione
      */
     public String getDimensione() {
@@ -81,7 +90,7 @@ public class RigaTabellaMieiCreek {
     }
 
     /**
-     * Restituisce il numero di peer del file
+     * Restituisce il numero di peer da cui si scarica
      * @return peer
      */
     public String getPeer() {
@@ -113,7 +122,7 @@ public class RigaTabellaMieiCreek {
     }
 
     /**
-     * Setta la percentuale di completamenti del file
+     * Setta la percentuale di completamento del file
      * @param percentuale
      * @exception condivisi.ErrorException se percentuale è null
      */
@@ -125,7 +134,8 @@ public class RigaTabellaMieiCreek {
     }
 
     /**
-     * Setta il numero dei peer del file
+     * Setta il numero dei peer da cui si
+     * sta scaricando il file
      * @param peer
      * @exception condivisi.ErrorException se peer è null
      */
@@ -136,18 +146,33 @@ public class RigaTabellaMieiCreek {
         this.peer = peer;
     }
 
-    private String Dim(long dimensione){
+    /**
+     * Restituisce la dimensione in byte, Kbyte, Mbyte,...
+     * a seconda della rappresentazione migliore
+     * @param dimensione
+     * @return stringa rappresentate la dimensione
+     */
+    private String Dim(long dimensione) {
         int i = 0;
-        for (i = 0; ; i++){
-            if( (dimensione / K) < 1)
+        for (i = 0;; i++) {
+            if ((dimensione / K) < 1) {
                 break;
-            else
+            } else {
                 dimensione = dimensione / K;
+            }
         }
-        if(i == 1)return dimensione + " Kbyte";
-        if(i == 2)return dimensione + " Mbyte";
-        if(i == 3)return dimensione + " Gbyte";
-        if(i == 4)return dimensione + " Tbyte";
+        if (i == 1) {
+            return dimensione + " Kbyte";
+        }
+        if (i == 2) {
+            return dimensione + " Mbyte";
+        }
+        if (i == 3) {
+            return dimensione + " Gbyte";
+        }
+        if (i == 4) {
+            return dimensione + " Tbyte";
+        }
         return dimensione + " byte";
     }
 }
