@@ -37,8 +37,14 @@ public class BitCreekServer {
     private int porta;
     private ServerSocket welcome;
     /* timer per i task ricorrenti */
+    /**
+     *
+     */
     protected static Timer timer = new Timer();
     /* id univoco */
+    /**
+     *
+     */
     protected static int idcount;
 
     /**
@@ -118,6 +124,10 @@ public class BitCreekServer {
         }
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         /* inizializzo il server*/

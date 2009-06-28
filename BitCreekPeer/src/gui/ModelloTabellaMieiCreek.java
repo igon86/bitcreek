@@ -14,6 +14,9 @@ public class ModelloTabellaMieiCreek extends AbstractTableModel{
 
     /* Costanti */
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 12;
     private final String [] headers = {"Id", "File", "Dimensione", "Stato", "Situazione", "Percentuale", "Peer"};
     private final Class [] tipi = {"".getClass(), "".getClass(), "".getClass(), "".getClass(), "".getClass(), "".getClass(), "".getClass()};

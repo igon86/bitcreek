@@ -11,6 +11,9 @@ import java.util.Calendar;
 public class NetRecord implements Serializable {
 
     /* Costanti */
+    /**
+     *
+     */
     public static final long serialVersionUID = 18;
     /* Variabili d'istanza */
     private InetAddress ip;
@@ -21,6 +24,7 @@ public class NetRecord implements Serializable {
      * Costruttore
      * @param ip
      * @param porta
+     * @param stato
      * @throws condivisi.ErrorException
      */
     public NetRecord(InetAddress ip, int porta, boolean stato) throws ErrorException {

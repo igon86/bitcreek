@@ -24,6 +24,10 @@ public class Cerca implements Runnable {
 
     /**
      * Costruttore
+     * @param nome 
+     * @param peer
+     * @param gui
+     * @throws ErrorException
      */
     public Cerca(String nome, BitCreekPeer peer, BitCreekGui gui) throws ErrorException {
         if (nome == null || peer == null || gui == null) {

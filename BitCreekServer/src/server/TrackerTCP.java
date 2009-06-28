@@ -20,6 +20,9 @@ public class TrackerTCP implements Runnable {
 
     /** la serverSocket viene passata dall'implementazione RMI, 
      * il descrittore viene passato per permettere le modifiche sul numero di peer aderenti allo swarm
+     * @param ss 
+     * @param lista
+     * @param d
      */
     public TrackerTCP(SSLServerSocket ss, ListaPeer lista, Descrittore d) {
         this.ss = ss;

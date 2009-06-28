@@ -15,6 +15,11 @@ public class ImplementazioneCallback implements InterfacciaCallback{
     private BitCreekPeer peer;
     
     
+    /**
+     *
+     * @param peer
+     * @throws condivisi.ErrorException
+     */
     public ImplementazioneCallback(BitCreekPeer peer) throws ErrorException{
         super();
         if(peer == null)throw new ErrorException("Param null");

@@ -26,6 +26,11 @@ public class Avvia implements Runnable {
 
 
     //array e` l'array di indici dei descrittori da avviare
+    /**
+     *
+     * @param peer
+     * @param array
+     */
     public Avvia(BitCreekPeer peer, int[] array) {
         this.peer = peer;
         this.array = array;

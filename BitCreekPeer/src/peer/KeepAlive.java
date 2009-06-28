@@ -23,6 +23,8 @@ public class KeepAlive implements Runnable {
 
     /**
      * Costruttore
+     * @param peer 
+     * @throws ErrorException
      */
     public KeepAlive(BitCreekPeer peer) throws ErrorException {
         if (peer == null) {

@@ -14,8 +14,14 @@ import java.util.Iterator;
  */
 public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
 
+    /**
+     *
+     */
     public static final long serialVersionUID = 16;
 
+    /**
+     *
+     */
     public ListaPeer() {
         super();
     }
@@ -32,7 +38,8 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
     /**l'ho messo synchronized perché il Tracker UDP potrebbe modificarlo
      * nel mentre lo esamino.
      * @param ip
-     * @return
+     * @param porta 
+     * @param stato
      */
     public synchronized void touchPeer(InetAddress ip, int porta, boolean stato) {
         boolean trovato = false;
@@ -61,6 +68,7 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
 
     /**elimina tutti i Peer che non hanno mandato messaggi di keepalive
      * ritorna il numero di seeder e leecher attualmente presenti
+     * @return
      */
     public synchronized NumPeer trimPeer() {
         int seeders = 0;

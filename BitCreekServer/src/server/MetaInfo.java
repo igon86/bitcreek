@@ -14,8 +14,14 @@ public class MetaInfo extends HashSet<Descrittore> {
 
     /* Costanti */
     private static final int NUMMAXDESCR = 15;
+    /**
+     *
+     */
     public static final long serialVersionUID = 15;
 
+    /**
+     *
+     */
     public MetaInfo() {
         super();
     }
@@ -30,6 +36,11 @@ public class MetaInfo extends HashSet<Descrittore> {
         return super.iterator();
     }
 
+    /**
+     *
+     * @param d
+     * @return
+     */
     public synchronized Descrittore presenza(Descrittore d) {
         Iterator<Descrittore> i = super.iterator();
         Descrittore temp = null;
@@ -42,6 +53,11 @@ public class MetaInfo extends HashSet<Descrittore> {
         return null;
     }
 
+    /**
+     *
+     * @param nomefile
+     * @return
+     */
     public synchronized ArrayList<Descrittore> cerca(String nomefile) {
 
         ArrayList<Descrittore> array = new ArrayList<Descrittore>();

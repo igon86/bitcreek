@@ -31,6 +31,9 @@ public class Crea implements Runnable {
     /**
      * Costruttore
      * @param sorgente file da pubblicare
+     * @param peer
+     * @param gui
+     * @throws ErrorException
      */
     public Crea(File sorgente, BitCreekPeer peer, BitCreekGui gui) throws ErrorException {
         if (sorgente == null || peer == null || gui == null) {

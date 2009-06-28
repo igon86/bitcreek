@@ -9,6 +9,9 @@ import java.net.InetAddress;
 public class RigaTabellaPubblicati {
 
     /* Costanti */
+    /**
+     *
+     */
     public static final int NONATTIVO = -1;
     private final int K = 1024;
 
@@ -118,7 +121,7 @@ public class RigaTabellaPubblicati {
 
     /**
      * Incrementa il numero dei peer che hanno cercato quel file
-     * @exception condivisi.ErrorException se il peer non ha pubblicato quel file
+     * @param np
      */
     public void setPeerCerca(int np) {
         if (peercercano != NONATTIVO && np != NONATTIVO) {
@@ -131,7 +134,6 @@ public class RigaTabellaPubblicati {
     /**
      * Setta l'ip dell'ultimo peer che ha cercato quel file
      * @param ind
-     * @exception condivisi.ErrorException se ind è null o il peer non ha pubblicato quel file
      */
     public void setIdentita(InetAddress ind) {
         if (ind != null && peercercano != NONATTIVO) {

@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 public class TrackerUDP implements Runnable{
 
     /* Costanti */
+    /**
+     *
+     */
     public static final int TIMEOUT = 10000;
     private final int NULL = -1;
 
@@ -24,6 +27,11 @@ public class TrackerUDP implements Runnable{
     private DatagramSocket alive;
     private ListaPeer lista;
     
+    /**
+     *
+     * @param d
+     * @param lista
+     */
     public TrackerUDP(DatagramSocket d,ListaPeer lista){
         this.alive = d;
         this.lista = lista;

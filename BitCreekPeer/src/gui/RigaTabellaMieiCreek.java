@@ -23,6 +23,8 @@ public class RigaTabellaMieiCreek {
      * Costruttore
      * @param file nome del file
      * @param dimensione dimensione del file
+     * @param percentuale
+     * @param peer
      */
     public RigaTabellaMieiCreek(String file, long dimensione, int percentuale, int peer) {
         this.file = file;

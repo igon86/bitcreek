@@ -9,6 +9,9 @@ import java.io.Serializable;
 public class Descrittore implements Serializable {
 
     /* Costanti */
+    /**
+     *
+     */
     public static final long serialVersionUID = 13;
     private final int NULL = -1;
     /* Variabili d'istanza */
@@ -54,20 +57,32 @@ public class Descrittore implements Serializable {
         this.id = -1;
     }
 
-    /**metodo che ritorna il numero di Seeders attualmente sul descrittore*/
+    /**metodo che ritorna il numero di Seeders attualmente sul descrittore
+     * @return
+     */
     public synchronized int getNumSeeders() {
         return this.numSeeders;
     }
 
-    /**metodo che ritorna il numero di leechers attualmente sul descrittore*/
+    /**metodo che ritorna il numero di leechers attualmente sul descrittore
+     * @return
+     */
     public synchronized int getNumLeechers() {
         return this.numLeechers;
     }
 
+    /**
+     *
+     * @param num
+     */
     public synchronized void setNumSeeders(int num) {
         this.numSeeders = num;
     }
 
+    /**
+     *
+     * @param num
+     */
     public synchronized void setNumLeechers(int num) {
         this.numLeechers = num;
     }
@@ -80,10 +95,18 @@ public class Descrittore implements Serializable {
         return this.nomefile;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
@@ -139,6 +162,11 @@ public class Descrittore implements Serializable {
         this.portaTCP = porta;
     }
 
+    /**
+     *
+     * @return
+     * @throws condivisi.ErrorException
+     */
     public Descrittore copia() throws ErrorException {
         Descrittore d = null;
         try {

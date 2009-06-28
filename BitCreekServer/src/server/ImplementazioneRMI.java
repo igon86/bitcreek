@@ -72,7 +72,6 @@ public class ImplementazioneRMI implements InterfacciaRMI {
      * Aggiunge il descrittore d alle metainfo
      * @param d
      * @return numero porta dei tracker TCP e UDP
-     * @throws java.rmi.RemoteException
      */
     public Porte inviaDescr(Descrittore d, InetAddress ip, int porta) {
         System.out.println("INVIA DESCR");

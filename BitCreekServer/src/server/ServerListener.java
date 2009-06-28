@@ -18,6 +18,11 @@ public class ServerListener implements Runnable {
     private MetaInfo tabella;
     private ServerSocket welcome;
     
+    /**
+     *
+     * @param tabella
+     * @param welcome
+     */
     public ServerListener(MetaInfo tabella, ServerSocket welcome){
         this.tabella = tabella;
         this.welcome = welcome;

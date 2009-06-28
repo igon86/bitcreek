@@ -32,6 +32,10 @@ public class Apri implements Runnable {
 
     /**
      * Costruttore
+     * @param creek 
+     * @param peer 
+     * @param gui
+     * @throws ErrorException
      */
     public Apri(File creek, BitCreekPeer peer, BitCreekGui gui) throws ErrorException {
         if (creek == null || peer == null || gui == null) {
