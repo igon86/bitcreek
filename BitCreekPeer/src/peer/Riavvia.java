@@ -35,11 +35,11 @@ public class Riavvia implements Runnable {
 
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         ArrayList<Creek> array = null;
-        try {
+        //try {
             array = this.peer.getDescr();
-        } catch (ErrorException ex) {
-            System.out.println("ErrorException in riavvia");
-        }
+        //} catch (ErrorException ex) {
+        //    System.out.println("ErrorException in riavvia");
+        //}
         if (array != null) {
             for (Creek c : array) {
                 /* inizializzo il creek */

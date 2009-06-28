@@ -93,6 +93,8 @@ public class Apri implements Runnable {
                 } catch (ErrorException ex) {
                     problema = true;
                 }
+                /* inizializzo il creek */
+                c.setToDo();
                 /* vedo di scaricarlo */
                 ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
                 SSLSocket s = null;

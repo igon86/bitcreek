@@ -53,11 +53,11 @@ public class KeepAlive implements Runnable {
             try {
                 // se sono connesso
                 if (peer.getIpServer() != null) {
-                    try {
+                    //try {
                         arraydescr = peer.getDescr();
-                    } catch (ErrorException ex) {
-                        System.err.println("ErrorException");
-                    }
+                    //} catch (ErrorException ex) {
+                    //    System.err.println("ErrorException");
+                    //}
                     synchronized (arraydescr) {
                         for (Creek c : arraydescr) {
                             porta = c.getUDP();
