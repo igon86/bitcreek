@@ -1,6 +1,5 @@
 package gui;
 
-import condivisi.ErrorException;
 import java.net.InetAddress;
 
 /**

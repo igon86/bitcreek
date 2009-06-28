@@ -654,11 +654,12 @@ public class BitCreekPeer {
                 percorso.delete();
                 throw new ErrorException("File non trovato");
             } else {
-                Creek c = new Creek(d, true, false);
+                Creek c = new Creek(d, true, false).esporta();
                 try {
                     output.writeObject(c);
                     output.close();
                 } catch (IOException ex) {
+                    Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                     percorso.delete();
                     throw new ErrorException("Impossibile leggere metainfo 1");
                 }
