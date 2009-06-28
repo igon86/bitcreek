@@ -36,29 +36,30 @@ import java.util.logging.Logger;
 
 /**
  * Parte client del protocollo BitCreek
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class BitCreekPeer {
 
     /* Costanti */
+    /** Definisce la costanta NULL*/
     private final int NULL = -1;
+    /** Definisce il tempo di attesa della risposta del server */
     private final int ATTESARISPSERVER = 3000;
+    /** Definisce la porta di ascolto del server */
     private final int PORTASERVER = 9999;
+    /** Definisce la porta di RMI */
     private final int PORTARMI = 10000;
+    /** Definisce la costante FINITO */
     private final int FINITO = 100;
+    /** Numero max di thread */
     private final int NUMTHREAD = 100;
-    /*dimensione del blocco*/
-    /**
-     *
-     */
+    /** Definsce la dimensione di un blocco da trasferire */
     public static final int DIMBLOCCO = 4096;
-    /**
-     *
-     */
+    /** Definisce il numero max di connessioni */
     protected static final int MAXCONNESSIONI = 100;
-    /**
-     *
-     */
+    /** Definisce il tempo di attesa su una connessione */
     protected static final int TIMEOUTCONNESSIONE = 500;
     /* Variabili d'istanza */
     /** Mio ip */
@@ -92,13 +93,12 @@ public class BitCreekPeer {
     private int connessioni;
 
     /**
-     * Costruttore vuoto
-     * @exception ErrorException
+     * Costruttore
+     * @exception ErrorException se no è possibile creare
+     * la parte client del protocollo
      */
     public BitCreekPeer() throws ErrorException {
-
         /* inizializzazione variabili istanza */
-
         mioip = null;
         portarichieste = NULL;
         ipServer = null;
@@ -119,9 +119,7 @@ public class BitCreekPeer {
         dir.mkdir();
         dir = new File("./MetaInfo");
         dir.mkdir();
-
         /* scandisco le metainfo e aggiorno arraydescr */
-
         File[] array = dir.listFiles();
         ObjectInputStream in = null;
         Creek c = null;
@@ -143,10 +141,9 @@ public class BitCreekPeer {
         }
     }
 
-    //METODI GETTER
     /**
      * Restituisce il numero di connessioni
-     * @return
+     * @return connessioni
      */
     public synchronized int getConnessioni() {
         return this.connessioni;
@@ -160,14 +157,14 @@ public class BitCreekPeer {
     }
 
     /**
-     * Incrementa il numero di connessioni
+     * Decrementa il numero di connessioni
      */
     public void decrConnessioni() {
         this.connessioni--;
     }
 
     /**
-     * Restituisce l' ip del client
+     * Restituisce l' ip del peer
      * @return mioip
      */
     public InetAddress getMioIp() {
@@ -176,14 +173,14 @@ public class BitCreekPeer {
 
     /**
      * Aggiunge un task al pool
-     * @param r
+     * @param r task da eseguire
      */
     public synchronized void addTask(Runnable r) {
         this.TP.execute(r);
     }
 
     /**
-     * Restituisce il numero della porta in ascolto
+     * Restituisce il numero della porta in ascolto del peer
      * @return portarichieste
      */
     public int getPortaRichieste() {
@@ -223,17 +220,17 @@ public class BitCreekPeer {
     }
 
     /**
-     * Restituisce lo stub
-     * @return stubcb
+     * Restituisce lo stub di RMI
+     * @return stub
      */
     public InterfacciaRMI getStub() {
         return this.stub;
     }
 
     /**
-     *
-     * @return
-     * @throws condivisi.ErrorException
+     * Restituisce una copia dell' array dei file cercati
+     * @return ris array di descrittori
+     * @throws condivisi.ErrorException se la copia di un descrittore fallisce
      */
     public synchronized ArrayList<Descrittore> getCercati() throws ErrorException {
         ArrayList<Descrittore> ris = new ArrayList<Descrittore>();
@@ -245,17 +242,15 @@ public class BitCreekPeer {
     }
 
     /**
-     * Restituisce tutti i creek
+     * Restituisce tutti i creek presenti nel peer
      * @return arraydescr
-     * @throws ErrorException
      */
-    public synchronized ArrayList<Creek> getDescr() throws ErrorException {
+    public synchronized ArrayList<Creek> getDescr() {
         return this.arraydescr;
     }
 
-    //SETTER
     /**
-     *
+     * Setta l' array dei file cercati al parametro results
      * @param results
      */
     public synchronized void setCercati(ArrayList<Descrittore> results) {
@@ -263,9 +258,10 @@ public class BitCreekPeer {
     }
 
     /**
-     * Controllas se la porta speceficata è libera
-     * @param porta
-     * @return
+     * Controlla se la porta specificata è libera e in caso
+     * affermativa scrive il numero su file
+     * @param porta da controllare
+     * @return true se è libera e av tutto bene, false altrimenti
      */
     public boolean settaporta(int porta) {
         boolean ris = true;
@@ -294,14 +290,12 @@ public class BitCreekPeer {
         return ris;
     }
 
-    //METODI OPERANTI SU ARRAYDESCR
     /**
      * Controlla se esiste un creek con il nome nome
      * @param nome
      * @return true se esiste già, false altrimenti
-     * @throws condivisi.ErrorException se nome è null
      */
-    public synchronized boolean presenza(/*int id*/String nome) throws ErrorException {
+    public synchronized boolean presenza(/*int id*/String nome) {
         boolean presenza = false;
         for (Creek c : arraydescr) {
             //if (c.getId() == id) {
@@ -314,10 +308,10 @@ public class BitCreekPeer {
     }
 
     /**
-     * ricerca e ritorna un creek in base all'id univoco passato come parametro
+     * Ricerca e ritorna un creek in base all'id univoco passato come parametro
      * se non lo trova ritorna null
      * @param id
-     * @return il Creek cercato
+     * @return il Creek cercato se c'è ; altrimenti null
      */
     public synchronized Creek getCreek(int id) {
         Creek ret = null;
@@ -326,16 +320,15 @@ public class BitCreekPeer {
                 return c;
             }
         }
-        //creek non trovato
         return ret;
     }
 
     /**
-     * Avvia il download dei file selezionati nella ricerca per lo scaricamento
+     * Avvia il download dei file selezionati nella ricerca
+     * facendo partire un thread apposito
      * @param array indici dei file da scaricare
-     * @throws ErrorException
      */
-    public synchronized void avviaDescr(int[] array) throws ErrorException {
+    public synchronized void avviaDescr(int[] array) {
         Thread t = new Thread(new Avvia(this, array));
         t.start();
     }
@@ -385,10 +378,10 @@ public class BitCreekPeer {
     }
 
     /**
-     * Aggiunge ad arraydescr un creek se non è già presente
-     * @param nome
-     * @return true se tutto ok, false se è già presente
-     * @throws condivisi.ErrorException se c è null
+     * Cancella un creek in arraydescr se presente
+     * @param nome nome del creek da cancellare
+     * @return true se tutto ok, false altrimenti
+     * @throws condivisi.ErrorException se nome è null
      */
     public synchronized boolean deleteCreek(String nome) throws ErrorException {
         if (nome == null) {
@@ -397,7 +390,6 @@ public class BitCreekPeer {
         int pos = 0;
         boolean rimosso = false;
         File f = null;
-
         for (Creek c : arraydescr) {
             if (c.getName().compareTo(nome) == 0) {
                 arraydescr.remove(pos);
@@ -416,9 +408,8 @@ public class BitCreekPeer {
     /**
      * Metodo che viene invocato dall'implementazione callback per
      * aggiornare lo stato
-     * 
-     * @param ind
-     * @param nome
+     * @param ind IP da notificare
+     * @param nome nome del creek da aggiornare
      */
     public synchronized void notifica(InetAddress ind, String nome) {
         for (Creek c : arraydescr) {
@@ -436,12 +427,9 @@ public class BitCreekPeer {
     public void close() {
         /* chiusura connessioni */
         disconnetti();
-
         /* cancellazione del file di avvio del programma */
-
         File conf = new File("./avviato.on");
         conf.delete();
-
         /* salvataggio */
         for (Creek creek : arraydescr) {
             ObjectOutputStream o = null;
@@ -458,13 +446,11 @@ public class BitCreekPeer {
             }
         }
         /* termino il processo */
-
         System.exit(0);
     }
 
     /**
-     * Chiude tutte le connessioni in upload e in download e salva lo stato
-     * sui file
+     * Chiude tutte le connessioni in upload e in download
      */
     private synchronized void terminaConn() {
         System.out.println("TerminaConn: CHIUDO I CREEK");
@@ -492,7 +478,6 @@ public class BitCreekPeer {
      * Disconnette il peer
      */
     public void disconnetti() {
-
         /* chiusura "connessione" con il server */
         ipServer = null;
         portarichieste = NULL;
@@ -514,10 +499,11 @@ public class BitCreekPeer {
     }
 
     /**
-     *
-     * @param nome
-     * @param gui
-     * @throws condivisi.ErrorException
+     * Handler che si occupa di far partire un task
+     * che effettua la ricerca
+     * @param nome del file da cercare
+     * @param gui interfaccia grafica da aggiornare
+     * @throws condivisi.ErrorException se almeno un parametro è null
      */
     public void cerca(String nome, BitCreekGui gui) throws ErrorException {
         if (nome == null || gui == null) {
@@ -530,8 +516,8 @@ public class BitCreekPeer {
     /**
      * Fa partire un task che si occupa di creare e pubblicare un creek
      * @param sorgente file da pubblicare
-     * @param gui 
-     * @exception condivisi.ErrorException se sorgente è null
+     * @param gui interfaccia grafica da aggiornare
+     * @exception condivisi.ErrorException se almeno un parametro è null
      */
     public void crea(File sorgente, BitCreekGui gui) throws ErrorException {
         if (sorgente == null || gui == null) {
@@ -543,9 +529,9 @@ public class BitCreekPeer {
 
     /**
      * Fa partire un task che si occupa ci aprire un .creek su disco
-     * @param creek file .creek
-     * @param gui
-     * @throws condivisi.ErrorException se creek è null
+     * @param creek file .creek da aprire
+     * @param gui interfaccia grafica da aggiornare
+     * @throws condivisi.ErrorException se almeno un parametro è null
      */
     public void apri(File creek, BitCreekGui gui) throws ErrorException {
         if (creek == null || gui == null) {
@@ -556,9 +542,10 @@ public class BitCreekPeer {
     }
 
     /**
-     * Fa partitìre un task che si occupa di eliminare il file con nome nome
-     * @param nome
-     * @throws condivisi.ErrorException
+     * Fa partitìre un task che si occupa di eliminare il
+     * file con nome nome
+     * @param nome nome del file da eliminare
+     * @throws condivisi.ErrorException se nome è null
      */
     public void elimina(String nome) throws ErrorException {
         if (nome == null) {
@@ -571,8 +558,8 @@ public class BitCreekPeer {
     /**
      * Tenta di stabilire una connessione con il server
      * @param server ip del server
-     * @param gui
-     * @throws condivisi.ErrorException se server è null
+     * @param gui interfaccia grafica da aggiornare
+     * @throws condivisi.ErrorException se almeno un parametro è null
      */
     public void connetti(InetAddress server, BitCreekGui gui) throws ErrorException {
         if (server == null || gui == null) {
@@ -603,11 +590,8 @@ public class BitCreekPeer {
         } catch (IOException e) {
             ipServer = null;
         }
-
         if (ipServer != null) {
-
             try {
-
                 /* attivazione rmi parte client e attivazione callback */
                 Registry reg = LocateRegistry.getRegistry(ipServer.getHostAddress(), PORTARMI);
                 stub = (InterfacciaRMI) reg.lookup("MetodiRMI");
@@ -659,15 +643,16 @@ public class BitCreekPeer {
             Thread t = new Thread(new Riavvia(this));
             t.start();
         }
-
     }
 
     /**
-     *
-     * @param path
-     * @param file
-     * @param cerca
-     * @throws condivisi.ErrorException
+     * Fa partitìre un task che si occupa di salvare il
+     * file con nome file nel path passato come parametro
+     * @param path path dove salvare il file
+     * @param file nome del file da salvare
+     * @param cerca flag che indica se il creek da salvare è un descrittore
+     * o un creek già presente
+     * @throws condivisi.ErrorException se almeno un parametro è null
      */
     public void salva(String path, String file, boolean cerca) throws ErrorException {
         if (path == null || file == null) {
@@ -697,7 +682,7 @@ public class BitCreekPeer {
                 } catch (IOException ex) {
                     Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                     percorso.delete();
-                    throw new ErrorException("Impossibile leggere metainfo 1");
+                    throw new ErrorException("Impossibile leggere metainfo");
                 }
             }
         } else {
@@ -712,19 +697,19 @@ public class BitCreekPeer {
                 in.close();
             } catch (IOException e) {
                 percorso.delete();
-                throw new ErrorException("Impossibile leggere metainfo 2");
+                throw new ErrorException("Impossibile leggere metainfo");
             } catch (ClassNotFoundException e) {
                 percorso.delete();
-                throw new ErrorException("Impossibile leggere metainfo 3");
+                throw new ErrorException("Impossibile leggere metainfo");
             }
         }
     }
 
     /**
-     * effettua una copia di un descrittore presente nell'array cercati
-     * @param nome
+     * Effettua una copia di un descrittore presente nell'array cercati
+     * @param nome nome del creek da copiare
      * @return la copia del descrittore
-     * @throws condivisi.ErrorException
+     * @throws condivisi.ErrorException se nome è null
      */
     private synchronized Descrittore getFileCerca(String nome) throws ErrorException {
         if (nome == null) {
@@ -742,8 +727,8 @@ public class BitCreekPeer {
 
     /**
      * Effettua il test NAT - Firewall
-     * @param gui 
-     * @throws ErrorException
+     * @param gui interfaccia da aggiornare
+     * @throws ErrorException se qualcosa non va
      */
     public void test(BitCreekGui gui) throws ErrorException {
 
@@ -814,6 +799,5 @@ public class BitCreekPeer {
         } else {
             gui.testDone(bloccato, portarichieste);
         }
-
     }
 }

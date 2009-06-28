@@ -13,20 +13,27 @@ import java.util.logging.Logger;
 
 /**
  * Task che si occupa di ascoltare richieste sulla porta di ricezione
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Ascolto implements Runnable {
 
     /* Costanti */
+    /**
+     * Definisce i millisecondi di attesa del task
+     * nel caso il peer sia disconnesso
+     */
     private final int ATTESA = 3000;
 
     /* Variabili d'istanza */
+    /** Peer */
     private BitCreekPeer peer;
 
     /**
      * Costruttore
      * @param peer 
-     * @throws ErrorException
+     * @throws ErrorException se peer è null
      */
     public Ascolto(BitCreekPeer peer) throws ErrorException {
         if (peer == null) {

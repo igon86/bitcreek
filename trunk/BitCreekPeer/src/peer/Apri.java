@@ -21,13 +21,18 @@ import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Task che si occupa di aprire un .creek dal disco
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Apri implements Runnable {
 
     /* Variabili d'istanza */
+    /** File da aprire */
     private File creek;
+    /** Peer */
     private BitCreekPeer peer;
+    /** Gui */
     private BitCreekGui gui;
 
     /**
@@ -35,7 +40,7 @@ public class Apri implements Runnable {
      * @param creek 
      * @param peer 
      * @param gui
-     * @throws ErrorException
+     * @throws ErrorException se almeno un parametro è null
      */
     public Apri(File creek, BitCreekPeer peer, BitCreekGui gui) throws ErrorException {
         if (creek == null || peer == null || gui == null) {
@@ -196,6 +201,5 @@ public class Apri implements Runnable {
         }
         /* cambio il cursore */
         gui.getRootPane().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
     }
 }
