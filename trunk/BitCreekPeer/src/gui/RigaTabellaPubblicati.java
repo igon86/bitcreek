@@ -99,18 +99,6 @@ public class RigaTabellaPubblicati {
     }
 
     /**
-    public void setFile(String file){
-    this.file = file;
-    }
-    public void setDimensione(String dimensione){
-    this.dimensione = dimensione;
-    }
-
-    public void setStato(String stato) throws ErrorException{
-    if( stato == null ) throw new ErrorException("Param null");
-    this.stato = stato;
-    }*/
-    /**
      * Setta la situazione del file
      * @param situazione
      */
@@ -124,7 +112,7 @@ public class RigaTabellaPubblicati {
      */
     public void setPeer(int peer) {
         if (peer < 0) {
-            this.peer = 0;
+            peer = 0;
         }
         this.peer = peer;
     }
