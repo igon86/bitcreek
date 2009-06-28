@@ -16,18 +16,22 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- *
- * @author andrea
+ * Task che si occupa di avviare il download
+ * dei file selezionati nella tabella della ricerca
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Avvia implements Runnable {
 
+    /* Variabili d'istanza*/
+    /** Peer */
     private BitCreekPeer peer;
+    /** Array con gli indici dei file selezionati */
     private int[] array;
 
-
-    //array e` l'array di indici dei descrittori da avviare
     /**
-     *
+     * Costruttore
      * @param peer
      * @param array
      */
@@ -36,9 +40,10 @@ public class Avvia implements Runnable {
         this.array = array;
     }
 
+    /**
+     * Corpo del task
+     */
     public void run() {
-        //System.out.println(Thread.currentThread().getName() + " AVVIA");
-
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         Creek c = null;
         Descrittore d = null;
@@ -72,7 +77,7 @@ public class Avvia implements Runnable {
             if (presenza) {
                 //recupero della lista Peer dal tracker
                 int portatracker = d.getTCP();
-                
+
                 //CONTATTO SSL
                 System.out.println(Thread.currentThread().getName() + " : Avvia : !presenza --> Contatto tracker sulla porta : " + portatracker);
                 try {
@@ -97,10 +102,6 @@ public class Avvia implements Runnable {
                     System.out.println(Thread.currentThread().getName() + " Avvia : IOIO");
                     Logger.getLogger(BitCreekPeer.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-
-
-
                 //devo contattare i peer nella lista
                 for (NetRecord n : lista) {
 
@@ -179,10 +180,7 @@ public class Avvia implements Runnable {
                         System.out.println(Thread.currentThread().getName() + " Avvia : Passo al prossimo netrecord");
                         continue;
                     }
-
-
                 }
-
                 System.out.println(Thread.currentThread().getName() + " Avvia : CREO UPLOADER MANAGER !!!!!");
                 peer.addTask(new UploadManager(peer, c));
                 /* inutile continuare a ciclare se non posso creare connessioni */
@@ -192,7 +190,6 @@ public class Avvia implements Runnable {
             } else {
                 System.out.println(Thread.currentThread().getName() + " Avvia : non aggiunto");
             }
-
         }
     }
 }
