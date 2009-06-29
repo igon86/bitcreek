@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.2.4)  29 JUN 2009 16:20
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.2.4)  29 JUN 2009 18:58
 entering extended mode
  %&-line parsing enabled.
 **relazione.tex
@@ -236,7 +236,7 @@ File: images/serverClass.jpg Graphic file (type jpg)
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [5] [6 <./images/serverClass.jpg>]
-<images/peerClass.jpg, id=26, 1478.52374pt x 1375.1375pt>
+<images/peerClass.jpg, id=26, 1478.52374pt x 1281.78876pt>
 File: images/peerClass.jpg Graphic file (type jpg)
 
 <use images/peerClass.jpg>
@@ -264,27 +264,37 @@ File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 8.
 )
-[11]) [12] (./relazione.aux (./prefazione.aux) (./test.aux) (./package.aux)
-(./Implementazione.aux)) ) 
+[11] <images/GUI.jpg, id=47, 837.1275pt x 746.79pt>
+File: images/GUI.jpg Graphic file (type jpg)
+ <use images/GUI.jpg>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[12] [13 <./images/GUI.jpg>] [14] (./code/Creek.header [15])) [16]
+(./relazione.aux (./prefazione.aux) (./test.aux) (./package.aux)
+(./Implementazione.aux))
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3762 strings out of 94101
- 50387 string characters out of 1165811
- 156304 words of memory out of 1500000
- 6966 multiletter control sequences out of 10000+50000
+ 3791 strings out of 94101
+ 50771 string characters out of 1165811
+ 167304 words of memory out of 1500000
+ 6991 multiletter control sequences out of 10000+50000
  10378 words of font info for 36 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
  35i,8n,43p,952b,1692s stack positions out of 5000i,500n,6000p,200000b,5000s
-</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx
-10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/
-texmf-texlive/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts
-/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/c
-mr10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr12.pfb></usr/share
-/texmf-texlive/fonts/type1/bluesky/cm/cmr17.pfb></usr/share/texmf-texlive/fonts
-/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/c
-mti10.pfb>
-Output written on relazione.pdf (12 pages, 657559 bytes).
+</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf
+-texlive/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type
+1/bluesky/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmmi12
+.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/tex
+mf-texlive/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/typ
+e1/bluesky/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10
+.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmti10.pfb>
+Output written on relazione.pdf (16 pages, 740890 bytes).
 PDF statistics:
- 79 PDF objects out of 1000 (max. 8388607)
+ 93 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

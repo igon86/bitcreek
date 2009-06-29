@@ -99,7 +99,35 @@ In fase di progetto abbiamo deciso di utilizzare i meccanismi degli SwingTimer p
 \subsection{Peer}
 
 Questo Package contiene le varie classi che compongono la logica dell'applicazione e definiscono il protocollo di interazione tra peer.
-Al momento dell'avvio (initProtocol) da parte della GUI viene istanziato un oggetto di tipo BitCreekPeer
+Al momento dell'avvio (initProtocol) da parte della GUI viene istanziato un oggetto di tipo BitCreekPeer, il suo stato viene ripristinato dalla precendente esecuzione usando dei file di configurazione presenti in una cartella apposita. Come prima cosa l'utente deve connettersi da interfaccia grafica tramite l'apposito tasto, durante la connessione viene invocata la procedura di test del NAT, se la procedura da esito positivo il peer risulta connesso al server. 
+A questo punto vengono avviati i vari thread di supporto:
+\begin{itemize}
+\item Thread KeepAlive
+\item Thread Listener
+\end{itemize}
+
+%%INSERIRE QUI COMMENTO DELLA SPIEGAZIONE NAT
+A questo punto le varie funzionalit\`a della GUI sono attive ed \`e possibile:
+\begin{enumerate}
+\item creare un nuovo descrittore.
+\item creare un file .creek.
+\item aprire un file .creek e avviarlo.
+\item avviare un file tra quelli cercati.
+\item eliminare file (sia in stato di seeder che di leecher).
+\item chiudere l'applicazione (ovviamente).
+\end{enumerate}
+
+%CASI D'USO
+
+\subsubsection{arrayDescr}
+Questa classe rappresenta il punto centrale di tutta l'applicazione.
+E` implementata come ArrayList$\langle Creek \rangle$ e contiene tutte le informazioni relative ai vari swarm a cui il peer partecipa, ogni singolo oggetto di tipo Creek infatti rappresenta un "Descrittore a runtime" e quindi racchiude tutte le informazioni necessarie a runtime per la gestione di uno swarm. Data la sua importanza riportiamo qui le sue varibili di istanza:
+
+\lstinputlisting[caption=$Creek$.,label=list:Creek]{code/Creek.header}
+
+\subsubsection{Analisi delle varie classi}
+Andiamo ad analizzare le varie classi in dettaglio:
+
 Le seguenti classi implementano tramite appositi Thread le funzionalit\`a invocate dalla GUI:
 \begin{itemize}
 \item Apri
@@ -108,3 +136,5 @@ Le seguenti classi implementano tramite appositi Thread le funzionalit\`a invoca
 \item Crea
 \item Riavvia
 \end{itemize}
+
+La caratteristica comune di questi Thread \`e di operare principalmente su arraydescr del peer per aggiungere/avviare/eliminare nuovi creek su cui lavorare.
