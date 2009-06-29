@@ -43,7 +43,7 @@ public class Apri implements Runnable {
      * @throws ErrorException se almeno un parametro è null
      */
     public Apri(File creek, BitCreekPeer peer, BitCreekGui gui) throws ErrorException {
-        if (creek == null || peer == null || gui == null) {
+        if ( creek == null || peer == null || gui == null ) {
             throw new ErrorException("Param null");
         }
         this.creek = creek;
