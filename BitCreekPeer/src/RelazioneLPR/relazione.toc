@@ -12,4 +12,9 @@
 \contentsline {subsubsection}{\numberline {4.1.1}interazioni RMI}{10}
 \contentsline {subsubsection}{\numberline {4.1.2}ListaPeer}{11}
 \contentsline {subsubsection}{\numberline {4.1.3}Features aggiuntive e chiarimenti}{12}
-\contentsline {subsection}{\numberline {4.2}Peer}{12}
+\contentsline {subsection}{\numberline {4.2}GUI}{12}
+\contentsline {subsubsection}{\numberline {4.2.1}Implementazione della GUI}{14}
+\contentsline {paragraph}{Listener della GUI}{14}
+\contentsline {subsection}{\numberline {4.3}Peer}{14}
+\contentsline {subsubsection}{\numberline {4.3.1}arrayDescr}{15}
+\contentsline {subsubsection}{\numberline {4.3.2}Analisi delle varie classi}{16}

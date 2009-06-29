@@ -1,0 +1,29 @@
+/**
+ * Classe che definisce la struttura dati del client di supporto al
+ * download/upload in uno swarm
+ * @author Andrea Lottarini, Alberto Bandettini
+ */
+public class Creek extends Descrittore implements Serializable {
+
+    /* Costanti */
+    ...
+    /* Variabili d'istanza */
+    private boolean stato; // true leecher,false seeder
+    private boolean situazione; // true se attivo, false altrimenti
+    //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
+    private int statoDownload;
+    private int percentuale;
+    private boolean pubblicato;
+    private int peer;
+    private int peercercano;
+    private InetAddress ind;
+    /** Per ogni Chunk true se posseduto, false altrimenti*/
+    private boolean[] have;
+    /** Lista dei Chunk da scaricare*/
+    private ArrayList<PIO> toDo;
+    private ArrayList<Connessione> connessioni;
+    //Strutture per la gestione del file
+    private File file;
+    private RandomAccessFile raf;
+    private int scaricati;
+    private int[] scaricatiId;
