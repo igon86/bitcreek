@@ -1,6 +1,5 @@
 package peer;
 
-import condivisi.ErrorException;
 import condivisi.NetRecord;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,31 +14,34 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- *
- * @author bande
+ * Task che si occupa di far ripartire tutti i download
+ * in seguito alla riconnessione
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Riavvia implements Runnable {
 
+    /* Variabili d' istanza */
+    /** Peer */
     private BitCreekPeer peer;
 
-    //array e` l'array di indici dei descrittori da avviare
     /**
-     *
+     * Costruttore
      * @param peer
      */
     public Riavvia(BitCreekPeer peer) {
         this.peer = peer;
     }
 
+    /**
+     * Corpo del task
+     */
     public void run() {
 
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         ArrayList<Creek> array = null;
-        //try {
-            array = this.peer.getDescr();
-        //} catch (ErrorException ex) {
-        //    System.out.println("ErrorException in riavvia");
-        //}
+        array = this.peer.getDescr();
         if (array != null) {
             for (Creek c : array) {
                 /* inizializzo il creek */
@@ -148,4 +150,3 @@ public class Riavvia implements Runnable {
         }
     }
 }
-

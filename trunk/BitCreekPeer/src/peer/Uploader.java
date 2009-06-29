@@ -7,21 +7,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author andrea
+ * Task che si occupa di far scaricare un file
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Uploader implements Runnable {
 
+    /* Costanti */
+    /** Connessione dove fare upload */
     private Connessione conn;
+    /** Creek associato */
     private Creek c;
+    /** Peer */
     private BitCreekPeer peer;
+    /** Mah */
     private int puntatoreHave;
+    /** Contatore */
     private int failed;
 
     /**
-     *
-     * @param conn
-     * @param c
+     * Costruttore
+     * @param conn connessione dove fare upload
+     * @param c creek associato
      * @param numPieces
      * @param peer
      */
@@ -33,8 +41,10 @@ public class Uploader implements Runnable {
         this.failed = 0;
     }
 
+    /**
+     * Corpo del task
+     */
     public void run() {
-        //INIZIALIZZAZIONE STAMPA DI DEBUG
         FileOutputStream file = null;
         PrintStream output = null;
         try {
@@ -86,7 +96,7 @@ public class Uploader implements Runnable {
                             Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                         } else {
                             Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: " + pezzo);
-                            //io non gli mando nulla e lui prima o poi mi mandera in culo
+                        //io non gli mando nulla e lui prima o poi mi mandera in culo
                         }
 
                         break;
@@ -140,7 +150,7 @@ public class Uploader implements Runnable {
             int dimHave = this.c.getScaricati() - this.puntatoreHave;
             if (dimHave > 0) {
                 int[] newHave = new int[dimHave];
-                for (int i=0; i<dimHave;i++) {
+                for (int i = 0; i < dimHave; i++) {
                     int daNotificare = this.c.getScaricatiIndex(this.puntatoreHave);
                     newHave[i] = daNotificare;
                     this.puntatoreHave++;

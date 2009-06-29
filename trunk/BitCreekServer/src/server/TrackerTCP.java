@@ -10,15 +10,22 @@ import javax.net.ssl.SSLSocket;
 
 /**
  * Task che implementa il tracker TCP
- * @author bande
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class TrackerTCP implements Runnable {
 
+    /* Variabili d'istanza */
+    /** Server Socket con SSL */
     private SSLServerSocket ss;
+    /** Lista dei peer */
     private ListaPeer lista;
+    /** Descrittore */
     private Descrittore d;
 
-    /** la serverSocket viene passata dall'implementazione RMI, 
+    /**Costruttore
+     * la serverSocket viene passata dall'implementazione RMI,
      * il descrittore viene passato per permettere le modifiche sul numero di peer aderenti allo swarm
      * @param ss 
      * @param lista
@@ -30,6 +37,9 @@ public class TrackerTCP implements Runnable {
         this.d = d;
     }
 
+    /**
+     * corpo del task
+     */
     public void run() {
         while (true) {
             /* accetto connessioni TCP/SSL */

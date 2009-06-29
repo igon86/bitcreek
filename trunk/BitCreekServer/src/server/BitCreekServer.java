@@ -20,31 +20,36 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 /**
  * Server del protocollo BitCreek
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class BitCreekServer {
 
     /* Costanti */
+    /** Definisce la costante ERRORE */
     private static final int ERRORE = 1;
+    /** Definisce la costante PORTA di ascolto del server */
     private static final int PORTA = 9999;
+    /** Definisce la costante PORTA di RMI */
     private static final int PORTARMI = 10000;
+    /** Definisce la costante INIZIO */
     private static final int INIZIO = 3000;
+    /** Definisce la costante DURATA */
     private static final int DURATA = 4000;
 
-    /* Variabili */
+    /* Variabili d' istanza */
+    /** Metainfo del server */
     private MetaInfo tabella;
-    /* socket per il test nat/firewall*/
+    /**  */
     private int porta;
+    /** Socket per il test nat/firewall*/
     private ServerSocket welcome;
-    /* timer per i task ricorrenti */
-    /**
-     *
-     */
+
+    /* Variabili di classe */
+    /** Timer per i task ricorrenti */
     protected static Timer timer = new Timer();
-    /* id univoco */
-    /**
-     *
-     */
+    /** Id univoco da associare ad ogni swarm */
     protected static int idcount;
 
     /**
@@ -56,19 +61,18 @@ public class BitCreekServer {
             porta = PORTA;
             welcome = new ServerSocket(porta);
         } catch (IOException ex) {
-            System.err.println("Problema creazione server socket sulla porta " + porta+": l'applicazione verrà chiusa");
+            System.err.println("Problema creazione server socket sulla porta " + porta + ": l'applicazione verrà chiusa");
             System.exit(ERRORE);
         }
         /* carico l'id univoco */
         ObjectInputStream in = null;
         try {
-                in = new ObjectInputStream(new FileInputStream(new File("./id.info")));
-                idcount = in.readInt();
-                in.close();
-            } catch (IOException ex) {
-                idcount = 0;
-            }
-
+            in = new ObjectInputStream(new FileInputStream(new File("./id.info")));
+            idcount = in.readInt();
+            in.close();
+        } catch (IOException ex) {
+            idcount = 0;
+        }
         /* creo la cartella per salvare le metainfo se non esiste */
         File dir = new File("./MetaInfo");
         dir.mkdir();
@@ -125,22 +129,18 @@ public class BitCreekServer {
     }
 
     /**
-     *
-     * @param args
+     * Main
+     * @param args parametro non utilizzato
      */
     public static void main(String[] args) {
-
         /* inizializzo il server*/
         BitCreekServer server = new BitCreekServer();
-
         /* creo thread di ascolto */
         Thread t1 = new Thread(new ServerListener(server.tabella, server.welcome));
         t1.start();
-
         /* creo thread di salvataggio */
         Thread t2 = new Thread(new ThreadSaver(server.tabella));
         t2.start();
-
         /* Attivazione RMI */
         InterfacciaRMI impl = null;
         try {

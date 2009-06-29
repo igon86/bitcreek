@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import condivisi.Descrittore;
@@ -15,23 +11,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author lottarin
+ * Task che si occupa di salvare le metainfo
+ * ad intervalli di tempo regolari
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class ThreadSaver implements Runnable {
-    
+
+    /* Costanti */
+    /**
+     * Costante che definisce il tempo di attesa tra un salvataggio
+     * e il successivo
+     */
     private static final int ATTESA = 15000;
-    
+    /* Variabili d' istanza */
+    /** Metainfo */
     private MetaInfo tabella;
 
     /**
-     *
+     * Costruttore
      * @param tabella
      */
     public ThreadSaver(MetaInfo tabella) {
         this.tabella = tabella;
     }
 
+    /**
+     * Corpo del task
+     */
     public void run() {
         File dir = new File("./MetaInfo");
         File temp = null;
@@ -40,12 +48,9 @@ public class ThreadSaver implements Runnable {
         ObjectOutputStream o = null;
 
         while (true) {
-
-            /* rimuovo tutto dalla cartella MetaInfo */
             for (File f : dir.listFiles()) {
                 f.delete();
             }
-
             /* salvo tutto su file nella cartella MetaInfo */
             i = tabella.iterator();
             while (i.hasNext()) {
@@ -61,7 +66,6 @@ public class ThreadSaver implements Runnable {
                     Logger.getLogger(BitCreekServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
             /* dormo per 15 secondi */
             try {
                 Thread.sleep(ATTESA);
@@ -70,5 +74,4 @@ public class ThreadSaver implements Runnable {
             }
         }
     }
-    }
-
+}

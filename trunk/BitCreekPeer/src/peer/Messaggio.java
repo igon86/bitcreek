@@ -1,81 +1,64 @@
-
 package peer;
 
 import java.io.Serializable;
 
 /**
- *
- * @author andrea
+ * Classe che definisce i messaggi scambiati tra peer
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
-public class Messaggio implements Serializable{
-    
-    /**
-     *
-     */
+public class Messaggio implements Serializable {
+
+    /* Costanti */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 67;
-    
-    /**codici dei messaggi*/
+    /** Codice del messaggio INTERESTED */
     protected static final int INTERESTED = 0;
-    /**
-     *
-     */
+    /** Codice del messaggio NOT_INTERESTED */
     protected static final int NOT_INTERESTED = 1;
-    /**
-     *
-     */
+    /** Codice del messaggio CHOCKE */
     protected static final int CHOKE = 2;
-    /**
-     *
-     */
+    /** Codice del messaggio UNCHOCKE */
     protected static final int UNCHOKE = 3;
-    /**
-     *
-     */
+    /** Codice del messaggio HAVE */
     protected static final int HAVE = 4;
-    /**
-     *
-     */
+    /** Codice del messaggio CHUNK */
     protected static final int CHUNK = 5;
-    /**
-     *
-     */
+    /** Codice del messaggio REQUEST */
     protected static final int REQUEST = 6;
-    /**
-     *
-     */
+    /** Codice del messaggio CLOSE */
     protected static final int CLOSE = 7;
 
+    /* Variabili d' istanza */
+    /** Tipo del messaggio */
     private int tipo;
+    /** Corpo del messaggio */
     private Object corpo;
-    
-    
+
     /**
-     *
-     * @param tipo
-     * @param corpo
+     * Costruttore
+     * @param tipo tipo del msg
+     * @param corpo del msg
      */
-    public Messaggio(int tipo, Object corpo){
+    public Messaggio(int tipo, Object corpo) {
         this.tipo = tipo;
         this.corpo = corpo;
     }
-    
-    //getter
+
     /**
-     *
-     * @return
+     * Restituisce il tipo del messaggio
+     * @return tipo
      */
-    public int getTipo(){
+    public int getTipo() {
         return this.tipo;
     }
-    
+
     /**
-     *
-     * @return
+     * Restituisce il corpo del messaggio
+     * @return corpo del msg
      */
-    public Object getObj(){
+    public Object getObj() {
         return this.corpo;
     }
-    
-    //non c'e` alcun bisogno dei setter
-    
 }

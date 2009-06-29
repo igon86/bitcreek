@@ -19,21 +19,26 @@ import java.util.ArrayList;
 
 /**
  * Task che si occupa di creare e pubblicare un creek
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Crea implements Runnable {
 
     /* Variabili d'istanza */
+    /** File associato al creek */
     private File sorgente;
+    /** Peer */
     private BitCreekPeer peer;
+    /** Gui */
     private BitCreekGui gui;
 
     /**
      * Costruttore
      * @param sorgente file da pubblicare
-     * @param peer
+     * @param peer logica del peer
      * @param gui
-     * @throws ErrorException
+     * @throws ErrorException se lameno un parametro è null
      */
     public Crea(File sorgente, BitCreekPeer peer, BitCreekGui gui) throws ErrorException {
         if (sorgente == null || peer == null || gui == null) {
@@ -67,13 +72,7 @@ public class Crea implements Runnable {
         boolean presenza = false;
 
         System.out.println(Thread.currentThread().getName() + " INIZIO CREA");
-        //QUESTO CONTROLLO LO DEVE FARE IL SERVER ... E A REGOLA ERA IMPLEMENTATO
-        //try {
-            presenza = peer.presenza(nomefilesorgente);
-        //} catch (ErrorException ex) {
-        //    problema = true;
-        //}
-
+        presenza = peer.presenza(nomefilesorgente);
         Creek c = null;
 
         /* se non presente lo copio, aggiorno arraydescr e poi pubblico*/
@@ -162,8 +161,7 @@ public class Crea implements Runnable {
             try {
                 if (peer == null) {
                     System.out.println("il peer e` null");
-                }
-                else{
+                } else {
                     peer.deleteCreek(c.getName());
                 }
             } catch (ErrorException ex) {

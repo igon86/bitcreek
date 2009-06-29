@@ -22,17 +22,20 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 /**
  * Implementazione dell'interfaccia RMI
- * @author bande
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class ImplementazioneRMI implements InterfacciaRMI {
 
     /* Variabili d'istanza */
+    /** Metainfo del server*/
     private MetaInfo tabella;
 
     /**
      * Costruttore
-     * @param tabella
-     * @throws condivisi.ErrorException
+     * @param tabella tabella
+     * @throws condivisi.ErrorException se tabella è null
      */
     public ImplementazioneRMI(MetaInfo tabella) throws ErrorException {
         super();
@@ -44,8 +47,8 @@ public class ImplementazioneRMI implements InterfacciaRMI {
 
     /**
      * Implementazione della ricerca di un file
-     * @param nomefile
-     * @param ind
+     * @param nomefile nome del file da cercare
+     * @param ind IP di chi ha cercato
      * @return lista di descrittori
      */
     public ArrayList<Descrittore> ricerca(String nomefile, InetAddress ind) {
@@ -57,7 +60,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
         // eseguo le callback
         while (i.hasNext()) {
             temp = i.next();
-            System.out.println("\nServer : ricerca : descr in tabella con id : " +temp.getId());
+            System.out.println("\nServer : ricerca : descr in tabella con id : " + temp.getId());
             cb = temp.getCallback();
             try {
                 cb.notifyMe(ind, temp.getName());
@@ -69,9 +72,11 @@ public class ImplementazioneRMI implements InterfacciaRMI {
     }
 
     /**
-     * Aggiunge il descrittore d alle metainfo
-     * @param d
-     * @return numero porta dei tracker TCP e UDP
+     * Aggiunge il descrittore d alle metainfo del server
+     * @param d descrittore da pubblicare
+     * @param ip IP peer
+     * @param porta porta di scolto del peer
+     * @return porte TCP e UDP dei tracker creati
      */
     public Porte inviaDescr(Descrittore d, InetAddress ip, int porta) {
         System.out.println("INVIA DESCR");
@@ -87,8 +92,6 @@ public class ImplementazioneRMI implements InterfacciaRMI {
                 //PER LA CALLBACK
                 return new Porte(temp.getTCP(), temp.getUDP(), temp.getId());
             } catch (ErrorException ex) {
-                
-                //DA GESTIRE
                 System.out.println("INVIA DESCR: PROBLEMA CON new Porte");
             }
         }
@@ -97,7 +100,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
             // creazione lista IP
             ListaPeer lista = new ListaPeer();
             try {
-                /**creo una nuova listaPeer associata al nuovo descrittore*/
+                /* creo una nuova listaPeer associata al nuovo descrittore */
                 lista.add(new NetRecord(ip, porta, false));
             } catch (Exception e) {
                 System.err.println("Errore");
@@ -127,7 +130,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
             // aggiornamento tabella
             tabella.add(d);
             /**avvio anche il thread trimmer sulla lista usando il timer comune del server*/
-            BitCreekServer.timer.schedule(new Trimmer(lista,d), 1000, 1000);
+            BitCreekServer.timer.schedule(new Trimmer(lista, d), 1000, 1000);
 
         } catch (IOException ex) {
             Logger.getLogger(ImplementazioneRMI.class.getName()).log(Level.SEVERE, null, ex);

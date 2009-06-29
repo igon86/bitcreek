@@ -8,33 +8,39 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author andrea
+ * Task che si occupa di scaricare un file
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Downloader implements Runnable {
 
-    //Messaggio utilizzato per comunicare il passaggio in endgame
-    /**
-     *
-     */
+    /* Costanti */
+    /** Definisce la costante ENDGAME */
     protected static final int ENDGAME = -1;
+    /** Definisce la costante PREQ */
     private static final int PREQ = -1;
-    /**
-     *
-     */
+    /** Definisce la costante MAXFAILURE */
     protected static final int MAXFAILURE = 10;
+    /* Variabili d' istanza */
+    /** Creek del file da scaricare */
     private Creek c;
+    /** Connessione da scaricare */
     private Connessione conn;
+    /** Peer */
     private BitCreekPeer peer;
+    /** flag che indica se ci sono richieste pendenti */
     private int pendingRequest;
+    /** Flag che indica che siamo nello stato ENDGAME */
     private boolean endgame;
+    /** Contatore */
     private int failed;
 
     /**
-     *
-     * @param c
-     * @param conn
-     * @param peer
+     * Costruttore
+     * @param c creek del file
+     * @param conn connessione dove fare download
+     * @param peer logica
      */
     public Downloader(Creek c, Connessione conn, BitCreekPeer peer) {
         this.c = c;
@@ -45,9 +51,10 @@ public class Downloader implements Runnable {
         this.failed = 0;
     }
 
+    /**
+     * Corpo del task
+     */
     public void run() {
-
-        //INIZIALIZZAZIONE STAMPA DI DEBUG
         FileOutputStream file = null;
         PrintStream output = null;
         try {
@@ -56,13 +63,8 @@ public class Downloader implements Runnable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         Creek.stampaDebug(output, "\n\n");
         Creek.stampaDebug(output, "SONO UN NUOVO THREAD DOWNLOADER \n");
-        //come prima cosa il thread verifica l'effettivo stato di interesse alla connessione
-
-
-
         if (c.interested(conn.getBitfield())) {
             conn.setInteresseDown(true);
             conn.sendDown(new Messaggio(Messaggio.INTERESTED, null));
@@ -183,10 +185,6 @@ public class Downloader implements Runnable {
             } else {
                 output.println("Non ho una pending Request");
             }
-
-
-
-
             //se siamo in endgame niente piu` richieste
             if (pendingRequest == PREQ && !endgame) {
                 p = c.getNext(this.conn.getBitfield());
@@ -207,8 +205,6 @@ public class Downloader implements Runnable {
                             }
                             this.pendingRequest = ultimi[0];
                         }
-
-
                     } else {
                         //invio normale
                         int[] toSend = new int[1];
@@ -245,4 +241,3 @@ public class Downloader implements Runnable {
         Creek.stampaDebug(output, " Downloader MUOIO");
     }
 }
-
