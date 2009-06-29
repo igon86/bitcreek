@@ -1,0 +1,110 @@
+\section{Implementazione e Funzionamento}
+
+\subsection{Server}
+
+Analizziamo come prima cosa il funzionamento dell'intero server andando poi a focalizzare l'attenzione sugli aspetti implementativi pi\`u importanti.
+Il main della parte server dell'applicazione si trova nella classe BitCreekServer all'interno del package $server$, all'avvio viene istanziato un nuovo oggetto BitCreekServer e contestualmente alla sua creazione (quindi nel costruttore) viene ripristinato uno stato consistente a partire da un file di configurazione. Successivamente vengono avviati i thread ServerListener e ThreadSaver ed infine avviato RMI.
+Si noti che le porte utilizzate come ServerSocket per la connessione dei peer e come porta RMI sono fissate a programma questo perch\'e abbiamo ritenuto che un server abbia piena disponibilit\`a delle proprie porte, diversamente nel lato client abbiamo creato un complesso sistema di gestione del NAT interattivo e a runtime per la scelta delle porte.
+Nel file di configurazione viene salvato lo stato di ogni swarm di cui il server tiene traccia, al momento della creazione del server vengono ripristinati (per ogni swarm) tre thread, un thread tracker di keepalive su UDP, un thread tracker per gestire i nuovi peer che si aggiungono allo swarm e infine un thread Trimmer.
+Il thread ServerListener si occupa di gestire le richieste di connessione al server da parte dei peer e fornisce meccanismi per la gestione del NAT.
+Il thread ThreadSaver invece effettua un periodico salvataggio dello stato del server su file di configurazione, questa costituisce una feature aggiuntiva che abbiamo deciso di implementare nel nostro progetto che si rileva particolarmente utile nel nostro caso dato che non abbiamo replicazione del server e quindi un improvviso guasto causerebbe la perdita di tutti i dati relativi agli swarm. 
+Dal diagramma delle classi~\ref{classiServer} si nota come La classe Descrittore sia il punto di centralizzazione di tutto il server. Questa classe definisce tutti gli attributi di uno swarm che \`e bene esplicitare:
+
+\lstinputlisting[caption=$Descrittore$.,label=list:Descrittore]{code/descrittore.code}
+
+Di fondamentale importanza risultano i campi:
+\begin{itemize}
+\item int id: E` l'identificativo unico dello swarm, viene creato al momento della creazione, tramite RMI, del descrittore realtivo.
+\item byte[] hash: E` la codifica in SHA del file relativo allo swarm, viene utilizzato al momento della creazione per verificare che non vi siano 2 file uguali associati a diversi swarm.
+\item int portaTCP, portaUDP: sono le porte di ascolto dei tracker inizializzate al momento della creazione del descrittore. Al momento del riavvio del server i tracker verranno riavviati sulle porte gia utilizzate di modo che un peer pu\`o sempre riunirsi allo swarm.
+\item int numSeeders, numLeechers: sono statistiche sul numero di seeder e leecher che partecipano allo swarm, vengono tenute costantemente aggiornate dal thread Trimmer.
+\end{itemize}
+
+\subsubsection{interazioni RMI}
+
+La struttura dati viene inizializzata tramite chiamate RMI da parte dei peer che vogliono condividere un nuovo file. 
+
+\lstinputlisting[caption=$inviaDescr$.,label=list:inviaDescr()]{code/inviaDescr.header}
+
+Come prima cosa viene effettuato un controllo, tramite lo SHA, che il file inviato non sia gia associato ad un altro swarm, in tal caso il peer viene solamente aggiunto e non riceve la callback per le ricerche (si noti come l'implementazione di questo meccanismo \`e del tutto trasparente al peer). Questo meccanismo risulta di fondamentale importanza in quanto permette di sfruttare appieno la rete P2P. Nel caso questo controllo viene superato il nuovo descrittore viene aggiunto alle $metainfo$ (implementate tramite HashSet), vengono inizializzati i tracker TCP e UDP relativi, il thread Trimmer e le relative strutture dati.
+
+L'altra possibile interazione tramite RMI \`e:
+
+\lstinputlisting[caption=$ricerca$.,label=list:ricerca]{code/ricerca.header}
+
+Questa chiamata provoca una scansione delle MetaInfo del server e ritorna una lista di descrittori. Le funzionalit\`a di confronto lessicali sono implementate utilizzando la librerie per le espressioni regolari consigliata.
+
+\subsubsection{ListaPeer}
+
+Rimane da chiarire le funzionalit\`a di questa struttura condivisa che rappresenta un notevole punto di contralizzazione per il server.
+Per ogni swarm di cui il server tiene traccia viene istanziata una $ListaPeer$ contenente i riferimento ad ogni peer che partecipa allo swarm. Questa lista viene gestita concorrentemente da 3 Thread:
+
+\begin{itemize}
+\item Thread TrackerTCP: Questo thread si occupa di ricevere su connessioni SSL sicure le richieste di unione allo swarm da parte dei peer. Al momento della ricezione di una richiesta il Thread aggiunge una nuove entry alla ListaPeer e invia al peer una lista di NetRecord, classe condivisa che contiene tutte le credenziali del peer.
+\item Thread TrackerUDP: Questo thread si occupa di ricevere i messaggi di keep alive dai peer su connessioni UDP, al momento della ricezione di un messaggio di keep alive viene scandita la ListaPeer e invocato il metodo touch() sul NetRecord corrispondente.
+\item Thread Trimmer: Questo thread, di tipo TimerTask, viene eseguito a intervalli regolari e si occupa di eliminare dalla ListaPeer i NetRecord relatvi a peer che non hanno pi\`u inviato messaggi di keep Alive.
+\end{itemize}
+
+Tutti i metodi per l'accesso e la modifica alla ListaPeer sono quindi Synchronized per garantirne la correttezza ed evitare Race Condition.
+
+\subsubsection{Features aggiuntive e chiarimenti}
+
+Nel realizzare il server abbiamo fatto alcune assunzioni ulteriori rispetto a quelle presenti nella bozza di progetto:
+
+\begin{itemize}
+\item Descrittori con zeri fonti: Differentemente da quanto specificato nella bozza di progetto i file con fonti non al momento disponibili non vengono rimosse dal server, la stato dei loro descrittori viene ugualmente salvato sul server ma la ricerca di un file con zero fonti non restituisce risultati, con questo meccanismo \`e possibile che lo swarm venga riattivato al momento che si ripresentano alcuni dei seeder o un peer pubblichi nuovamente il file relativo allo swarm.
+\item Salvataggio periodico dello stato: Come precedentemente spiegato questa funzionalit\`a \`e stata aggiunta come prevenzione contro fallimenti improvvisi del server che, in mancanza di un meccanismo di salvataggio periodico, risulterebbero fatali per il buon funzionamento dell'applicazione.
+\item Controllo sulla pubblicazione: Per evitare che un file venga pubblicato pi\`u volte abbiamo effettuato un controllo sia sullo SHA del file che sulla dimensione, in questo modo la probabilit\`a che due file diversi risultino uguali \`e assolutamente trascurabile.
+\end{itemize}
+
+\subsection{GUI}
+
+Il main della parte server in questo caso si trova nella classe $BitCreekGui$. Al momento della creazione di una nuova istanza di BitCreekGui vengono eseguite in sequneza le seguenti azioni:
+\begin{enumerate}
+\item initComponents(): Funzione che inizializza tutta la parte grafica del peer.
+\item initProtocol(): Funzione che inizializza la parte di protocollo (o logica) del peer, al suo interno viene istanziato un nuovo BitCreekPeer che mantiene un riferimento alla BitCreekGui per l'aggiornamento grafico in seguito ad eventi rilevati dalla logica.
+\item inizializzazione del ListenerTabelle.
+\item inizializzazione del ListenerGrafico.
+\end{enumerate}
+
+Al momento del'avvio la GUI si presenta come in figura:
+
+\begin{figure}[h]
+  \centerline{
+    \mbox{\includegraphics[width=15cm]{images/GUI.jpg}}
+  }
+  \caption{snapshot della GUI.}
+  \label{GUI}
+\end{figure}
+
+In questa sezione daremo una spiegazione delle varie politiche e delle scelte implementative fatte, per una descrizione dell'interazione utente-GUI si legga la sezione successiva.
+Nella realizzazione della Gui abbiamo posto grande attenzione all'utilizzo delle primitive adeguate per avere un'interfaccia grafica responsiva.
+In particolare abbiamo utilizzato i meccanismi della libreria $Javax.Swing$ per la gestione dell'EventQueue, in particolare nessuna delle operazioni invocabili dalla Gui gira sul Thread Dispatcher ma viene assegnato ad un Thread apposito della logica che al termine dell'elaborazione invoca un apposito metodo della Gui per l'aggiornamento della grafica con il metodo $InvokeLater()$.
+Con questi meccanismi manteniamo l'interfaccia grafica sempre responsiva anche a seguito di elaborazioni consistenti da parte della logica. In particolare per le funzionalit\`a come la creazione dei Descrittori e la loro ricerca tramite RMI, molto onerose anche a causa dell'interazione client-server, l'interfaccia grafica non presenta freeze. Unica eccezione a questa politica \`e la funzione di connessione, abbiamo infatti ritenuto che nel caso della connessione fosse pi\`u naturale avere un freeze dell'interfaccia fino a che la procedura di connessione al server non \`e completata.
+Altro aspetto che abbiamo considerato accuratamente \`e l'abilitazione/disabilitazione dei vari bottoni, evitando quindi che un utente inesperto possa effettuare operazioni prive di senso ed eventualmente dannose per la consistenza dei dati.
+
+\subsubsection{Implementazione della GUI}
+
+La GUI utilizza tre modelli con altrettanti pannelli:
+\begin{itemize}
+\item modello MieiCreek: visualizza lo stato degli swarm a cui sto partecipando.
+\item modello CreekPubblicati: visualizza lo stato degli swarm in cui sono seeder, il peer che ha pubblicato il file ha anche visibilit\`a dei peer che effettuano la ricerca.
+\item modello RisultatiRicerca: vengono visualizzati i risultati della ricerca di un file, la ricerca si attiva sia dalla textbox in alto a sinistra che tramite il pulsante "Mi sento fortunato" in basso a destra. Questa funzionalit\`a \`e stata implementata durante il testing dell'applicazione ed \`e rimasta inalterata nella versione finale del progetto.
+\end{itemize}
+
+\paragraph{Listener della GUI}
+La GUI utilizza due listener, entrambi implementati come SwingTimer. Questi due Thread effettuano una scansione di arrayDescr<Creek> e arrayCercati<Descrittore> nella logica del peer e aggiornano le relative tabelle dell'interfaccia grafica.
+In fase di progetto abbiamo deciso di utilizzare i meccanismi degli SwingTimer perch\'e consentono una stesura del codice coerente oltre ad essere preferibile, nel nostro caso, a degli oggetti $Observable$. Degli oggetti $Observable$ avrebbero causato un Overhead eccessivo per il peer e assolutamente ingiustificato. Nel nostro caso abbiamo scelto un delay tra le varie invocazioni del timer di 0.5 secondi nell'aggiornamento delle tabelle e di 1.2 secondi per l'aggiornamento del grafico delle connessioni, la scelta dei valori \`e un buon compromesso tra la responsivit\`a dell'interfaccia grafica e l'overhead introdotto dai Thread.
+
+\subsection{Peer}
+
+Questo Package contiene le varie classi che compongono la logica dell'applicazione e definiscono il protocollo di interazione tra peer.
+Al momento dell'avvio (initProtocol) da parte della GUI viene istanziato un oggetto di tipo BitCreekPeer
+Le seguenti classi implementano tramite appositi Thread le funzionalit\`a invocate dalla GUI:
+\begin{itemize}
+\item Apri
+\item Avvia
+\item Cerca
+\item Crea
+\item Riavvia
+\end{itemize}
