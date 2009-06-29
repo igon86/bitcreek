@@ -10,35 +10,47 @@ import java.util.Iterator;
 
 /**
  * Classe che implementa una lista di IP
- * @author bande
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
 
-    /**
-     *
-     */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 16;
 
     /**
-     *
+     * Costruttore
      */
     public ListaPeer() {
         super();
     }
+
+    /**
+     * Aggiunge un netrecord alla lista
+     * @param record netrecord da aggiungere
+     * @return esito operazione
+     */
     @Override
     public synchronized boolean add(NetRecord record) {
         return super.add(record);
     }
 
+    /**
+     * Rimuove il netrecord record salla lista
+     * @param record netrecord da eliminare
+     * @return esito operazione
+     */
     @Override
     public synchronized boolean remove(Object record) {
         return super.remove(record);
     }
 
-    /**l'ho messo synchronized perché il Tracker UDP potrebbe modificarlo
-     * nel mentre lo esamino.
-     * @param ip
-     * @param porta 
+    /**
+     * Effettua l' aggiornamneto della lista di
+     * peer
+     * @param ip IP del peer che ha fatto keep-alive
+     * @param porta porta del peer che ha fatto keep-alive
      * @param stato
      */
     public synchronized void touchPeer(InetAddress ip, int porta, boolean stato) {
@@ -49,7 +61,6 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
             /** se il netrecord e` gia presente lo toucho*/
             r = (NetRecord) h.next();
             if (r.getIp().getHostAddress().compareTo(ip.getHostAddress()) == 0 && r.getPorta() == porta && r.getStato() == stato) {
-                //System.out.println("Touchato peer con ip " + ip.getHostAddress() + ", porta : " + porta);
                 r.touch();
                 trovato = true;
             }
@@ -60,15 +71,15 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
             try {
                 nuovo = new NetRecord(ip, porta, stato);
             } catch (ErrorException ex) {
-                // --------> da gestire
             }
             this.add(nuovo);
         }
     }
 
-    /**elimina tutti i Peer che non hanno mandato messaggi di keepalive
+    /**
+     * Elimina tutti i Peer che non hanno mandato messaggi di keepalive
      * ritorna il numero di seeder e leecher attualmente presenti
-     * @return
+     * @return new NumPeer(seeders,leechers)
      */
     public synchronized NumPeer trimPeer() {
         int seeders = 0;
@@ -79,12 +90,15 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
             long test = Calendar.getInstance().getTimeInMillis() - a.getTouch().getTimeInMillis();
             if (test > TrackerUDP.TIMEOUT) {
                 h.remove();
-                System.out.println("Rimosso net record con ip: "+a.getIp().getHostAddress()+" e porta : " + a.getPorta());
+                System.out.println("Rimosso net record con ip: " + a.getIp().getHostAddress() + " e porta : " + a.getPorta());
             } else {
-                if (a.getStato() == false) seeders++;
-                else leechers ++;
+                if (a.getStato() == false) {
+                    seeders++;
+                } else {
+                    leechers++;
+                }
             }
         }
-        return new NumPeer(seeders,leechers);
+        return new NumPeer(seeders, leechers);
     }
 }

@@ -7,39 +7,51 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * 
- * @author Bandettini 
+ * Classe che rappresenta la struttura fondamentale
+ * utilizzata dal server
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class MetaInfo extends HashSet<Descrittore> {
 
     /* Costanti */
+    /** Costante che definisce il numero max di descrittori restituiti per ogni ricerca */
     private static final int NUMMAXDESCR = 15;
-    /**
-     *
-     */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 15;
 
     /**
-     *
+     * Costruttore
      */
     public MetaInfo() {
         super();
     }
 
+    /**
+     * Aggiunge il descrittore d alle metainfo
+     * @param d descittore da aggiungere
+     * @return sito operazione
+     */
     @Override
     public synchronized boolean add(Descrittore d) {
         return super.add(d);
     }
 
+    /**
+     * Restituisce i descrittori delle metainfo
+     * @return super.iterator()
+     */
     @Override
     public Iterator<Descrittore> iterator() {
         return super.iterator();
     }
 
     /**
-     *
-     * @param d
-     * @return
+     * verifica la presenza nelle metainfo del descrittore
+     * passato come parametro
+     * @param d descrittore da trovare
+     * @return descrittore trovato ; altrimenti null
      */
     public synchronized Descrittore presenza(Descrittore d) {
         Iterator<Descrittore> i = super.iterator();
@@ -54,9 +66,10 @@ public class MetaInfo extends HashSet<Descrittore> {
     }
 
     /**
-     *
-     * @param nomefile
-     * @return
+     * Cerca descrittori nelle metainfo con nome
+     * uguale a quello passato come parametro
+     * @param nomefile nome file da cercare
+     * @return lista di descrittori trovati ; altrimenti null
      */
     public synchronized ArrayList<Descrittore> cerca(String nomefile) {
 

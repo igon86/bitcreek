@@ -10,34 +10,41 @@ import java.util.logging.Logger;
 /**
  * Thread per l'implementazione delle politiche di CHOKE/UNCHOKE delle
  * connessioni in upload di uno swarm
- * @author andrea
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class UploadManager implements Runnable {
 
     /* Costanti */
-    private final int ATTESA = 10000;
     /**
-     *
+     * Costante che definisce il tempo di attesa tra
+     * un' esecuzione e l' altra
      */
+    private final int ATTESA = 10000;
+    /** Numero max di upload */
     protected static final int UPLOADLIMIT = 4;
 
     /* Variabili d'istanza */
+    /** Peer */
     private BitCreekPeer peer;
+    /** Creek associato */
     private Creek c;
 
     /**
-     *
-     * @param peer
-     * @param c
+     * Costruttore
+     * @param peer logica
+     * @param c creek associato
      */
     public UploadManager(BitCreekPeer peer, Creek c) {
         this.peer = peer;
         this.c = c;
     }
 
+    /**
+     * Corpo del task
+     */
     public void run() {
-
-        //INIZIALIZZAZIONE STAMPA DI DEBUG
         FileOutputStream file = null;
         PrintStream output = null;
         try {
@@ -48,8 +55,6 @@ public class UploadManager implements Runnable {
         }
         Creek.stampaDebug(output, "UploadManager del creek " + c.getName() + " avviato");
         try {
-
-            //giusto per dare il tempo di riprendersi
             Thread.sleep(100);
         } catch (InterruptedException ex) {
             Creek.stampaDebug(output, "UploadManager : sono stato ainterrotto");
@@ -67,7 +72,7 @@ public class UploadManager implements Runnable {
                 /*sort delle connessioni*/
                 random = this.c.ordinaConnessioni(countOrdina, random);
             } catch (ErrorException ex) {
-                Creek.stampaDebug(output,"Esco perchè mi hanno chiuso : " + ex.getMessage());
+                Creek.stampaDebug(output, "Esco perchè mi hanno chiuso : " + ex.getMessage());
                 break;
             }
             Creek.stampaDebug(output, "HO FINITO :D \n\n");
@@ -79,6 +84,6 @@ public class UploadManager implements Runnable {
                 break;
             }
         }
-        System.out.println(Thread.currentThread().getName()+" MUOIO!!!!!!!");
+        System.out.println(Thread.currentThread().getName() + " MUOIO!!!!!!!");
     }
 }

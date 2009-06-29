@@ -12,66 +12,75 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Classe che virtualizza la Connessione tra 2 peer facenti parte di uno swarm
- * @author andrea
+ * Classe che virtualizza la connessione tra 2 peer
+ * facenti parte di uno swarm
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Connessione implements Serializable, Comparable<Connessione> {
 
-    /**
-     *
-     */
+    /* Costanti */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 45;
-    //codici mnemonici per lo stato
-    /**
-     *
-     */
+    /** Costante che definisce una connessione CHOCKED */
     protected static final boolean CHOKED = false;
-    /**
-     *
-     */
+    /** Costante che definisce una connessione UNCHOCKED */
     protected static final boolean UNCHOKED = true;
+    /** Costante che definisce il timeout sulla receive */
     private static final int TIMEOUT = 100;
-    //l'oggetto connessione e` l'unico abilitato ad inviare messaggi sulle socket
+
+    /* ariabili d' istanza*/
+    /** Socket in download */
     private Socket down;
+    /** Socket in upload */
     private Socket up;
-    //identificativo unico dell'altro peer sulla connessione
+    /** Porta di ascolto del partner */
     private int portaVicino;
+    /** IP del partner */
     private InetAddress ipVicino;
+    /** Flusso in ingresso sulla socket in download */
     private ObjectInputStream inDown;
+    /** Flusso in uscita sulla socket in download */
     private ObjectOutputStream outDown;
+    /** Flusso in ingresso sulla socket in upload */
     private ObjectInputStream inUp;
+    /** Flusso in uscita sulla socket in upload */
     private ObjectOutputStream outUp;
-    //CHOKED o UNCHOKED
+    /** Stato della connessione in download */
     private boolean statoDown;
+    /** Stato della connessione in upload */
     private boolean statoUp;
-    /**interesseDown viene inizializzato all'avvio del thread Downloader
-     * interesseUp invece viene inizializzato a NOT_INTERESTED
-     */
-    //INTERESTED o NOT_INTERESTED
+    /** Interesse della connessione in download */
     private boolean interesseDown;
+    /** Interesse della connessione in upload */
     private boolean interesseUp;
+    /** Bitfield del partner */
     private boolean[] bitfield;
-    //flag settato dall'Upload Manager che determina se si puo uploadare
+    /** Flag che indica se è possibile fare upload su questa connessione */
     private boolean uploadable;
-    private int downloaded; /* numero pezzi scaricati su questa connessione */
+    /** Numero chunk scaricati su questa connessione */
+    private int downloaded;
+    /** Flag che indica di terminare la connessione */
+    private boolean termina;
 
-    private boolean termina; /* flag che indica di terminare */
-
-
-    /** Costruttore */
+    /**
+     * Costruttore
+     */
     public Connessione() {
         this.termina = false;
         this.uploadable = true;
     }
 
     /**
-     *
+     * Metodo che testa se è possibile fare upload.
+     * Se non è possibile ferma il chiamante
      */
     public synchronized void possoUploadare() {
-        if(!this.uploadable){
+        if (!this.uploadable) {
             System.out.println("\n\nNON VA BENE ASSOLUTAMENTE CHE MI SCATTI IL MONITOR\n\n");
         }
-        while(!this.uploadable){
+        while (!this.uploadable) {
             try {
                 wait();
             } catch (InterruptedException ex) {
@@ -79,9 +88,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
             }
         }
     }
-    
+
     /**
-     *
+     * Metodo che dice che è possibile fare upload.
+     * Sveglia chi era in attesa
      */
     public synchronized void puoiUploadare() {
         this.uploadable = true;
@@ -89,7 +99,8 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
+     * Metodo che dice che non è possibile fare upload su questa
+     * connessione
      */
     public synchronized void nonPuoiUploadare() {
         this.uploadable = false;
@@ -97,12 +108,13 @@ public class Connessione implements Serializable, Comparable<Connessione> {
 
     /**
      * Metodo fico che setta la connessione
-     * @param download
-     * @param s
-     * @param in
-     * @param out
-     * @param bitfield
-     * @param portaVicino
+     * @param download flag che indica se le modifiche vanno
+     * fatte in download o in upload
+     * @param s socket instaurata
+     * @param in flusso in ingresso associato ad s
+     * @param out flusso in uscita associato ad s
+     * @param bitfield chunk del partner
+     * @param portaVicino porta del partner
      */
     public synchronized void set(boolean download, Socket s, ObjectInputStream in, ObjectOutputStream out, boolean[] bitfield, int portaVicino) {
         if (download) {
@@ -143,55 +155,43 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
-     * @param down
-     * @param up
-     * @param bitfield
-     * @param portaVicino
-     * @deprecated
+     * Connessione
+     * @param down socket in download
+     * @param up socket in upload
+     * @param bitfield chunk del partner
+     * @param portaVicino porta in ascolto del partner
+     * @deprecated E' preferibile utilizzare set
      */
     @Deprecated
     public Connessione(Socket down, Socket up, boolean[] bitfield, int portaVicino) {
-        System.out.println(Thread.currentThread().getName() + "COSTRUTTORE CONNESSIONE");
         this.down = down;
         this.up = up;
         this.bitfield = bitfield;
         if (down != null) {
-            System.out.println(Thread.currentThread().getName() + "CONNESSIONE IN DOWNLOAD");
             this.ipVicino = down.getInetAddress();
             try {
                 this.outDown = new ObjectOutputStream(down.getOutputStream());
-                System.out.println(Thread.currentThread().getName() + "WRAPPATO L'OUTPUTSTREAM");
                 this.inDown = new ObjectInputStream(down.getInputStream());
-                System.out.println(Thread.currentThread().getName() + "WRAPPATO L'INPUTSTREAM");
             } catch (IOException ex) {
-                System.out.println(Thread.currentThread().getName() + " NON MI SI WRAPPANO LE SOCKET IN DOWNLOAD");
                 Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } else {
-            System.out.println(Thread.currentThread().getName() + "CONNESSIONE IN UPLOAD");
             this.ipVicino = up.getInetAddress();
             try {
                 this.outUp = new ObjectOutputStream(up.getOutputStream());
-                System.out.println(Thread.currentThread().getName() + "WRAPPATO L'OUTPUTSTREAM");
                 this.inUp = new ObjectInputStream(up.getInputStream());
-                System.out.println(Thread.currentThread().getName() + "WRAPPATO L'INPUTSTREAM");
             } catch (IOException ex) {
-                System.out.println(Thread.currentThread().getName() + " NON MI SI WRAPPANO LE SOCKET IN UPLOAD");
                 Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         this.portaVicino = portaVicino;
         this.downloaded = 0;
-        //Il binding degli stream alle socket viene effettuato solo al momento opportuno
-        //dai thread
-        System.out.println(Thread.currentThread().getName() + "TERMINATO COSTRUTTORE CONNESSIONE");
     }
 
     /**
      * Restituisce true se la socket in download è null
-     * @return
+     * @return down == null
      */
     public synchronized boolean DownNull() {
         return down == null;
@@ -213,10 +213,11 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     * Metodo utilizzato per controllare se una connessione e` gia presente
-     * @param ip
-     * @param porta
-     * @return
+     * Metodo utilizzato per controllare se una
+     * connessione e` gia presente
+     * @param ip ip del parner
+     * @param porta porta in ascolto del partner
+     * @return true se presente ; false altrimenti
      */
     public synchronized boolean confronta(InetAddress ip, int porta) {
         if (this.ipVicino.getHostAddress().compareTo(ip.getHostAddress()) == 0 && this.portaVicino == porta) {
@@ -226,10 +227,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
 
-    //Virtualizzazione
     /**
-     *
-     * @param m
+     * Effettua una send sulla socket in download
+     * del Messaggio m
+     * @param m Messaggio da inviare
      */
     public synchronized void sendDown(Messaggio m) {
         try {
@@ -240,8 +241,9 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
-     * @param m
+     * Effettua una send sulla socket in upload
+     * del Messaggio m
+     * @param m Messaggio da inviare
      */
     public synchronized void sendUp(Messaggio m) {
         try {
@@ -250,12 +252,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
             Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
+
     /**
-     *
-     * @return
+     * Effettua una receive sulla socket in download
+     * @return m Messaggio ricevuto
      */
     public synchronized Messaggio receiveDown() {
         try {
@@ -277,8 +277,8 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
-     * @return
+     * Effettua una receive sulla socket in upload
+     * @return m Messaggio ricevuto
      */
     public synchronized Messaggio receiveUp() {
         try {
@@ -299,7 +299,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
+     * Resetta lo stream sulla socket in download
      */
     public synchronized void ResetDown() {
         try {
@@ -310,7 +310,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
+     * Resetta lo stream sulla socket in upload
      */
     public synchronized void ResetUp() {
         try {
@@ -320,105 +320,105 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         }
     }
 
-    //chiamato in seguito ad un messaggio di have
     /**
-     *
-     * @param b
+     * Metodo che setta i bitfield all' array
+     * ricevuto
+     * @param b array di bitfield
      */
     public synchronized void setBitfield(boolean[] b) {
         this.bitfield = b;
     }
-    
+
     /**
-     *
-     * @param toSet
+     * Setta i bitfield dell' array nelle posizioni presenti
+     * nell' array passato come parametro .
+     * @param toSet array di indici dei bitfield da settare
      */
-    public synchronized void setArrayBitfield(int[] toSet){
-        for (int i=0;i<toSet.length;i++){
-            this.bitfield[toSet[i]]=true;
+    public synchronized void setArrayBitfield(int[] toSet) {
+        for (int i = 0; i < toSet.length; i++) {
+            this.bitfield[toSet[i]] = true;
         }
     }
-    
+
     /**
-     *
-     * @param id
-     * @deprecated
+     * Setta il bitfield nella posixione id
+     * @param id indice del bitfield nell'array da settare
+     * @deprecated E' preferibile utilizzare setArrayBitfield
      */
     @Deprecated
     public synchronized void setIndexBitfield(int id) {
         this.bitfield[id] = true;
     }
 
-    //GETTER
     /**
-     *
-     * @return
+     * Restituisce il numero di pezzi scaricati su questa connessione
+     * @return downloaded
      */
-    public synchronized int getDownloaded(){
+    public synchronized int getDownloaded() {
         return this.downloaded;
     }
+
     /**
-     *
-     * @return
+     * Restituisce i bitfield del partner
+     * @return bitfield
      */
     public synchronized boolean[] getBitfield() {
         return this.bitfield;
     }
 
     /**
-     *
-     * @return
+     * Restituisce la porta in ascolto del partner
+     * @return PottaVicino
      */
     public synchronized int getPortaVicino() {
         return this.portaVicino;
     }
 
     /**
-     *
-     * @return
+     * Restituisce l' IP del parner
+     * @return ipVicino
      */
     public synchronized InetAddress getIPVicino() {
         return this.ipVicino;
     }
 
     /**
-     *
-     * @return
+     * Restituicse lo stato della connessione in download
+     * @return statoDown
      */
     public synchronized boolean getStatoDown() {
         return this.statoDown;
     }
 
     /**
-     *
-     * @return
+     * Restituicse lo stato della connessione in upload
+     * @return statoUp
      */
     public synchronized boolean getStatoUp() {
         return this.statoUp;
     }
 
     /**
-     *
-     * @return
+     * Restituisce l' interesse della connessione in download
+     * @return interesseDown
      */
     public synchronized boolean getInteresseDown() {
         return this.interesseDown;
     }
 
     /**
-     *
-     * @return
+     * Restituisce l' interesse della connessione in upload
+     * @return interesseUp
      */
     public synchronized boolean getInteresseUp() {
         return this.interesseUp;
     }
 
-    //SETTER
     /**
-     *
-     * @param up
-     * @param in
-     * @param out
+     * Setta la connessione in upload
+     * @param up socket in upload
+     * @param in flusso in ingresso associato ad up
+     * @param out flusso in uscita associato ad up
      */
     public synchronized void setUp(Socket up, ObjectInputStream in, ObjectOutputStream out) {
         this.up = up;
@@ -427,10 +427,10 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
-     * @param down
-     * @param in
-     * @param out
+     * Setta la connessione in download
+     * @param down socket in download
+     * @param in flusso in ingresso associato a down
+     * @param out flusso in uscita associato a down+
      */
     public synchronized void setDown(Socket down, ObjectInputStream in, ObjectOutputStream out) {
         this.down = down;
@@ -439,61 +439,72 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     }
 
     /**
-     *
-     * @param stato
+     * Setta la stato della connessione in download
+     * al parametro stato
+     * @param stato nuovo stato
      */
     public synchronized void setStatoDown(boolean stato) {
         this.statoDown = stato;
     }
 
     /**
-     *
-     * @param stato
+     * Setta la stato della connessione in upload
+     * al parametro stato
+     * @param stato nuovo stato
      */
     public synchronized void setStatoUp(boolean stato) {
         this.statoUp = stato;
     }
 
     /**
-     *
-     * @param up
+     * Setta la socket in upload a up
+     * @param up nuova socket
      */
     public synchronized void setSocketUp(Socket up) {
         this.up = up;
     }
 
     /**
-     *
-     * @param down
+     * Setta la socket in download a down
+     * @param down nuova socket
      */
     public synchronized void setSocketDown(Socket down) {
         this.down = down;
     }
 
     /**
-     *
-     * @param b
+     * Setta l' interesse della connessione in download
+     * al parametro b
+     * @param b nuovo interesse
      */
     public synchronized void setInteresseDown(boolean b) {
         this.interesseDown = b;
     }
 
     /**
-     *
-     * @param b
+     * Setta l' interesse della connessione in upload
+     * al parametro b
+     * @param b nuovo interesse
      */
     public synchronized void setInteresseUp(boolean b) {
         this.interesseUp = b;
     }
 
     /**
-     *
-     * @return
+     * Incrementa il numero di pezzi scaricati
+     * e restiusce il nuovo valore
+     * @return downloaded
      */
     public synchronized int incrDown() {
         return ++this.downloaded;
     }
 
+    /**
+     * Compara la connessione con la connessione
+     * passata come parametro in base ao pizzi scaricati
+     * @param arg0 connessione da comparare
+     * @return differenza dei pezzi scaricati
+     */
     public int compareTo(Connessione arg0) {
         if (this.getInteresseUp()) {
             if (arg0.getInteresseUp()) {

@@ -1,20 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 /**
- *
- * @author lottarin
+ * Classe che contiene il numero di seeder e leecher
+ * di uno swarm
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version bitCreekPeer 1.0
  */
 public class NumPeer {
 
-    int seeders;
-    int leechers;
+    /* Variabili d' istanza */
+    /** Numero seeders */
+    private int seeders;
+    /** Numero leechers */
+    private int leechers;
 
     /**
-     *
+     * Costruttore
      * @param seeders
      * @param leechers
      */
@@ -22,20 +24,20 @@ public class NumPeer {
         this.seeders = seeders;
         this.leechers = leechers;
     }
-    
+
     /**
-     * 
-     * @return
+     * Restituisce il numero di seeders dello swarm
+     * @return seeders
      */
-    public int getSeeders(){
-       return this.seeders;
+    public int getSeeders() {
+        return this.seeders;
     }
-    
+
     /**
-     *
-     * @return
+     * Restituisce il numero di leechers dello swarm
+     * @return leechers
      */
-    public int getLeechers(){
+    public int getLeechers() {
         return this.leechers;
     }
 }

@@ -4,55 +4,56 @@ import java.io.Serializable;
 
 /**
  * Classe che rappresenta un chunk di un file
- * @author andrea
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
-public class Chunk implements Serializable{
+public class Chunk implements Serializable {
 
-    /**
-     *
-     */
+    /* Costanti */
+    /** Costante che definisce la versione della classe */
     public static final long serialVersionUID = 45;
-
+    /* Varibili d' istanza */
+    /** Dati del chunk */
     private byte[] data;
-    // spero non si voglia trasferire gighi di roba!! :::: io una prova la faccio sicuro!!!..se non va vengo
-    // a lamentarmi da te
+    /** Offset del chunk all' interno del file */
     private int offset;
+    /** Dimensione del chunk */
     private int dim;
-    
 
     /**
-     *
-     * @param data
-     * @param offset
-     * @param dim
+     * Costruttore
+     * @param data dati del chunk
+     * @param offset posizione del chunk nel file
+     * @param dim dimensione del chunk
      */
-    public Chunk(byte[] data,int offset,int dim){
+    public Chunk(byte[] data, int offset, int dim) {
         this.data = data;
         this.offset = offset;
         this.dim = dim;
     }
 
     /**
-     *
-     * @return
+     * Restituisce l'offset del chunk
+     * @return offset
      */
-    public int getOffset(){
+    public int getOffset() {
         return this.offset;
     }
 
     /**
-     *
-     * @return
+     * Restituisce la dimensione del chunk
+     * @return dim
      */
-    public int getDim(){
+    public int getDim() {
         return this.dim;
     }
 
     /**
-     *
-     * @return
+     * Restituisce i dati del chunk
+     * @return data
      */
-    public byte[] getData(){
+    public byte[] getData() {
         return this.data;
     }
 }

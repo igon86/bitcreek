@@ -11,20 +11,27 @@ import java.util.ArrayList;
 
 /**
  * Task che si occupa di mandare msg di keepalive al server
- * @author Bandettini
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class KeepAlive implements Runnable {
 
     /* Costanti */
+    /**
+     * Definizione del tempo di attesa tra un invio dei keep-alive
+     * e il successivo
+     */
     private final int ATTESA = 3000;
 
     /* Variabili d'istanza */
+    /** Peer */
     private BitCreekPeer peer;
 
     /**
      * Costruttore
      * @param peer 
-     * @throws ErrorException
+     * @throws ErrorException se peer è null
      */
     public KeepAlive(BitCreekPeer peer) throws ErrorException {
         if (peer == null) {
@@ -34,7 +41,7 @@ public class KeepAlive implements Runnable {
     }
 
     /**
-     * corpo del task
+     * Corpo del task
      */
     public void run() {
         int porta = -1;
@@ -53,18 +60,11 @@ public class KeepAlive implements Runnable {
             try {
                 // se sono connesso
                 if (peer.getIpServer() != null) {
-                    //try {
-                        arraydescr = peer.getDescr();
-                    //} catch (ErrorException ex) {
-                    //    System.err.println("ErrorException");
-                    //}
+                    arraydescr = peer.getDescr();
                     synchronized (arraydescr) {
                         for (Creek c : arraydescr) {
                             porta = c.getUDP();
-
                             /* invio keep alive x ogni descr */
-
-                            //System.out.println("invio alive per creek " + c.getName() + ",porta richieste : " + peer.getPortaRichieste());
                             try {
                                 dout.writeInt(peer.getPortaRichieste());
                                 dout.writeBoolean(c.getStato());
@@ -81,9 +81,8 @@ public class KeepAlive implements Runnable {
                     }
                 }
             } catch (NullPointerException e) {
-                // ipServer è null --> sono disconnesso
+                /* ipServer è null --> sono disconnesso */
             }
-            // aspetto
             try {
                 Thread.sleep(ATTESA);
             } catch (InterruptedException ex) {
