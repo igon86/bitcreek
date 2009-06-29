@@ -83,7 +83,7 @@ public class Creek extends Descrittore implements Serializable {
     private RandomAccessFile raf;
     /** Numero pezzi scaricati */
     private int scaricati;
-    /** Mistero */
+    /** Array degli indici dei pezzi scaricati */
     private int[] scaricatiId;
 
     /**
