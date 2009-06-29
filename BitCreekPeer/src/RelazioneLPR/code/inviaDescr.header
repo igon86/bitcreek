@@ -1,0 +1,9 @@
+/**
+     * Metodo esportato dal server al peer per l'invio di un descrittore
+     * @param d descrittore da pubblicare
+     * @param ip ip client che pubblica
+     * @param porta porta in ascolto del peer che pubblica
+     * @return porte TCP e UDP dei tracker
+     * @throws java.rmi.RemoteException
+     */
+    public Porte inviaDescr(Descrittore d, InetAddress ip, int porta) throws RemoteException;
