@@ -105,10 +105,6 @@ public class MetaInfo extends HashSet<Descrittore> {
                 break;
             }
         }
-        // stampa di prova
-        for (int j = 0; j < array.size(); j++) {
-            System.out.println(array.get(j).getName());
-        }
         return array;
     }
 }

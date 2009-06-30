@@ -55,7 +55,6 @@ public class TrackerTCP implements Runnable {
                 synchronized (this.lista) {
                     Iterator<NetRecord> i = lista.iterator();
                     while (i.hasNext()) {
-                        System.out.println("Sto scrivendo");
                         out.writeObject(i.next());
                     }
                     out.flush();
@@ -63,7 +62,6 @@ public class TrackerTCP implements Runnable {
                 }
             } catch (IOException ex) {
                 System.err.print("Errore ssl\n");
-                ex.printStackTrace();
             }
         }
     }

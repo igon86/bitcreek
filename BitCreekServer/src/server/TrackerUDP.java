@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Task che implenta il tracker UDP
@@ -60,7 +58,6 @@ public class TrackerUDP implements Runnable {
                 stato = din.readBoolean();
                 rcv = dpin.getAddress();
             } catch (IOException ex) {
-                Logger.getLogger(TrackerUDP.class.getName()).log(Level.SEVERE, null, ex);
             }
             lista.touchPeer(rcv, porta, stato);
         }

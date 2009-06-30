@@ -116,9 +116,6 @@ public class BitCreekServer {
                 System.exit(ERRORE);
             }
             /* creazione tracker */
-            if (temp == null) {
-                System.out.println("temp e` null");
-            }
             Thread t1 = new Thread(new TrackerTCP(ssl, lista, temp));
             Thread t2 = new Thread(new TrackerUDP(alive, lista));
             t1.start();

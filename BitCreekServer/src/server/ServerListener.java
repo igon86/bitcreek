@@ -45,6 +45,8 @@ public class ServerListener implements Runnable {
         DataInputStream in = null;
         int porta = NULL;
 
+        /****************** il ciclo ******************/
+        
         while (true) {
             try {
                 connessione = welcome.accept();

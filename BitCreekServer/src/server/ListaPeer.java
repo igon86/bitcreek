@@ -65,7 +65,7 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
                 trovato = true;
             }
         }
-        // caso peer che riappare
+        /* caso peer che riappare */
         if (!trovato) {
             NetRecord nuovo = null;
             try {
@@ -90,7 +90,6 @@ public class ListaPeer extends ArrayList<NetRecord> implements Serializable {
             long test = Calendar.getInstance().getTimeInMillis() - a.getTouch().getTimeInMillis();
             if (test > TrackerUDP.TIMEOUT) {
                 h.remove();
-                System.out.println("Rimosso net record con ip: " + a.getIp().getHostAddress() + " e porta : " + a.getPorta());
             } else {
                 if (a.getStato() == false) {
                     seeders++;
