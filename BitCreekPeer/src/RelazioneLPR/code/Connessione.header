@@ -1,0 +1,44 @@
+/**
+ * Classe che virtualizza la connessione tra 2 peer
+ * facenti parte di uno swarm
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
+ */
+public class Connessione implements Serializable, Comparable<Connessione> {
+
+    /* Costanti */
+	...
+    /* Variabili d' istanza*/
+    /** Socket in download */
+    private Socket down;
+    /** Socket in upload */
+    private Socket up;
+    /** Porta di ascolto del partner */
+    private int portaVicino;
+    /** IP del partner */
+    private InetAddress ipVicino;
+    /** Flusso in ingresso sulla socket in download */
+    private ObjectInputStream inDown;
+    /** Flusso in uscita sulla socket in download */
+    private ObjectOutputStream outDown;
+    /** Flusso in ingresso sulla socket in upload */
+    private ObjectInputStream inUp;
+    /** Flusso in uscita sulla socket in upload */
+    private ObjectOutputStream outUp;
+    /** Stato della connessione in download */
+    private boolean statoDown;
+    /** Stato della connessione in upload */
+    private boolean statoUp;
+    /** Interesse della connessione in download */
+    private boolean interesseDown;
+    /** Interesse della connessione in upload */
+    private boolean interesseUp;
+    /** Bitfield del partner */
+    private boolean[] bitfield;
+    /** Flag che indica se è possibile fare upload su questa connessione */
+    private boolean uploadable;
+    /** Numero chunk scaricati su questa connessione */
+    private int downloaded;
+    /** Flag che indica di terminare la connessione */
+    private boolean termina;

@@ -10,7 +10,7 @@ Nel realizzare il peer abbiamo suddiviso il codice in tre package
 \item condivisi: si tratta di un package condiviso tra peer e server
 \end{itemize}
 \paragraph{BitCreekServer}
-Nel realizzare il peer abbiamo suddiviso il codice in tre package
+Nel realizzare il peer abbiamo suddiviso il codice in due package
 \begin{itemize}
 \item server: contiene tutto il codice necessario per il funzionamento del server
 \item condivisi: vedi sopra
@@ -32,7 +32,7 @@ Il package $server$ contiene le seguenti classi:
 \item ThreadSaver: Thread di gestione del salvataggio su file della lista degli swarm presenti.
 \item TrackerTCP: Thread di gestione della ricerca Peer.
 \item TrackerUDP: Thread di gestione del meccanismo di Keep Alive.
-\item Trimmer: Classi che implementa le funzionalit\`a di rimozione Peer che non rispondo al KeepAlive.
+\item Trimmer: Classi che implementa le funzionalit\`a di rimozione Peer che non inviano messaggi di KeepAlive.
 \end{itemize}
 
 e sfrutta le classi presenti in $condivisi$:
@@ -46,7 +46,6 @@ e sfrutta le classi presenti in $condivisi$:
 \item Porte: Classe wrapper utilizzata per definire le informazioni che un peer deve ricevere a seguito dell'invio di un descrittore appena creato; contiene le porte del trackerUDP e TCP associati allo swarm appena creato.
 \end{itemize}
 
-diagramma UML delle classi:
 
 \begin{figure}[h]
   \centerline{
