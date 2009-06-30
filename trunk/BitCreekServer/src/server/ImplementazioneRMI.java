@@ -15,8 +15,6 @@ import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
@@ -28,6 +26,9 @@ import javax.net.ssl.SSLServerSocketFactory;
  */
 public class ImplementazioneRMI implements InterfacciaRMI {
 
+    /* Costanti */
+    /** Definizione costante ERRORE */
+    private final int ERRORE = -1;
     /* Variabili d'istanza */
     /** Metainfo del server*/
     private MetaInfo tabella;
@@ -52,22 +53,20 @@ public class ImplementazioneRMI implements InterfacciaRMI {
      * @return lista di descrittori
      */
     public ArrayList<Descrittore> ricerca(String nomefile, InetAddress ind) {
-        System.out.println("RICERCA");
         ArrayList<Descrittore> ris = tabella.cerca(nomefile);
         Iterator<Descrittore> i = ris.iterator();
         Descrittore temp = null;
         InterfacciaCallback cb = null;
-        // eseguo le callback
+        /* eseguo le callback */
         while (i.hasNext()) {
             temp = i.next();
-            System.out.println("\nServer : ricerca : descr in tabella con id : " + temp.getId());
             cb = temp.getCallback();
             try {
                 cb.notifyMe(ind, temp.getName());
             } catch (RemoteException ex) {
             }
         }
-        // restituisco il risultato
+        /* restituisco il risultato della ricerca */
         return ris;
     }
 
@@ -79,70 +78,62 @@ public class ImplementazioneRMI implements InterfacciaRMI {
      * @return porte TCP e UDP dei tracker creati
      */
     public Porte inviaDescr(Descrittore d, InetAddress ip, int porta) {
-        System.out.println("INVIA DESCR");
         SSLServerSocket welcome = null;
         DatagramSocket alive = null;
         Descrittore temp = null;
-        // controllo che il file non sia già pubblicato
+        /* controllo che il file non sia già pubblicato */
         if ((temp = tabella.presenza(d)) != null) {
             try {
-                // il file esiste già --> aggiungo il nuovo peer allo swarm
-                // SI NOTA COME AL PEER LA COSA SIA DEL TUTTO TRASPARENTE
-                // L'UNICA DIFFERENZA E` CHE NON SARA` REGISTRATO
-                //PER LA CALLBACK
                 return new Porte(temp.getTCP(), temp.getUDP(), temp.getId());
             } catch (ErrorException ex) {
-                System.out.println("INVIA DESCR: PROBLEMA CON new Porte");
+                System.err.println("Implemantazione RMI : problema con new Porte");
+                System.exit(ERRORE);
             }
         }
-        // il file non esiste
+        /* il file non esiste */
         try {
-            // creazione lista IP
+            /* creazione lista IP */
             ListaPeer lista = new ListaPeer();
             try {
                 /* creo una nuova listaPeer associata al nuovo descrittore */
                 lista.add(new NetRecord(ip, porta, false));
             } catch (Exception e) {
-                System.err.println("Errore");
-                Logger.getLogger(ImplementazioneRMI.class.getName()).log(Level.SEVERE, null, e);
-                System.exit(-1);
+                System.err.println("Implementazione RMI : Errore");
+                System.exit(ERRORE);
             }
-            // creo welcom socket per Tcp
+            /* creo welcom socket per Tcp */
             SSLServerSocketFactory sslserversocketfactory =
                     (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             welcome = (SSLServerSocket) sslserversocketfactory.createServerSocket(0);
-            // creo Datagram Socket per Udp
+            /* creo Datagram Socket per Udp */
             alive = new DatagramSocket();
-            // creazione thread
+            /* creazione thread */
             Thread t1 = new Thread(new TrackerTCP(welcome, lista, d));
             Thread t2 = new Thread(new TrackerUDP(alive, lista));
             t1.start();
             t2.start();
-            // aggiornamento descrittore
+            /* aggiornamento descrittore */
             d.setPortaTCP(welcome.getLocalPort());
             d.setPortaUDP(alive.getLocalPort());
             d.setId(BitCreekServer.idcount++);
-            System.out.println("SERVER : creo e mando id descr : " + BitCreekServer.idcount);
             // salviamo id su file
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File("./id.info")));
             out.writeInt(BitCreekServer.idcount);
             out.close();
-            // aggiornamento tabella
+            /* aggiornamento tabella */
             tabella.add(d);
-            /**avvio anche il thread trimmer sulla lista usando il timer comune del server*/
+            /* avvio anche il thread trimmer sulla lista usando il timer comune del server */
             BitCreekServer.timer.schedule(new Trimmer(lista, d), 1000, 1000);
-
         } catch (IOException ex) {
-            Logger.getLogger(ImplementazioneRMI.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Implementazione RMI : IOException");
+            System.exit(ERRORE);
         }
         Porte ris = null;
         try {
             ris = new Porte(welcome.getLocalPort(), alive.getLocalPort(), d.getId());
         } catch (ErrorException ex) {
-            // --------> da gestire
         }
-        System.out.println("TERMINATO INVIA DESCR");
-        ris.setPubblicato(); // comunico che ha pubblicato il file
+        ris.setPubblicato();
         return ris;
     }
 }

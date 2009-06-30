@@ -61,16 +61,14 @@ public class ThreadSaver implements Runnable {
                     o.writeObject(d);
                     o.close();
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(BitCreekServer.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-                    Logger.getLogger(BitCreekServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             /* dormo per 15 secondi */
             try {
                 Thread.sleep(ATTESA);
             } catch (InterruptedException ex) {
-                System.err.println("Thread salvataggio interrotto");
+                System.err.println("ThreadSaver : sono stato interrotto");
             }
         }
     }
