@@ -114,10 +114,19 @@ A questo punto le varie funzionalit\`a della GUI sono attive ed \`e possibile:
 \item aprire un file .creek e avviarlo.
 \item avviare un file tra quelli cercati.
 \item eliminare file (sia in stato di seeder che di leecher).
+\item disconnettersi dalla rete.
 \item chiudere l'applicazione (ovviamente).
 \end{enumerate}
 
-%CASI D'USO
+Si osservi il diagramma dei casi d'uso.
+
+\begin{figure}[h]
+  \centerline{
+    \mbox{\includegraphics[scale=0.8]{images/UseCase.jpg}}
+  }
+  \caption{Casi d'uso.}
+  \label{UseCase}
+\end{figure}
 
 \subsubsection{arrayDescr}
 Questa classe rappresenta il punto centrale di tutta l'applicazione.
@@ -138,3 +147,56 @@ Le seguenti classi implementano tramite appositi Thread le funzionalit\`a invoca
 \end{itemize}
 
 La caratteristica comune di questi Thread \`e di operare principalmente su arraydescr del peer per aggiungere/avviare/eliminare nuovi creek su cui lavorare.
+Merita approfondire le operazioni svolte dal thread Avvia in quanto sono significative per comprendere l'avvio di uno scaricamento da parte del peer:
+\begin{enumerate}
+\item Creazione dell'oggetto creek a partire dal descrittore ricevuto dal server.
+\item Controllo di presenza (si verifica che lo swarm non sia gia stato avviato)
+\item Settaggio del Creek e aggiunta ad arrayDescr, in questa fase vengono inzializzate tutte le parti del creek NON serializzabili e relative al download, in particolare viene aperto il RandomAccessFile e inizializzata la lista toDo relativa ai chunk da scaricare.
+\item Contatto il server in SSL e recupero la listaPeer.
+\item Per ogni NetRecord contenuto nella ListaPeer tento una connessione (Handshake applicativo), se ha successo creo un nuovo oggetto Connessione e lo associo ad un Thread Downloader
+\item Avvio l'UploadManager
+\end{enumerate}
+
+In fase di progetto abbiamo scartato l'ipotesi di introdurre un'ulteriore livello di generalizzazione estendendo la classe Creek in quanto non avrebbe introdotto un ulteriore livello di astrazione ma esclusivamente aggiunto dettagli implementativi alla classe.
+
+%diagramma di sequenza IMPOSSBILE
+
+Questo stesso tipo di interazione \`e riscontrabili in tutti gli altri Thread sopra elencati con lievi differenze, per esempio nel caso di Riavvia i descrittori non vengono selezionati a partire dalla funzionalit\`a di ricerca ma caricati da file system.
+
+\subsubsection{Politiche e Strutture Dati}
+
+A questo punto \`e doveroso dare una panoramica delle politiche e stutture dati utilizzate per la gestione di uno swarm all'interno del peer. La trattazione non pu\`o essere ovviamente esaustiva ma cercheremo di evidenziare i punti salienti della progettazione.
+Facciamo notare che ogni swarm viene gestito indipendentemente, l'unica eccezione \`e data dalla gestione del limite connessioni, globale per ogni peer.
+Come prima cosa dobbiamo evidenziare che per la realizzazione delle politiche ci siamo attenuti strettamente alle politiche reali di BitTorrent facendo riferimento, quando possibile, al testo \citep{art:rif.1} 
+; qualora il testo non fosse risultato di aiuto abbiamo progettato autonomamente le politiche da utilizzare.
+In particolare la definizione dei vari messaggi scambiati tra i peer \`e conforme a quella del testo, per la scelta degli algoritmi ci siamo invece attenuti il pi\`u possibile alle politiche di BitTorrent introducendo eventuali modifiche per aumentare le prestazioni.
+Come prima cosa \`e utile dare visione delle variabili di istanza dell'oggetto connessione:
+
+\lstinputlisting[caption=$Connessione$.,label=list:Connessione]{code/Connessione.header}
+
+Si nota che l'oggetto connessione wrappa 2 socket, una dedicata al download e una all'upload. Cos\`i facendo abbiamo numerevoli vantaggi. In primo luogo un'astrazione sulle socket vere e proprie che facilita notevolmente la comprensibilit\`a del codice operante sulla connessione. In secondo luogo i Thread Downloader e Uploader che operano sulle connessioni risultano completamente autonomi, l'utilizzo di due socket separate permette ai due thread di operare in maniera totalmente indipendente e con un protocollo a scambio di messaggi semplice e intuitivo. E` risultato a questo punto molto naturale estendere il comportamento del Thread Downloader con le politiche INIT,RAREST e ENDGAME direttamente ricavate dal protocollo BitTorrent.
+Diamo una rapido riassunto di queste politiche:
+\begin{itemize}
+\item INIT: al momento dell'avvio di uno swarm il Chunk da scaricare va scelto in maniera totalmente casuale in maniera da massimizzare la probabilit\`a di ottenere un pezzo utile al pi\`u presto, una volta raggiunto questo obbiettivo si passa in RAREST.
+\item RAREST: la scelta dei pezzi avviene in base alla rarit\`a, ad ogni passo il pezzo prescelto \`e quello pi\`u raro, si noti che come politica aggiuntiva abbiamo introdotto una scelta casuale tra pezzi di pari rarit\`a, in un ambiente di test con numero di peer ristretto come quello che avevamo a disposizione (o comunque su swarm poco popolati) l'aumento di prestazioni e distribuzione complessiva del file tra i peer \`e risultata assai maggiore.
+\item ENDGAME: al raggiungimento di una soglia specificata ogni singolo Thread effettua una richiesta unica di tutti i pezzi mancanti all'altro peer, l'overhead introdotto da questa tecnica \`e giustificato dall'aumento delle probabilit\`a di completamento di un file con il conseguente rilascio di tutte le risorse occupate dai Thread Downloader (di cui beneficiano anche gli altri peer dato che si aggiunge automaticamente un nuovo seeder).
+\end{itemize} L'utilizzo degli oggetti connessione ha inoltre facilitato lo sviluppo del Thread UploadManager, responsabile delle politiche di CHOKE e UNCHOKE; nel realizzarle abbiamo introdotto gli stessi meccanismi utilizzati da BitTorrent con 4 peer UNCHOKE e un peer scelto a caso (OPTIMISTIC UNCHOKE). Nel realizzare le varie politiche abbiamo adottato un approccio coeso realizzando sia la classe Connessione che la classe PIO come implementazione di Comparable, questo ha permesso l'utilizzo dei meccanismi forniti dal package Collections per l'ordinamento:
+\begin{itemize}
+\item nel caso della politica Rarest utilizzato per ordinare i pezzi da scaricare in base alla rarit\`a.
+\item nel caso dell'UploadManager per ordinare le connessioni in base al numero di pezzi scaricati.
+\end{itemize}
+Si noti a questo punto la bonta della scelta di un oggetto che virtualizzi la connessione: I thread Downloader e Uploader utilizzano metodi e variabili della classe connessione distinti senza introdurre overhead tra di loro dovuto ad eventuali sincronizzazioni. Il thread UplodManager opera interamente sull'oggetto connessione e in basse alle informazioni salvate dal thread Downloader comunica al Thread Uploader il CHOKE o l'UNCHOKE sul pezzo, il tutto per\`o in maniera molto naturale e comprensibile a livello di codice. Se si osserva le operazioni svolte dal Thread UploadManager si nota che esso effettua esclusivamente l'ordinamento della lista Connessioni e le segnalazioni sui Monitor associati.
+
+\subsubsection{Meccanismi di sincronizzazione}
+
+La scelta dei corretti meccanismi di sincronizzazione \`e stata ampiamente ponderata. Per la sincronizzazione tra Thread si \`e fatto uso di metodi synchronized. Come gia specificato precedentemente l'UploadManager fa uso di monitor per gestire gli upload, in questa  maniera abbiamo il duplice vantaggio di una strutturazione del codice elegante e la riduzione dell'overhead dovuta ai Thread Uploader in quanto esclusivamente i thread che posso uploadare sono attivi.
+Infine bisogna notare che sono presenti numerosi thread all'interno di BitCreek che operano a intervalli regolari di tempo, per ogni caso \`e stato scelto un meccanismo adeguato allo scopo valutando l'overhead introdotto e i benefici, in particolare.
+\begin{itemize}
+\item I thread relativi alla GUI, avendo minore priorit\`a rispetto ai thread della logica, utilizzano SwingTimer per andare in esecuzione a intervalli regolari. I motivi di questa scelta sono essenzialmente due: in questa maniera abbiamo una gestione coerente esattamente come se fossere eventi, possiamo utilizzare meccanismi quali InvokeLater per evitare che l'esecuzione di questi thread rallenti l'applicazione. \citep{site:rif.1}
+\item I thread quali: sono gestiti come TimerTask in quanto abbiamo ritenuto che un loro eventuale delay nell'esecuzione non costituisse un problema e fosse preferibile un minore overhead.
+\item I thread a maggiore priorit\`a infine sono gestiti tramite sleep esplicite in quanto la loro esecuzione a intervalli regolari \`e fondamentale per il corretto funzionamento dell'applicazione o sono necessarri meccanismi di sincronizzazione esplicita come gli interrupt.
+\end{itemize}
+
+\subsubsection{Features Aggiuntive: Salva, Terminazione}
+
+Queste due features sono state aggiunte

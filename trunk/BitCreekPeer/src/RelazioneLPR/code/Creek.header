@@ -1,29 +1,44 @@
 /**
- * Classe che definisce la struttura dati del client di supporto al
- * download/upload in uno swarm
- * @author Andrea Lottarini, Alberto Bandettini
+ * Classe che definisce la struttura dati
+ * del client di supporto al download/upload
+ * in uno swarm
+ * @author Bandettini Alberto
+ * @author Lottarini Andrea
+ * @version BitCreekPeer 1.0
  */
 public class Creek extends Descrittore implements Serializable {
 
-    /* Costanti */
-    ...
+    /** Contatatore */
+    private static int countNext = 0;
+
     /* Variabili d'istanza */
-    private boolean stato; // true leecher,false seeder
-    private boolean situazione; // true se attivo, false altrimenti
-    //FONDAMENTALE determina la politica adottata per la scelta e scaricamento dei chunk
+    /** Stato del creek : puo essere LEECHER o SEEDER */
+    private boolean stato;
+    /** Situazione del creek : puo` essere NOTSTARTED o STARTED */
+    private boolean situazione;
+    /** Politica di download : puo` essere INIT, RAREST o ENDGAME */
     private int statoDownload;
+    /** Percentuale di completezza del file */
     private int percentuale;
+    /** Flag che indica se il file e` stato pubblicato dal peer */
     private boolean pubblicato;
+    /** Numero di peer connessi al peer per questo file */
     private int peer;
+    /** Numero di peer che hanno crecato questo file */
     private int peercercano;
+    /** Identità dell' ultimo peer che ha cercato questo file */
     private InetAddress ind;
-    /** Per ogni Chunk true se posseduto, false altrimenti*/
+    /** Array di falg che indicano i pezzi posseduti dal peer */
     private boolean[] have;
-    /** Lista dei Chunk da scaricare*/
+    /** Array di PIO che indicano i chunk liberi o occupati */
     private ArrayList<PIO> toDo;
+    /** Array di connessioni per questo file */
     private ArrayList<Connessione> connessioni;
-    //Strutture per la gestione del file
+    /** File del creek */
     private File file;
+    /** File Random associato al creek */
     private RandomAccessFile raf;
+    /** Numero pezzi scaricati */
     private int scaricati;
+    /** Array degli indici dei pezzi scaricati */
     private int[] scaricatiId;
