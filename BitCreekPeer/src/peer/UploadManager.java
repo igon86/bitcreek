@@ -1,11 +1,6 @@
 package peer;
 
 import condivisi.ErrorException;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Thread per l'implementazione delle politiche di CHOKE/UNCHOKE delle
@@ -45,45 +40,35 @@ public class UploadManager implements Runnable {
      * Corpo del task
      */
     public void run() {
-        FileOutputStream file = null;
-        PrintStream output = null;
-        try {
-            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
-            output = new PrintStream(file);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Creek.stampaDebug(output, "UploadManager del creek " + c.getName() + " avviato");
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Creek.stampaDebug(output, "UploadManager : sono stato ainterrotto");
+            System.err.println("uploaderManager : sono stato interrotto");
         }
+        int countOrdina = 0, random = -1;
 
-        int countOrdina = 0;
-        int random = -1;
-        /* ciclo infinito */
+        /**************************** il ciclo ********************/
+
         while (true) {
             if (Thread.interrupted()) {
+                /* esco perchè mi hanno chiuso */
                 break;
             }
-            Creek.stampaDebug(output, "\n\nARRIVA l'UPLOAD MANAGER :D\n\n");
             try {
-                /*sort delle connessioni*/
+                /* sort delle connessioni */
                 random = this.c.ordinaConnessioni(countOrdina, random);
             } catch (ErrorException ex) {
-                Creek.stampaDebug(output, "Esco perchè mi hanno chiuso : " + ex.getMessage());
+                /* esco perchè mi hanno chiuso */
                 break;
             }
-            Creek.stampaDebug(output, "HO FINITO :D \n\n");
             /* dormo */
             try {
                 Thread.sleep(ATTESA);
             } catch (InterruptedException ex) {
-                Creek.stampaDebug(output, "UploadManager : sono stato interrotto");
+                /* esco perchè mi hanno chiuso */
+                System.err.println("uploaderManager : sono stato interrotto");
                 break;
             }
         }
-        System.out.println(Thread.currentThread().getName() + " MUOIO!!!!!!!");
     }
 }

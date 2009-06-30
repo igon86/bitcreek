@@ -67,16 +67,10 @@ public class Crea implements Runnable {
         String nomefilesorgente = sorgente.getName();
 
         /* controllo che non sia presente */
-
-        boolean problema = false;
-        boolean presenza = false;
-
-        System.out.println(Thread.currentThread().getName() + " INIZIO CREA");
+        boolean problema = false, presenza = false;
         presenza = peer.presenza(nomefilesorgente);
         Creek c = null;
-
         /* se non presente lo copio, aggiorno arraydescr e poi pubblico*/
-
         if (!presenza) {
             try {
                 input = new FileInputStream(sorgente);
@@ -93,64 +87,41 @@ public class Crea implements Runnable {
             } catch (IOException e) {
                 problema = true;
             }
-
             Descrittore descr = null;
-
-            if (problema) {
-                System.out.println("AIA1");
-            }
-
             if (!problema) {
                 try {
-                    System.out.println("CREA - NEW DESCRITTORE");
                     descr = new Descrittore(nomefilesorgente, dimensione, hash(), peer.getStubCb());
                 } catch (ErrorException ex) {
                     problema = true;
                 }
             }
-
-            if (problema) {
-                System.out.println("AIA2");
-            }
             /* invio al server il descrittore e contestualmente mi registro per la callback */
-
             Porte p = null;
             InterfacciaRMI stub = peer.getStub();
-
             if (!problema && stub != null) {
                 try {
                     p = stub.inviaDescr(descr, peer.getMioIp(), peer.getPortaRichieste());
-                    System.out.println(Thread.currentThread().getName() + " INVIATO AL SERVER!");
                 } catch (RemoteException ex) {
                     problema = true;
-                    System.out.println("TRAGGEDIA RMI");
                 }
             } else {
                 problema = true;
             }
-
-            if (problema) {
-                System.out.println("PROBLEMA INVIO STUB");
-            }
-
             if (!problema && p != null) {
                 descr.setPortaTCP(p.getPortaTCP());
                 descr.setPortaUDP(p.getPortaUDP());
-                System.out.println(Thread.currentThread().getName() + " Crea : getId() = " + p.getId());
                 try {
                     c = new Creek(descr, false, p.getPubblicato());
                 } catch (ErrorException ex) {
                     problema = true;
                 }
                 c.setId(p.getId());
-                System.out.println("\n\n Creek ha id : " + c.getId());
             } else {
                 problema = true;
             }
 
             if (!problema) {
                 try {
-                    System.out.println("Entro in addcreek");
                     peer.addCreek(c);
                 } catch (ErrorException ex) {
                     problema = true;
@@ -159,9 +130,7 @@ public class Crea implements Runnable {
         }
         if (problema) {
             try {
-                if (peer == null) {
-                    System.out.println("il peer e` null");
-                } else {
+                if (peer != null) {
                     peer.deleteCreek(c.getName());
                 }
             } catch (ErrorException ex) {
@@ -172,7 +141,6 @@ public class Crea implements Runnable {
         }
         /* ricambio il cursore */
         gui.getRootPane().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        System.out.println(Thread.currentThread().getName() + " MUORO ");
     }
 
     /**
@@ -193,7 +161,6 @@ public class Crea implements Runnable {
             inChannel.close();
             outChannel.close();
         } catch (IOException e) {
-            System.out.println("Casino nella copia del file");
             throw new ErrorException("Casino nella copia del file");
         }
     }
@@ -210,41 +177,32 @@ public class Crea implements Runnable {
         } catch (NoSuchAlgorithmException ex) {
             throw new ErrorException("No such Algorithm");
         }
-
         byte[] arraybyte = null; /* bytes letti dal file */
         long dim = sorgente.length();
-
         if (dim < BitCreekPeer.DIMBLOCCO) {
             arraybyte = new byte[(int) dim];
         } else {
             arraybyte = new byte[BitCreekPeer.DIMBLOCCO];
         }
-
         for (int i = 0; i < arraybyte.length; i++) {
             arraybyte[i] = 0;
         }
-
         FileInputStream input = null;
         try {
             input = new FileInputStream(sorgente);
         } catch (FileNotFoundException ex) {
             throw new ErrorException("File not Found");
         }
-
         byte[] arrayris = null;
         int dimhash = 0; /* dimensione della stringa risultante */
-
         /* leggo a blocchi e applico SHA-1 */
-
         ArrayList<byte[]> array = new ArrayList<byte[]>();
-
         try {
             while (input.read(arraybyte) != -1) {
                 dim -= arraybyte.length;
                 md.update(arraybyte);
                 arrayris = md.digest();
                 dimhash += arrayris.length;
-                System.out.println("LUNGHEZZA ARRAY RIS : " + arrayris.length);
                 array.add(arrayris);
                 if (dim != 0) {
                     if (dim < BitCreekPeer.DIMBLOCCO) {
@@ -252,7 +210,6 @@ public class Crea implements Runnable {
                     } else {
                         arraybyte = new byte[BitCreekPeer.DIMBLOCCO];
                     }
-
                     for (int i = 0; i < arraybyte.length; i++) {
                         arraybyte[i] = 0;
                     }
