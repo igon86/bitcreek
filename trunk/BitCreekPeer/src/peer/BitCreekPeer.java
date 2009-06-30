@@ -61,6 +61,7 @@ public class BitCreekPeer {
     protected static final int MAXCONNESSIONI = 100;
     /** Definisce il tempo di attesa su una connessione */
     protected static final int TIMEOUTCONNESSIONE = 500;
+
     /* Variabili d'istanza */
     /** Mio ip */
     private InetAddress mioip;
@@ -298,7 +299,6 @@ public class BitCreekPeer {
     public synchronized boolean presenza(/*int id*/String nome) {
         boolean presenza = false;
         for (Creek c : arraydescr) {
-            //if (c.getId() == id) {
             if (c.getName().compareTo(nome) == 0) {
                 presenza = true;
                 break;
@@ -345,22 +345,17 @@ public class BitCreekPeer {
         }
         /* controllo se il creek è presente */
         boolean trovato = this.presenza(creek.getName());
-        System.out.println("Sono in addCrek");
         if (!trovato) {
-            System.out.println(Thread.currentThread().getName() + "CREEK NON PRESENTE IN ARRAYDESCR");
             FileOutputStream c = null;
             ObjectOutputStream o = null;
             try {
-                System.out.println("INIZIO PEZZO TRAGICO");
                 c = new FileOutputStream(new File("./MetaInfo/" + creek.getName() + ".creek"));
                 Creek toBeWritten = creek.copia();
                 toBeWritten.setClean();
                 o = new ObjectOutputStream(c);
-                System.out.println("CREATO LO STREAM");
                 o.writeObject(toBeWritten);
                 c.close();
                 o.close();
-                System.out.println("FINE PEZZO TRAGICO");
             } catch (FileNotFoundException ex) {
                 File f = new File("./MetaInfo/" + creek.getName() + ".creek");
                 f.delete();
@@ -371,8 +366,6 @@ public class BitCreekPeer {
                 throw new ErrorException("Impossibile aggiungere il file: IOEXCEPTION");
             }
             arraydescr.add(creek);
-        } else {
-            System.out.println("Trovato creek in arraydescr");
         }
         return !trovato;
     }
@@ -453,24 +446,20 @@ public class BitCreekPeer {
      * Chiude tutte le connessioni in upload e in download
      */
     private synchronized void terminaConn() {
-        System.out.println("TerminaConn: CHIUDO I CREEK");
         for (Creek creek : arraydescr) {
             creek.chiudi();
         }
-        System.out.println("TerminaConn: CHIUDO IL POOL");
         if (TP != null) {
             this.TP.shutdownNow();
             while (!TP.isTerminated()) {
                 this.TP.shutdownNow();
-                System.out.println("ancora non TERMINATO");
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
-                    System.out.println("interrotto");
+                    System.err.println("BitCreekPeer : sono stato interrotto");
                 }
             }
         }
-        System.out.println("\nTERMINATO");
         this.TP = null;
     }
 
@@ -484,17 +473,15 @@ public class BitCreekPeer {
         stub = null;
         stubcb = null;
         callback = null;
-        System.out.println("MESSE A NULL LE VARIABILI");
         try {
             if (welcome != null) {
                 /* chiudo la socket solo se è inizializzata */
                 welcome.close();
             }
         } catch (IOException ex) {
-            System.out.println("WELCOME gia chiusa");
+            /* la socket è già chiusa */
         }
         /* chiusura socket con altri peer */
-        System.out.println("CHIAMO LA TERMINACONN");
         this.terminaConn();
     }
 
@@ -750,7 +737,6 @@ public class BitCreekPeer {
 
         if (ipServer != null && !problema) {
             mioip = s.getLocalAddress();
-            System.out.println("\n\nIO SONO: " + s.getLocalAddress().getHostAddress() + "\n\n");
             try {
                 DataOutputStream out = new DataOutputStream(s.getOutputStream());
                 out.writeInt(portarichieste);

@@ -8,8 +8,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Classe che virtualizza la connessione tra 2 peer
@@ -30,7 +28,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     /** Costante che definisce il timeout sulla receive */
     private static final int TIMEOUT = 100;
 
-    /* ariabili d' istanza*/
+    /* Variabili d' istanza*/
     /** Socket in download */
     private Socket down;
     /** Socket in upload */
@@ -77,14 +75,11 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * Se non è possibile ferma il chiamante
      */
     public synchronized void possoUploadare() {
-        if (!this.uploadable) {
-            System.out.println("\n\nNON VA BENE ASSOLUTAMENTE CHE MI SCATTI IL MONITOR\n\n");
-        }
         while (!this.uploadable) {
             try {
                 wait();
             } catch (InterruptedException ex) {
-                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.print("Connessione : sono stato interrotto");
             }
         }
     }
@@ -118,39 +113,27 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      */
     public synchronized void set(boolean download, Socket s, ObjectInputStream in, ObjectOutputStream out, boolean[] bitfield, int portaVicino) {
         if (download) {
-            //CHIAMATO DA AVVIA
-            System.out.print("\n\nCHIAMATO DA AVVIA\n\n");
             this.bitfield = bitfield;
             this.down = s;
-            System.out.println("Setto timeout su down");
             try {
                 this.down.setSoTimeout(TIMEOUT);
             } catch (SocketException ex) {
-                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println("socket DOWN porta remota : " + s.getPort() + " porta locale : " + s.getLocalPort());
+            } 
             this.inDown = in;
             this.outDown = out;
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
-            System.out.println("Avvia :::: Porta vicino : " + portaVicino);
             this.downloaded = 0;
         } else {
-            //CHIAMATO DA ASCOLTA
-            System.out.print("\n\nCHIAMATO DA ASSCOLTA\n\n");
             this.up = s;
-            System.out.println("Setto timeout su up");
             try {
                 this.up.setSoTimeout(TIMEOUT);
             } catch (SocketException ex) {
-                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("socket UP porta remota : " + s.getPort() + " porta locale : " + s.getLocalPort());
             this.inUp = in;
             this.outUp = out;
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
-            System.out.println("Ascolta :::: Porta vicino : " + portaVicino);
         }
     }
 
@@ -173,7 +156,6 @@ public class Connessione implements Serializable, Comparable<Connessione> {
                 this.outDown = new ObjectOutputStream(down.getOutputStream());
                 this.inDown = new ObjectInputStream(down.getInputStream());
             } catch (IOException ex) {
-                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } else {
@@ -182,7 +164,6 @@ public class Connessione implements Serializable, Comparable<Connessione> {
                 this.outUp = new ObjectOutputStream(up.getOutputStream());
                 this.inUp = new ObjectInputStream(up.getInputStream());
             } catch (IOException ex) {
-                Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         this.portaVicino = portaVicino;
@@ -236,7 +217,6 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         try {
             outDown.writeObject(m);
         } catch (IOException ex) {
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -249,7 +229,6 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         try {
             this.outUp.writeObject(m);
         } catch (IOException ex) {
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -259,19 +238,13 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      */
     public synchronized Messaggio receiveDown() {
         try {
-            if (inDown == null) {
-                System.out.println(Thread.currentThread().getName() + " inDown non inizializzata, sei un programmatore BUSTA");
-            } else {
+            if (inDown != null) {
                 return (Messaggio) inDown.readObject();
             }
         } catch (SocketTimeoutException ex) {
-            System.out.println("TIMEOUT di merda che finalmente rilascia");
+            /* scattato il timeout */
         } catch (IOException ex) {
-            System.out.println(Thread.currentThread().getName() + " IO Exception nella receiveDown");
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFound Exception nella receiveDown");
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -282,18 +255,13 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      */
     public synchronized Messaggio receiveUp() {
         try {
-            if (inUp == null) {
-                System.out.println(Thread.currentThread().getName() + " inUp non inizializzata, sei un programmatore BUSTA");
-            } else {
+            if (inUp != null) {
                 return (Messaggio) inUp.readObject();
             }
         } catch (SocketTimeoutException ex) {
-            System.out.println("TIMEOUT di merda che finalmente rilascia");
             return null;
         } catch (IOException ex) {
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -305,7 +273,6 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         try {
             outDown.reset();
         } catch (IOException ex) {
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -316,7 +283,6 @@ public class Connessione implements Serializable, Comparable<Connessione> {
         try {
             outUp.reset();
         } catch (IOException ex) {
-            Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

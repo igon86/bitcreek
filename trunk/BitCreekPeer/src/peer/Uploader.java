@@ -1,11 +1,5 @@
 package peer;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Task che si occupa di far scaricare un file
  * @author Bandettini Alberto
@@ -14,7 +8,7 @@ import java.util.logging.Logger;
  */
 public class Uploader implements Runnable {
 
-    /* Costanti */
+    /* Variabili d' istanza */
     /** Connessione dove fare upload */
     private Connessione conn;
     /** Creek associato */
@@ -45,108 +39,76 @@ public class Uploader implements Runnable {
      * Corpo del task
      */
     public void run() {
-        FileOutputStream file = null;
-        PrintStream output = null;
-        try {
-            file = new FileOutputStream(Thread.currentThread().getName() + ".log");
-            output = new PrintStream(file);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Uploader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Creek.stampaDebug(output, " SONO UN NUOVO THREAD UPLOADER \n verso " + this.conn.getIPVicino());
         int count = 0;
+
+        /************************* il ciclo ************************/
         while (true) {
 
-            // GESTIONE TERMINAZIONE, la MAXFAILURE non puo funzionare con i mille ritardi che abbiamo
-            if (this.conn.getTermina() /*|| this.failed > Downloader.MAXFAILURE*/) {
-                // invio msg CLOSE al downloader associato
+            /* controllo se devo terminare */
+            if (this.conn.getTermina()) {
+                /* invio msg CLOSE al downloader associato */
                 this.conn.sendUp(new Messaggio(Messaggio.CLOSE, null));
                 break;
             }
 
-            //LETTURA MESSAGGIO
             Messaggio m = this.conn.receiveUp();
             if (m == null) {
-                Creek.stampaDebug(output, "Uploader: Timeout da connessione");
                 this.failed++;
                 continue;
             } else {
                 this.failed = 0;
             }
-
-
             int tipo = m.getTipo();
             switch (tipo) {
                 case Messaggio.REQUEST: {
-                    Creek.stampaDebug(output, "TESTO IL SEMAFORO....");
+                    /* se posso uploadare invio il chunk richiesto */
                     this.conn.possoUploadare();
-                    Creek.stampaDebug(output, "...TESTATO");
                     int pezzo;
                     int[] idPezzo = (int[]) m.getObj();
                     if (idPezzo.length == 1) {
                         pezzo = idPezzo[0];
-
-                        //creo il chunk corretto da mandare
                         Chunk pezzoRichiesto = c.getChunk(pezzo);
                         if (pezzoRichiesto != null) {
                             Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
-                            //riempio il buffer
                             this.conn.sendUp(nuovo);
-                            Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
-                        } else {
-                            Creek.stampaDebug(output, "CAZZO LA GETCHUNK RESTITUISCE DAVVERO NULL: " + pezzo);
-                        //io non gli mando nulla e lui prima o poi mi mandera in culo
                         }
-
                         break;
                     } else {
-                        //gestione endgame -> glieli mando tutti (se li possiedo)
+                        /* gestione endgame : glieli mando tutti (se li possiedo) */
                         for (int i = 0; i < idPezzo.length; i++) {
                             pezzo = idPezzo[i];
-
-                            //creo il chunk corretto da mandare
                             Chunk pezzoRichiesto = c.getChunk(pezzo);
-
                             if (pezzoRichiesto != null) {
-                                Creek.stampaDebug(output, " Mando chunk con id " + pezzo);
                                 Messaggio nuovo = new Messaggio(Messaggio.CHUNK, pezzoRichiesto);
                                 this.conn.sendUp(nuovo);
-                            } else {
-                                Creek.stampaDebug(output, "NON CE L'HOOOOO il " + pezzo);
                             }
-
-                        //riempio il buffer
-
                         }
                         break;
                     }
                 }
+                /* per questi msg : aggiorno stato ed invio risposte attinenti al protocollo */
                 case Messaggio.INTERESTED: {
-                    Creek.stampaDebug(output, " L'altro peer e` interessato");
                     this.conn.setInteresseUp(true);
                     this.conn.sendUp(new Messaggio(Messaggio.UNCHOKE, null));
                     break;
                 }
                 case Messaggio.NOT_INTERESTED: {
-                    Creek.stampaDebug(output, " L'altro peer NON e` interessato");
                     this.conn.setInteresseUp(false);
                     break;
                 }
                 case Messaggio.CLOSE: {
-                    Creek.stampaDebug(output, " Mi e` arrivata una close");
+                    /* devo chiudere */
                     break;
                 }
             }
             if (tipo == Messaggio.CLOSE) {
                 break;
             }
-            //CONTROLLO RESET STREAM
+            /* resetto lo stream */
             if (++count % 100 == 0) {
-                Creek.stampaDebug(output, "\n\n SVUOTO LO STEAM DELL'UPLOADER \n");
                 this.conn.ResetUp();
             }
-            //CONTROLLO/INVIO MESSAGGI DI HAVE
+            /* eseguo il controllo sui pezzi che ho ed, eventualmente, invio msh di HAVE*/
             int dimHave = this.c.getScaricati() - this.puntatoreHave;
             if (dimHave > 0) {
                 int[] newHave = new int[dimHave];
@@ -159,7 +121,7 @@ public class Uploader implements Runnable {
                 this.conn.sendUp(have);
             }
         }
-        Creek.stampaDebug(output, "Uploader: sto morendo perche` me l'ha detto l'altro");
+        /* uscita */
         /* decremento il numero di connessioni */
         peer.decrConnessioni();
         /* decremento il numero dei peer */

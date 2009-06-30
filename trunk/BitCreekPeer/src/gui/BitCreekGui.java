@@ -278,11 +278,13 @@ public class BitCreekGui extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setForeground(java.awt.Color.white);
         addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
             }
         });
         addWindowListener(new java.awt.event.WindowAdapter() {
+
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
@@ -291,6 +293,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         pannellomieicreek.setBorder(javax.swing.BorderFactory.createTitledBorder("I miei creek"));
 
         tabellamieicreek.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabellamieicreekMouseClicked(evt);
             }
@@ -300,15 +303,9 @@ public class BitCreekGui extends javax.swing.JFrame {
         javax.swing.GroupLayout pannellomieicreekLayout = new javax.swing.GroupLayout(pannellomieicreek);
         pannellomieicreek.setLayout(pannellomieicreekLayout);
         pannellomieicreekLayout.setHorizontalGroup(
-            pannellomieicreekLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pannellomieicreekLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+                pannellomieicreekLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(pannellomieicreekLayout.createSequentialGroup().addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE).addContainerGap()));
         pannellomieicreekLayout.setVerticalGroup(
-            pannellomieicreekLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-        );
+                pannellomieicreekLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE));
 
         barrastrumenti.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         barrastrumenti.setFloatable(false);
@@ -322,6 +319,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneapri.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottoneapri.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottoneapri.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottoneapriMouseClicked(evt);
             }
@@ -335,6 +333,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonecrea.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottonecrea.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottonecrea.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonecreaMouseClicked(evt);
             }
@@ -348,6 +347,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonesalva.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottonesalva.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottonesalva.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonesalvaMouseClicked(evt);
             }
@@ -362,6 +362,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneprecedente.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottoneprecedente.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottoneprecedente.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bottoneprecedenteActionPerformed(evt);
             }
@@ -375,6 +376,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonesuccessivo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottonesuccessivo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottonesuccessivo.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonesuccessivoMouseClicked(evt);
             }
@@ -388,6 +390,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneelimina.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottoneelimina.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottoneelimina.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottoneeliminaMouseClicked(evt);
             }
@@ -401,6 +404,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneconnetti.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottoneconnetti.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottoneconnetti.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottoneconnettiMouseClicked(evt);
             }
@@ -414,6 +418,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonedisconnetti.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottonedisconnetti.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottonedisconnetti.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonedisconnettiMouseClicked(evt);
             }
@@ -427,6 +432,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonetest.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottonetest.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottonetest.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonetestMouseClicked(evt);
             }
@@ -440,6 +446,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonesettaporta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottonesettaporta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottonesettaporta.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonesettaportaMouseClicked(evt);
             }
@@ -453,6 +460,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneexit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bottoneexit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bottoneexit.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottoneexitMouseClicked(evt);
             }
@@ -463,6 +471,7 @@ public class BitCreekGui extends javax.swing.JFrame {
 
         tabellapubblicati.setGridColor(new java.awt.Color(252, 245, 245));
         tabellapubblicati.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabellapubblicatiMouseClicked(evt);
             }
@@ -472,19 +481,14 @@ public class BitCreekGui extends javax.swing.JFrame {
         javax.swing.GroupLayout pannellopubblicatiLayout = new javax.swing.GroupLayout(pannellopubblicati);
         pannellopubblicati.setLayout(pannellopubblicatiLayout);
         pannellopubblicatiLayout.setHorizontalGroup(
-            pannellopubblicatiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pannellopubblicatiLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+                pannellopubblicatiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(pannellopubblicatiLayout.createSequentialGroup().addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE).addContainerGap()));
         pannellopubblicatiLayout.setVerticalGroup(
-            pannellopubblicatiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-        );
+                pannellopubblicatiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE));
 
         bottonecerca.setText("Cerca");
         bottonecerca.setEnabled(false);
         bottonecerca.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonecercaMouseClicked(evt);
             }
@@ -502,6 +506,7 @@ public class BitCreekGui extends javax.swing.JFrame {
 
         tabellaricerca.setGridColor(new java.awt.Color(252, 245, 245));
         tabellaricerca.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabellaricercaMouseClicked(evt);
             }
@@ -511,15 +516,9 @@ public class BitCreekGui extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE).addContainerGap()));
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE));
 
         labelnat.setText("Firewall/NAT :");
 
@@ -531,6 +530,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottonefortuna.setText("Mi sento fortunato");
         bottonefortuna.setEnabled(false);
         bottonefortuna.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 bottonefortunaMouseClicked(evt);
             }
@@ -542,13 +542,9 @@ public class BitCreekGui extends javax.swing.JFrame {
         javax.swing.GroupLayout graficoLayout = new javax.swing.GroupLayout(grafico);
         grafico.setLayout(graficoLayout);
         graficoLayout.setHorizontalGroup(
-            graficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 241, Short.MAX_VALUE)
-        );
+                graficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 241, Short.MAX_VALUE));
         graficoLayout.setVerticalGroup(
-            graficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 132, Short.MAX_VALUE)
-        );
+                graficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 132, Short.MAX_VALUE));
 
         jMenuBar1.setFont(new java.awt.Font("Bitstream Vera Serif", 2, 13));
 
@@ -559,6 +555,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         crea.setToolTipText("Crea un .creek");
         crea.setEnabled(false);
         crea.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 creaActionPerformed(evt);
             }
@@ -570,6 +567,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         apri.setToolTipText("Apre un .creek");
         apri.setEnabled(false);
         apri.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 apriActionPerformed(evt);
             }
@@ -580,6 +578,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         menusalva.setText("Salva Creek");
         menusalva.setEnabled(false);
         menusalva.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menusalvaActionPerformed(evt);
             }
@@ -590,6 +589,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         cerca.setText("Cerca");
         cerca.setEnabled(false);
         cerca.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cercaActionPerformed(evt);
             }
@@ -599,6 +599,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         connetti.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
         connetti.setText("Connetti...");
         connetti.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connettiActionPerformed(evt);
             }
@@ -609,6 +610,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         disconnetti.setText("Disconnetti");
         disconnetti.setEnabled(false);
         disconnetti.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 disconnettiActionPerformed(evt);
             }
@@ -619,6 +621,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         esci.setText("Esci");
         esci.setToolTipText("Chiude BitCreekPeer");
         esci.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 esciActionPerformed(evt);
             }
@@ -635,6 +638,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         avviaselezionato.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         avviaselezionato.setText("Creek selezionato");
         avviaselezionato.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 avviaselezionatoActionPerformed(evt);
             }
@@ -644,6 +648,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         avviatutticerca.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_J, java.awt.event.InputEvent.CTRL_MASK));
         avviatutticerca.setText("Tutti i file cercati");
         avviatutticerca.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 avviatutticercaActionPerformed(evt);
             }
@@ -658,6 +663,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         eliminaselezionato.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         eliminaselezionato.setText("Creek selezionato");
         eliminaselezionato.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eliminaselezionatoActionPerformed(evt);
             }
@@ -667,6 +673,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneeliminatutticreek.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         bottoneeliminatutticreek.setText("Tutti i miei creek");
         bottoneeliminatutticreek.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bottoneeliminatutticreekActionPerformed(evt);
             }
@@ -676,6 +683,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         bottoneeliminapubblicati.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
         bottoneeliminapubblicati.setText("Tutti i file pubblicati");
         bottoneeliminapubblicati.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bottoneeliminapubblicatiActionPerformed(evt);
             }
@@ -685,6 +693,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         eliminacercati.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         eliminacercati.setText("Tutti i file cercati");
         eliminacercati.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eliminacercatiActionPerformed(evt);
             }
@@ -702,6 +711,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         barra.setText("Barra degli strumenti");
         barra.setToolTipText("Abilita/Disabilita la barra degli strumenti");
         barra.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 barraActionPerformed(evt);
             }
@@ -712,6 +722,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         menuprecedente.setText("Precedente");
         menuprecedente.setEnabled(false);
         menuprecedente.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuprecedenteActionPerformed(evt);
             }
@@ -722,6 +733,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         menusuccessivo.setText("Successivo");
         menusuccessivo.setEnabled(false);
         menusuccessivo.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menusuccessivoActionPerformed(evt);
             }
@@ -737,6 +749,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         menutest.setToolTipText("Effettua il test sulla porta di ascolto");
         menutest.setEnabled(false);
         menutest.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menutestActionPerformed(evt);
             }
@@ -746,6 +759,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         menusettaporta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
         menusettaporta.setText("Setta Porta");
         menusettaporta.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menusettaportaActionPerformed(evt);
             }
@@ -756,6 +770,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         menudownload.setText("Download");
         menudownload.setToolTipText("Mostra dove sono i file");
         menudownload.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menudownloadActionPerformed(evt);
             }
@@ -766,6 +781,7 @@ public class BitCreekGui extends javax.swing.JFrame {
         info.setText("Info");
         info.setToolTipText("Visualizza le informazioni");
         info.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 infoActionPerformed(evt);
             }
@@ -779,81 +795,9 @@ public class BitCreekGui extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pannellopubblicati, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pannellomieicreek, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
-                        .addComponent(areacerca, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bottonecerca, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(labelmioip, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(labelipserver, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(labelconnessione)
-                        .addGap(18, 18, 18)
-                        .addComponent(labelnat)
-                        .addGap(18, 18, 18)
-                        .addComponent(labelnatfaccina))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(grafico, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(labelporta, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(bottonefortuna)))
-                .addContainerGap())
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(pannellopubblicati, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(pannellomieicreek, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE).addComponent(areacerca, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(bottonecerca, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(labelmioip, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE).addGap(24, 24, 24).addComponent(labelipserver, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE).addGap(18, 18, 18).addComponent(jLabel1).addGap(18, 18, 18).addComponent(labelconnessione).addGap(18, 18, 18).addComponent(labelnat).addGap(18, 18, 18).addComponent(labelnatfaccina)).addGroup(layout.createSequentialGroup().addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(grafico, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(labelporta, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addContainerGap().addComponent(bottonefortuna))).addContainerGap()));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(bottonecerca)
-                        .addComponent(areacerca, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(labelconnessione)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(22, 22, 22)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelmioip)
-                                .addComponent(jLabel1)
-                                .addComponent(labelipserver))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(labelnat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelnatfaccina, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pannellomieicreek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pannellopubblicati, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(grafico, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(labelporta))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(bottonefortuna, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(28, 28, 28))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(bottonecerca).addComponent(areacerca, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)).addComponent(barrastrumenti, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(labelconnessione).addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup().addGap(22, 22, 22).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(labelmioip).addComponent(jLabel1).addComponent(labelipserver)))).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addComponent(labelnat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(labelnatfaccina, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(pannellomieicreek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(pannellopubblicati, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(grafico, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE).addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGap(18, 18, 18).addComponent(labelporta)).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addGap(23, 23, 23).addComponent(bottonefortuna, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))).addGap(28, 28, 28)));
 
         pack();
     }// </editor-fold>                        
@@ -881,23 +825,14 @@ public class BitCreekGui extends javax.swing.JFrame {
             public void run() {
 
                 boolean problema = false;
-
                 ArrayList<Creek> array = null;
-
-                //QUI C"ERA UN TRY
                 array = peer.getDescr();
-
                 if (!problema) {
-
                     /* rimuovo vecchi modelli */
                     modellomieicreek.removeTutti();
-
-                    //RigaTabellaMieiCreek riga = null;
                     RigaTabellaPubblicati rigap = null;
-
                     for (Creek c : array) {
                         if (c.getStato()) {
-
                             /* file in download */
                             RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getPercentuale(), c.getPeer());
                             try {
@@ -906,11 +841,8 @@ public class BitCreekGui extends javax.swing.JFrame {
                                 System.err.println("Listener : modellomieicreek.addRiga(r), " + e.getMessage());
                             }
                         } else {
-
                             /* file in upload */
-
                             if ((rigap = modellopubblicati.presenza(c.getName())) != null) {
-
                                 /* modifico riga */
                                 if (c.getPeer() > 0) {
                                     rigap.setSituazione("Attivo");
@@ -922,9 +854,7 @@ public class BitCreekGui extends javax.swing.JFrame {
                                 rigap.setIdentita(c.getIdentita());
 
                             } else {
-
                                 /* creek non presente : lo aggiungo */
-
                                 RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione(), c.getPubblicato());
                                 try {
                                     modellopubblicati.addRiga(r);
@@ -949,512 +879,514 @@ public class BitCreekGui extends javax.swing.JFrame {
      * Chiude l'applicazione chiamando l'handler pulizia
      * @param evt evento non utilizzato
      */
-private void esciActionPerformed(java.awt.event.ActionEvent evt) {                                     
-    pulizia();
-}                                    
+    private void esciActionPerformed(java.awt.event.ActionEvent evt) {
+        pulizia();
+    }
 
     /**
      * Chiude l'applicazione chiamando l'handler pulizia
      * @param evt evento non utilizzato
      */
-private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
-    pulizia();
-}                                  
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
+        pulizia();
+    }
 
     /**
      * Visualizza o non visualizza la barra degli strumenti
      * @param evt evento non utilizzato
      */
-private void barraActionPerformed(java.awt.event.ActionEvent evt) {                                      
-    SwingUtilities.invokeLater(new Runnable() {
+    private void barraActionPerformed(java.awt.event.ActionEvent evt) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-        public void run() {
-            doubleclick();
-            if (barra.isSelected()) {
-                barrastrumenti.setVisible(true);
-            } else {
-                barrastrumenti.setVisible(false);
+            public void run() {
+                doubleclick();
+                if (barra.isSelected()) {
+                    barrastrumenti.setVisible(true);
+                } else {
+                    barrastrumenti.setVisible(false);
+                }
             }
-        }
-    });
-}                                     
+        });
+    }
 
     /**
      * Crea, se possibile, un .creek chiamando l'handler crea
      * @param evt evento non utilizzato
      */
-private void creaActionPerformed(java.awt.event.ActionEvent evt) {                                     
-    if (crea.isEnabled()) {
-        crea();
+    private void creaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (crea.isEnabled()) {
+            crea();
+        }
     }
-}                                    
 
     /**
      * Crea,se possibile,un .creek chiamando l'handler crea
      * @param evt evento non utilizzato
      */
-private void bottonecreaMouseClicked(java.awt.event.MouseEvent evt) {                                         
-    if (bottonecrea.isEnabled()) {
-        crea();
+    private void bottonecreaMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonecrea.isEnabled()) {
+            crea();
+        }
     }
-}                                        
 
     /**
      * Apre,se possibile, un .creek chiamando l'handler apri
      * @param evt evento non utilizzato
      */
-private void apriActionPerformed(java.awt.event.ActionEvent evt) {                                     
-    if (apri.isEnabled()) {
-        apri();
+    private void apriActionPerformed(java.awt.event.ActionEvent evt) {
+        if (apri.isEnabled()) {
+            apri();
+        }
     }
-}                                    
 
     /**
      * Apre,se possibile, un .creek chiamando l'handler apri
      * @param evt evento non utilizzato
      */
-private void bottoneapriMouseClicked(java.awt.event.MouseEvent evt) {                                         
-    if (bottoneapri.isEnabled()) {
-        apri();
+    private void bottoneapriMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottoneapri.isEnabled()) {
+            apri();
+        }
     }
-}                                        
 
     /**
      * Apre le informazioni
      * @param evt evento non utilizzato
      */
-private void infoActionPerformed(java.awt.event.ActionEvent evt) {                                     
-    SwingUtilities.invokeLater(new Runnable() {
+    private void infoActionPerformed(java.awt.event.ActionEvent evt) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-        public void run() {
-            doubleclick();
-            /* visualizzo le info */
-            PrintInformation("A cura di Bandettini Alberto e " +
-                    "Andrea Lottarini\nalberto.bandettini@gmail.com\nandre.lotta86@gmail.com\n" +
-                    "In particolare : per problemi e lamentele contattare Lottarini,\n" +
-                    "per elogi vari ed eventuali contattare Bandettini", AIUTO);
-        }
-    });
-}                                    
+            public void run() {
+                doubleclick();
+                /* visualizzo le info */
+                PrintInformation("A cura di Bandettini Alberto e " +
+                        "Andrea Lottarini\nalberto.bandettini@gmail.com\nandre.lotta86@gmail.com\n" +
+                        "In particolare : per problemi e lamentele contattare Lottarini,\n" +
+                        "per elogi vari ed eventuali contattare Bandettini", AIUTO);
+            }
+        });
+    }
 
     /**
      * Elimina le informazioni selezionate
      * @param evt evento non utilizzato
      */
-private void bottoneeliminaMouseClicked(java.awt.event.MouseEvent evt) {                                            
-    if (bottoneelimina.isEnabled()) {
-        elimina();
+    private void bottoneeliminaMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottoneelimina.isEnabled()) {
+            elimina();
+        }
     }
-}                                           
+
     /**
      * Elimina l' informazione selezionata
      * @param evt evento non utilizzato
      */
-private void eliminaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-    if (elimina.isEnabled()) {
-        elimina();
+    private void eliminaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {
+        if (elimina.isEnabled()) {
+            elimina();
+        }
     }
-}                                                  
 
     /**
      * Seleziona la riga precedente chiamando l'handler precedente
      * @param evt evento non utilizzato
      */
-private void bottoneprecedenteActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-    if (bottoneprecedente.isEnabled()) {
-        precedente();
+    private void bottoneprecedenteActionPerformed(java.awt.event.ActionEvent evt) {
+        if (bottoneprecedente.isEnabled()) {
+            precedente();
+        }
     }
-}                                                 
 
     /**
      * Elimina tutti i creek nella prima tabella
      * @param evt evento non utilizzato
      */
-private void bottoneeliminatutticreekActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-    if (elimina.isEnabled()) {
-        SwingUtilities.invokeLater(new Runnable() {
+    private void bottoneeliminatutticreekActionPerformed(java.awt.event.ActionEvent evt) {
+        if (elimina.isEnabled()) {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                tabellamieicreek.selectAll();
-                elimina();
-            }
-        });
+                public void run() {
+                    tabellamieicreek.selectAll();
+                    elimina();
+                }
+            });
+        }
     }
-}                                                        
+
     /**
      * Elimina tutti i creek nella seconda tabella
      * @param evt evento non utilizzato
      */
-private void bottoneeliminapubblicatiActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-    if (elimina.isEnabled()) {
-        SwingUtilities.invokeLater(new Runnable() {
+    private void bottoneeliminapubblicatiActionPerformed(java.awt.event.ActionEvent evt) {
+        if (elimina.isEnabled()) {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                tabellapubblicati.selectAll();
-                elimina();
-            }
-        });
+                public void run() {
+                    tabellapubblicati.selectAll();
+                    elimina();
+                }
+            });
+        }
     }
-}                                                        
 
     /**
      * Seleziona la riga precedente chiamando l'handler precedente
      * @param evt evento non utilizzato
      */
-private void menuprecedenteActionPerformed(java.awt.event.ActionEvent evt) {                                               
-    if (menuprecedente.isEnabled()) {
-        precedente();
+    private void menuprecedenteActionPerformed(java.awt.event.ActionEvent evt) {
+        if (menuprecedente.isEnabled()) {
+            precedente();
+        }
     }
-}                                              
 
     /**
      * Seleziona la riga successiva chiamando l'handler successivo
      * @param evt evento non utilizzato
      */
-private void menusuccessivoActionPerformed(java.awt.event.ActionEvent evt) {                                               
-    if (menusuccessivo.isEnabled()) {
-        successivo();
+    private void menusuccessivoActionPerformed(java.awt.event.ActionEvent evt) {
+        if (menusuccessivo.isEnabled()) {
+            successivo();
+        }
     }
-}                                              
 
     /**
      * Seleziona la riga successiva chiamando l'handler successivo
      * @param evt evento non utilizzato
      */
-private void bottonesuccessivoMouseClicked(java.awt.event.MouseEvent evt) {                                               
-    if (bottonesuccessivo.isEnabled()) {
-        successivo();
+    private void bottonesuccessivoMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonesuccessivo.isEnabled()) {
+            successivo();
+        }
     }
-}                                              
 
     /**
      * Tenta di connettersi chiamando l' handler connetti
      * @param evt evento non utilizzato
      */
-private void bottoneconnettiMouseClicked(java.awt.event.MouseEvent evt) {                                             
-    if (bottoneconnetti.isEnabled()) {
-        connetti();
+    private void bottoneconnettiMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottoneconnetti.isEnabled()) {
+            connetti();
+        }
     }
-}                                            
 
     /**
      * Tenta di connettersi chiamando l' handler connetti
      * @param evt evento non utilizzato
      */
-private void connettiActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    if (connetti.isEnabled()) {
-        connetti();
+    private void connettiActionPerformed(java.awt.event.ActionEvent evt) {
+        if (connetti.isEnabled()) {
+            connetti();
+        }
     }
-}                                        
 
     /**
      * Pulisce lo stato; chiamato quando si clicca sulla finestra
      * ma non su un particolare bottone o menu
      * @param evt evento non utilizzato
      */
-private void formMouseClicked(java.awt.event.MouseEvent evt) {                                  
-    SwingUtilities.invokeLater(new Runnable() {
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-        public void run() {
-            doubleclick();
-            tabellamieicreek.clearSelection();
-            tabellapubblicati.clearSelection();
-            tabellaricerca.clearSelection();
-            bottoneprecedente.setEnabled(false);
-            bottonesuccessivo.setEnabled(false);
-            menuprecedente.setEnabled(false);
-            menusuccessivo.setEnabled(false);
-            bottoneelimina.setEnabled(false);
-            eliminaselezionato.setEnabled(false);
-            avviaselezionato.setEnabled(false);
-            bottonesalva.setEnabled(false);
-            menusalva.setEnabled(false);
+            public void run() {
+                doubleclick();
+                tabellamieicreek.clearSelection();
+                tabellapubblicati.clearSelection();
+                tabellaricerca.clearSelection();
+                bottoneprecedente.setEnabled(false);
+                bottonesuccessivo.setEnabled(false);
+                menuprecedente.setEnabled(false);
+                menusuccessivo.setEnabled(false);
+                bottoneelimina.setEnabled(false);
+                eliminaselezionato.setEnabled(false);
+                avviaselezionato.setEnabled(false);
+                bottonesalva.setEnabled(false);
+                menusalva.setEnabled(false);
+            }
+        });
+    }
+
+    /**
+     * Tenta di disconnettersi chiamando l' handler disconnetti
+     * @param evt evento non utilizzato
+     */
+    private void bottonedisconnettiMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonedisconnetti.isEnabled()) {
+            disconnetti();
         }
-    });
-}                                 
+    }
 
     /**
      * Tenta di disconnettersi chiamando l' handler disconnetti
      * @param evt evento non utilizzato
      */
-private void bottonedisconnettiMouseClicked(java.awt.event.MouseEvent evt) {                                                
-    if (bottonedisconnetti.isEnabled()) {
-        disconnetti();
+    private void disconnettiActionPerformed(java.awt.event.ActionEvent evt) {
+        if (disconnetti.isEnabled()) {
+            disconnetti();
+        }
     }
-}                                               
-
-    /**
-     * Tenta di disconnettersi chiamando l' handler disconnetti
-     * @param evt evento non utilizzato
-     */
-private void disconnettiActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    if (disconnetti.isEnabled()) {
-        disconnetti();
-    }
-}                                           
 
     /**
      * Gestisce il click sulla seconda tabella
      * @param evt evento non utilizzato
      */
-private void tabellapubblicatiMouseClicked(java.awt.event.MouseEvent evt) {                                               
-    SwingUtilities.invokeLater(new Runnable() {
+    private void tabellapubblicatiMouseClicked(java.awt.event.MouseEvent evt) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-        public void run() {
-            doubleclick();
-            int[] array = tabellapubblicati.getSelectedRows();
-            if (array.length > 0) {
-                tabellamieicreek.clearSelection();
-                tabellaricerca.clearSelection();
-                bottonesuccessivo.setEnabled(true);
-                bottoneprecedente.setEnabled(true);
-                menuprecedente.setEnabled(true);
-                menusuccessivo.setEnabled(true);
-                menusalva.setEnabled(false);
-                bottonesalva.setEnabled(false);
-                // se sono connesso attivo anche altre funzioni
-                if (peer.getIpServer() != null) {
-                    eliminaselezionato.setEnabled(true);
-                    bottoneelimina.setEnabled(true);
-                    avviaselezionato.setEnabled(false);
+            public void run() {
+                doubleclick();
+                int[] array = tabellapubblicati.getSelectedRows();
+                if (array.length > 0) {
+                    tabellamieicreek.clearSelection();
+                    tabellaricerca.clearSelection();
+                    bottonesuccessivo.setEnabled(true);
+                    bottoneprecedente.setEnabled(true);
+                    menuprecedente.setEnabled(true);
+                    menusuccessivo.setEnabled(true);
+                    menusalva.setEnabled(false);
+                    bottonesalva.setEnabled(false);
+                    // se sono connesso attivo anche altre funzioni
+                    if (peer.getIpServer() != null) {
+                        eliminaselezionato.setEnabled(true);
+                        bottoneelimina.setEnabled(true);
+                        avviaselezionato.setEnabled(false);
+                    }
                 }
             }
-        }
-    });
-}                                              
+        });
+    }
 
     /**
      * Gestisce il click sulla prima tabella
      * @param evt evento non utilizzato
      */
-private void tabellamieicreekMouseClicked(java.awt.event.MouseEvent evt) {                                              
-    SwingUtilities.invokeLater(new Runnable() {
+    private void tabellamieicreekMouseClicked(java.awt.event.MouseEvent evt) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-        public void run() {
-            doubleclick();
-            int[] array = tabellamieicreek.getSelectedRows();
-            if (array.length > 0) {
-                tabellapubblicati.clearSelection();
-                tabellaricerca.clearSelection();
-                bottonesuccessivo.setEnabled(true);
-                bottoneprecedente.setEnabled(true);
-                menuprecedente.setEnabled(true);
-                menusuccessivo.setEnabled(true);
-                bottonesalva.setEnabled(true);
-                menusalva.setEnabled(true);
-                /* se sono connesso attivo anche altre funzionalità */
-                if (peer.getIpServer() != null) {
-                    eliminaselezionato.setEnabled(true);
-                    avviaselezionato.setEnabled(true);
-                    bottoneelimina.setEnabled(true);
+            public void run() {
+                doubleclick();
+                int[] array = tabellamieicreek.getSelectedRows();
+                if (array.length > 0) {
+                    tabellapubblicati.clearSelection();
+                    tabellaricerca.clearSelection();
+                    bottonesuccessivo.setEnabled(true);
+                    bottoneprecedente.setEnabled(true);
+                    menuprecedente.setEnabled(true);
+                    menusuccessivo.setEnabled(true);
+                    bottonesalva.setEnabled(true);
+                    menusalva.setEnabled(true);
+                    /* se sono connesso attivo anche altre funzionalità */
+                    if (peer.getIpServer() != null) {
+                        eliminaselezionato.setEnabled(true);
+                        avviaselezionato.setEnabled(true);
+                        bottoneelimina.setEnabled(true);
+                    }
                 }
             }
+        });
+    }
+
+    /**
+     * Tenta di effettuare una ricerca chiamando l' handler cerca
+     * @param evt evento non utilizzato
+     */
+    private void bottonecercaMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonecerca.isEnabled()) {
+            cerca();
         }
-    });
-}                                             
+    }
 
     /**
      * Tenta di effettuare una ricerca chiamando l' handler cerca
      * @param evt evento non utilizzato
      */
-private void bottonecercaMouseClicked(java.awt.event.MouseEvent evt) {                                          
-    if (bottonecerca.isEnabled()) {
-        cerca();
+    private void cercaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (cerca.isEnabled()) {
+            cerca();
+        }
     }
-}                                         
-
-    /**
-     * Tenta di effettuare una ricerca chiamando l' handler cerca
-     * @param evt evento non utilizzato
-     */
-private void cercaActionPerformed(java.awt.event.ActionEvent evt) {                                      
-    if (cerca.isEnabled()) {
-        cerca();
-    }
-}                                     
 
     /**
      *  Gestisce il click sulla tabella dei file cercati
      * @param evt evento non utilizzato
      */
-private void tabellaricercaMouseClicked(java.awt.event.MouseEvent evt) {                                            
-    SwingUtilities.invokeLater(new Runnable() {
+    private void tabellaricercaMouseClicked(java.awt.event.MouseEvent evt) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-        public void run() {
-            if (!tabellacercaclicked) {
-                tabellacercaclicked = true;
-                int[] array = tabellaricerca.getSelectedRows();
-                if (array.length > 0) {
-                    tabellamieicreek.clearSelection();
-                    tabellapubblicati.clearSelection();
-                    bottonesuccessivo.setEnabled(true);
-                    bottoneprecedente.setEnabled(true);
-                    menuprecedente.setEnabled(true);
-                    menusuccessivo.setEnabled(true);
-                    menusalva.setEnabled(true);
-                    bottonesalva.setEnabled(true);
-                    if (peer.getIpServer() != null) {
-                        bottoneelimina.setEnabled(false);
-                        eliminaselezionato.setEnabled(false);
-                        eliminacercati.setEnabled(true);
-                        avviaselezionato.setEnabled(true);
+            public void run() {
+                if (!tabellacercaclicked) {
+                    tabellacercaclicked = true;
+                    int[] array = tabellaricerca.getSelectedRows();
+                    if (array.length > 0) {
+                        tabellamieicreek.clearSelection();
+                        tabellapubblicati.clearSelection();
+                        bottonesuccessivo.setEnabled(true);
+                        bottoneprecedente.setEnabled(true);
+                        menuprecedente.setEnabled(true);
+                        menusuccessivo.setEnabled(true);
+                        menusalva.setEnabled(true);
+                        bottonesalva.setEnabled(true);
+                        if (peer.getIpServer() != null) {
+                            bottoneelimina.setEnabled(false);
+                            eliminaselezionato.setEnabled(false);
+                            eliminacercati.setEnabled(true);
+                            avviaselezionato.setEnabled(true);
+                        }
+                    }
+                } else {
+                    if (avviaselezionato.isEnabled()) {
+                        avvia();
                     }
                 }
-            } else {
-                if (avviaselezionato.isEnabled()) {
-                    avvia();
-                }
             }
-        }
-    });
-}                                           
+        });
+    }
 
     /**
      * Elimina tutti i creek tabella dei file cercati
      * @param evt evento non utilizzato
      */
-private void eliminacercatiActionPerformed(java.awt.event.ActionEvent evt) {                                               
-    if (elimina.isEnabled()) {
-        modellocerca.removeall();
-        modellocerca.fireTableDataChanged();
+    private void eliminacercatiActionPerformed(java.awt.event.ActionEvent evt) {
+        if (elimina.isEnabled()) {
+            modellocerca.removeall();
+            modellocerca.fireTableDataChanged();
+        }
     }
-}                                              
 
     /**
      * Tenta di avviare il download sul creek selezionato chiamando
      * l' handler avvia
      * @param evt evento non utilizzato
      */
-private void avviaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-    if (avviaselezionato.isEnabled()) {
-        avvia();
+    private void avviaselezionatoActionPerformed(java.awt.event.ActionEvent evt) {
+        if (avviaselezionato.isEnabled()) {
+            avvia();
+        }
     }
-}                                                
 
     /**
      * Tenta di avviare il download su tutti i creek chiamando
      * l' handler avvia
      * @param evt evento non utilizzato
      */
-private void avviatutticercaActionPerformed(java.awt.event.ActionEvent evt) {                                                
-    if (avviatutticerca.isEnabled()) {
-        tabellaricerca.selectAll();
-        avvia();
+    private void avviatutticercaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (avviatutticerca.isEnabled()) {
+            tabellaricerca.selectAll();
+            avvia();
+        }
     }
-}                                               
 
     /**
      * Tenta di avviare il test NAT-firewall chiamando
      * l' handler test
      * @param evt evento non utilizzato
      */
-private void menutestActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    if (menutest.isEnabled()) {
-        test();
+    private void menutestActionPerformed(java.awt.event.ActionEvent evt) {
+        if (menutest.isEnabled()) {
+            test();
+        }
     }
-}                                        
 
     /**
      * Tenta di avviare il test NAT-firewall chiamando
      * l' handler test
      * @param evt evento non utilizzato
      */
-private void bottonetestMouseClicked(java.awt.event.MouseEvent evt) {                                         
-    if (bottonetest.isEnabled()) {
-        test();
+    private void bottonetestMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonetest.isEnabled()) {
+            test();
+        }
     }
-}                                        
 
     /**
      * Tenta di settare la porta chiamando
      * l' handler settaporta
      * @param evt evento non utilizzato
      */
-private void bottonesettaportaMouseClicked(java.awt.event.MouseEvent evt) {                                               
-    if (bottonesettaporta.isEnabled()) {
-        try {
-            settaporta(false);
-        } catch (ErrorException e) {
-            PrintInformation("Impossibile settare la porta : " + e.getMessage(), ERRORE);
+    private void bottonesettaportaMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonesettaporta.isEnabled()) {
+            try {
+                settaporta(false);
+            } catch (ErrorException e) {
+                PrintInformation("Impossibile settare la porta : " + e.getMessage(), ERRORE);
+            }
         }
     }
-}                                              
 
     /**
      * Tenta di settare la porta chiamando
      * l' handler settaporta
      * @param evt evento non utilizzato
      */
-private void menusettaportaActionPerformed(java.awt.event.ActionEvent evt) {                                               
-    if (menusettaporta.isEnabled()) {
-        try {
-            settaporta(false);
-        } catch (ErrorException e) {
-            PrintInformation("Impossibile settare la porta : " + e.getMessage(), ERRORE);
+    private void menusettaportaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (menusettaporta.isEnabled()) {
+            try {
+                settaporta(false);
+            } catch (ErrorException e) {
+                PrintInformation("Impossibile settare la porta : " + e.getMessage(), ERRORE);
+            }
         }
     }
-}                                              
 
     /**
      * Tenta di chiudere l'applicazione chiamando
      * l' handler pulizia
      * @param evt evento non utilizzato
      */
-private void bottoneexitMouseClicked(java.awt.event.MouseEvent evt) {                                         
-    pulizia();
-}                                        
+    private void bottoneexitMouseClicked(java.awt.event.MouseEvent evt) {
+        pulizia();
+    }
 
     /**
      * Tenta di salvare un .creek chiamando
      * l' handler salva
      * @param evt evento non utilizzato
      */
-private void bottonesalvaMouseClicked(java.awt.event.MouseEvent evt) {                                          
-    if (bottonesalva.isEnabled()) {
-        salva();
+    private void bottonesalvaMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonesalva.isEnabled()) {
+            salva();
+        }
     }
-}                                         
 
     /**
      * Tenta di salvare un .creek chiamando
      * l' handler salva
      * @param evt evento non utilizzato
      */
-private void menusalvaActionPerformed(java.awt.event.ActionEvent evt) {                                          
-    if (menusalva.isEnabled()) {
-        salva();
+    private void menusalvaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (menusalva.isEnabled()) {
+            salva();
+        }
     }
-}                                         
 
     /**
      * Visualizza le informazioni riguardanti
      * i file scaricati
      * @param evt evento non utilizzato
      */
-private void menudownloadActionPerformed(java.awt.event.ActionEvent evt) {                                             
-    if (menudownload.isEnabled()) {
-        PrintInformation("I file completi sono presenti in 'File Condivisi'\nnella cartella del programma", AIUTO);
+    private void menudownloadActionPerformed(java.awt.event.ActionEvent evt) {
+        if (menudownload.isEnabled()) {
+            PrintInformation("I file completi sono presenti in 'File Condivisi'\nnella cartella del programma", AIUTO);
+        }
     }
-}                                            
 
     /**
      * Esegue la ricerca 'Mi sento fortunato'
      * @param evt evento non utilizzato
      */
-private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {                                            
-    if (bottonefortuna.isEnabled()) {
-        /* rimuovo i vecchi risultati della ricerca*/
-        modellocerca.removeall();
-        modellocerca.fireTableDataChanged();
-        try {
-            /* effettuo la ricerca con un metacarattere speciale */
-            peer.cerca("\\", this);
-        } catch (ErrorException e) {
-            PrintInformation(e.getMessage(), ERRORE);
+    private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {
+        if (bottonefortuna.isEnabled()) {
+            /* rimuovo i vecchi risultati della ricerca*/
+            modellocerca.removeall();
+            modellocerca.fireTableDataChanged();
+            try {
+                /* effettuo la ricerca con un metacarattere speciale */
+                peer.cerca("\\", this);
+            } catch (ErrorException e) {
+                PrintInformation(e.getMessage(), ERRORE);
+            }
+            doubleclick();
         }
-        doubleclick();
     }
-}                                           
 
     /**
      * Handler che si occupa di far partire uno o più download 
@@ -1462,11 +1394,8 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {
     private void avvia() {
         int[] arraycerca = tabellaricerca.getSelectedRows();
         if (arraycerca.length != 0) {
-            //QUI C'ERA UN TRY
-            
-                /* effettua l'aggiunta dei descrittori nell'arraydescr della logica del peer */
-                peer.avviaDescr(arraycerca);
-            
+            /* effettua l'aggiunta dei descrittori nell'arraydescr della logica del peer */
+            peer.avviaDescr(arraycerca);
         }
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -1661,7 +1590,7 @@ private void bottonefortunaMouseClicked(java.awt.event.MouseEvent evt) {
             sorgente = scelta.getSelectedFile();
         }
         doubleclick();
-        /* creazione del creek*/
+        /* creazione del creek */
         try {
             peer.crea(sorgente, this);
         } catch (ErrorException e) {
