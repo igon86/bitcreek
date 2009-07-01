@@ -1,0 +1,568 @@
+#LyX file created by tex2lyx 1.6.2
+\lyxformat 247
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize 12
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+
+Suddivisione in Package
+\end_layout
+
+\begin_layout Standard
+
+La fase di progettazione ha portato ad individuare numerose classi. E` risultata fondamentale una corretta suddivisione in package, sia nel lato server che nel lato client dell'applicazione. Ogni package verr\i \`{a}
+ analizzato singolarmente nelle varie sottosezioni.
+\end_layout
+
+\begin_layout Paragraph
+
+BitCreekPeer
+\end_layout
+
+\begin_layout Standard
+
+Nel realizzare il peer abbiamo suddiviso il codice in tre package 
+\end_layout
+
+\begin_layout Itemize
+
+gui: contiene tutto il codice necessario per il funzionamento dell'interfaccia grafica. Vi sono degli ulteriori riferimenti alla cartella icone contenente tutte le icone utilizzate dalla GUI. 
+\end_layout
+
+\begin_layout Itemize
+
+peer: contiene tutto il codice relativo alle politiche e ai thread del peer 
+\end_layout
+
+\begin_layout Itemize
+
+condivisi: si tratta di un package condiviso tra peer e server 
+\end_layout
+
+\begin_layout Paragraph
+
+BitCreekServer
+\end_layout
+
+\begin_layout Standard
+
+Nel realizzare il peer abbiamo suddiviso il codice in tre package 
+\end_layout
+
+\begin_layout Itemize
+
+server: contiene tutto il codice necessario per il funzionamento del server 
+\end_layout
+
+\begin_layout Itemize
+
+condivisi: vedi sopra 
+\end_layout
+
+\begin_layout Paragraph
+
+Condivisi
+\end_layout
+
+\begin_layout Standard
+
+E` un package condiviso tra peer e server, principalmente contiene tutte le classi necessarie per il funzionamento dell'RMI, gestione eccezioni e dati scambiati tra peer e server.
+\end_layout
+
+\begin_layout Subsection
+
+server
+\end_layout
+
+\begin_layout Standard
+
+Il package 
+\begin_inset Formula $server$
+\end_inset
+
+ contiene le seguenti classi:
+\end_layout
+
+\begin_layout Itemize
+
+BitCreekServer: Classe principale contenente il main del server 
+\end_layout
+
+\begin_layout Itemize
+
+ImplementazioneRMI: implementazione dei metodi presenti nell'InterfacciaRMI condivisa tra peer e server. 
+\end_layout
+
+\begin_layout Itemize
+
+ListaPeer: ArrayList di NetRecord gestita dai Tracker del server (relativa a singolo Swarm). 
+\end_layout
+
+\begin_layout Itemize
+
+MetaInfo: HashSet di Descrittori 
+\end_layout
+
+\begin_layout Itemize
+
+NumPeer: Classe che tiene traccia di Seeder e Leecher (relativa a singolo Swarm). 
+\end_layout
+
+\begin_layout Itemize
+
+ServerListener: Thread di gestione del meccanismo di aggiramento del NAT. 
+\end_layout
+
+\begin_layout Itemize
+
+ThreadSaver: Thread di gestione del salvataggio su file della lista degli swarm presenti. 
+\end_layout
+
+\begin_layout Itemize
+
+TrackerTCP: Thread di gestione della ricerca Peer. 
+\end_layout
+
+\begin_layout Itemize
+
+TrackerUDP: Thread di gestione del meccanismo di Keep Alive. 
+\end_layout
+
+\begin_layout Itemize
+
+Trimmer: Classi che implementa le funzionalit\i \`{a}
+ di rimozione Peer che non rispondo al KeepAlive. 
+\end_layout
+
+\begin_layout Standard
+
+e sfrutta le classi presenti in 
+\begin_inset Formula $condivisi$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+
+Descrittore: Classe che racchiude tutte le informazioni relative allo swarm. 
+\end_layout
+
+\begin_layout Itemize
+
+ErrorException: Classe che estende le normali eccezioni in Java, utilizzata per un trattamento uniforme di tutte le eccezioni che vanno notificate all'utente. 
+\end_layout
+
+\begin_layout Itemize
+
+InterfacciaRMI: Interfaccia condivisa con il peer per il meccanismo RMI 
+\end_layout
+
+\begin_layout Itemize
+
+InterfacciaCallback: Interfaccia condivisa con il peer per il meccanismo delle CallBack 
+\end_layout
+
+\begin_layout Itemize
+
+NetRecord: Classe che definisce le informazioni necessarie alla lista Peer 
+\end_layout
+
+\begin_layout Itemize
+
+Porte: Classe wrapper utilizzata per definire le informazioni che un peer deve ricevere a seguito dell'invio di un descrittore appena creato; contiene le porte del trackerUDP e TCP associati allo swarm appena creato. 
+\end_layout
+
+\begin_layout Standard
+
+diagramma UML delle classi:
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+mbox{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename images/serverClass.jpg
+	scale 35
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Caption
+
+Diagramma delle classi del Server.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand \label{classiServer}
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+peer
+\end_layout
+
+\begin_layout Standard
+
+Il package 
+\begin_inset Formula $gui$
+\end_inset
+
+ contiene le seguenti classi:
+\end_layout
+
+\begin_layout Itemize
+
+BitCreekGui: Classe principale del package, contenente il main dell'applicazione lato Peer. 
+\end_layout
+
+\begin_layout Itemize
+
+FunctionPanel: Classe che implementa il grafico delle connessioni. 
+\end_layout
+
+\begin_layout Itemize
+
+ModelloTabellaCerca 
+\end_layout
+
+\begin_layout Itemize
+
+ModelloTabellaMieiCreek 
+\end_layout
+
+\begin_layout Itemize
+
+ModelloTabellaPubblicati 
+\end_layout
+
+\begin_layout Itemize
+
+RigaTabellaCerca 
+\end_layout
+
+\begin_layout Itemize
+
+RigaTabellaMieiCreek 
+\end_layout
+
+\begin_layout Itemize
+
+RigaTabellaPubblicati 
+\end_layout
+
+\begin_layout Standard
+
+Il package 
+\begin_inset Formula $peer$
+\end_inset
+
+ contiene le seguenti classi:
+\end_layout
+
+\begin_layout Itemize
+
+BitCreekPeer: Classe principale del package, viene creato da BitCreekGui al momento dell'avvio dell'applicazione. 
+\end_layout
+
+\begin_layout Itemize
+
+Apri: Thread di apertura di un file .creek 
+\end_layout
+
+\begin_layout Itemize
+
+Ascolto: Thread di ascolto di nuove connessioni 
+\end_layout
+
+\begin_layout Itemize
+
+Avvia: Thread di Avvio di un nuovo swarm 
+\end_layout
+
+\begin_layout Itemize
+
+Bitfield: Classe che definisce un messaggio di risposta a livello di HandShake applicativo. 
+\end_layout
+
+\begin_layout Itemize
+
+Cerca: Thread che effettua una ricerca sul server. 
+\end_layout
+
+\begin_layout Itemize
+
+Chunk: Classe che definisce tutti gli attributi di un chunk del file relativo allo Swarm. 
+\end_layout
+
+\begin_layout Itemize
+
+Connessione: Classe che virtualizza la connessione tra 2 peer 
+\end_layout
+
+\begin_layout Itemize
+
+Contact: Classe che definisce il primo Messaggio a livello di Hanshake Applicativo. 
+\end_layout
+
+\begin_layout Itemize
+
+Crea: Thread che implementa la creazione di un nuovo Descrittore da submittare tramite RMI al server. 
+\end_layout
+
+\begin_layout Itemize
+
+Creek: Classe che definisce gli attributi necessari alla gestione di uno swarm (a runtime). 
+\end_layout
+
+\begin_layout Itemize
+
+Downloader: Thread che gestisce lo scaricamento di un file su di una connessione. 
+\end_layout
+
+\begin_layout Itemize
+
+Elimina: Thread che gestisce l'eliminazione di un creek con relativa comunicazione al server. 
+\end_layout
+
+\begin_layout Itemize
+
+Implementazione Callback: gestione della callback relativa alla ricerca. 
+\end_layout
+
+\begin_layout Itemize
+
+KeepAlive: Thread che gestisce l'invio dei messaggi di KeepAlive. 
+\end_layout
+
+\begin_layout Itemize
+
+Messaggio: Classe che definisce i messaggi scambiati tra per lo scaricamento di un file. 
+\end_layout
+
+\begin_layout Itemize
+
+PIO: Classe che definisce gli attributi di un Chunk da scaricare. 
+\end_layout
+
+\begin_layout Itemize
+
+Riavvia: Thread invocato al per la gestione di Swarm interrotti. 
+\end_layout
+
+\begin_layout Itemize
+
+Uploader: Thread che gestisce l'upload su una connessione. 
+\end_layout
+
+\begin_layout Itemize
+
+UploadManager: Thread relativo ad ogni swarm per la gestione delle politiche di upload. 
+\end_layout
+
+\begin_layout Standard
+
+Il peer utilizza le classi contenute nel package condivisi, gia illustrato nella sezione precedente.
+\end_layout
+
+\begin_layout Standard
+
+diagramma UML delle classi:
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+mbox{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename images/peerClass.jpg
+	scale 35
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Caption
+
+Diagramma delle classi del Peer.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand \label{overView}
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
