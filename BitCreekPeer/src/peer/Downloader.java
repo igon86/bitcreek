@@ -63,7 +63,7 @@ public class Downloader implements Runnable {
             conn.sendDown(new Messaggio(Messaggio.NOT_INTERESTED, null));
         }
 
-        int count = 0; //utilizzato per lo svuotamento dello buffer degli stream
+        int count = 0; // utilizzato per lo svuotamento dello buffer degli stream
         PIO p = null;
 
         /*********************** il ciclo ********************/
