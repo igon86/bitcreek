@@ -127,9 +127,10 @@ public class Uploader implements Runnable {
         /* uscita */
         /* decremento il numero di connessioni */
         peer.decrConnessioni();
-        /* decremento il numero dei peer */
-        c.decrPeer();
-        
+        /* decremento il numero dei peer solos e sono seeder */
+        if(!c.getStato()){
+            c.decrPeer();
+        }
         System.out.println(Thread.currentThread().getName()+" Uploader Terminato");
     }
 }
