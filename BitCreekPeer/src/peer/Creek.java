@@ -149,6 +149,7 @@ public class Creek extends Descrittore implements Serializable {
             index++;
             count++;
             Connessione temp = (Connessione) h.next();
+            temp.resetDownloaded();
             temp.puoiUploadare();
         }
         /* se rimane spazio per il peer random */
@@ -159,6 +160,7 @@ public class Creek extends Descrittore implements Serializable {
             while (h.hasNext()) {
                 index++;
                 Connessione temp = (Connessione) h.next();
+                temp.resetDownloaded();
                 if (index == random) {
                     temp.puoiUploadare();
                 } else {

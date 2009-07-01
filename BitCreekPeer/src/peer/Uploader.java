@@ -39,6 +39,9 @@ public class Uploader implements Runnable {
      * Corpo del task
      */
     public void run() {
+        
+        System.out.println(Thread.currentThread().getName()+" Uploader Avviato");
+        
         int count = 0;
 
         /************************* il ciclo ************************/
@@ -126,5 +129,7 @@ public class Uploader implements Runnable {
         peer.decrConnessioni();
         /* decremento il numero dei peer */
         c.decrPeer();
+        
+        System.out.println(Thread.currentThread().getName()+" Uploader Terminato");
     }
 }

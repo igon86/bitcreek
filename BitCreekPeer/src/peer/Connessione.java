@@ -59,6 +59,8 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     private boolean uploadable;
     /** Numero chunk scaricati su questa connessione */
     private int downloaded;
+    /** Numero chunk scaricati nell'ultima sessione */
+    private int lastDownloaded;
     /** Flag che indica di terminare la connessione */
     private boolean termina;
 
@@ -124,6 +126,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
             this.ipVicino = s.getInetAddress();
             this.portaVicino = portaVicino;
             this.downloaded = 0;
+            this.lastDownloaded = 0;
         } else {
             this.up = s;
             try {
@@ -192,7 +195,11 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     public synchronized boolean getTermina() {
         return this.termina;
     }
-
+    
+    public synchronized void resetDownloaded(){
+        this.lastDownloaded = 0;
+    }
+    
     /**
      * Metodo utilizzato per controllare se una
      * connessione e` gia presente
@@ -462,6 +469,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * @return downloaded
      */
     public synchronized int incrDown() {
+        this.lastDownloaded++;
         return ++this.downloaded;
     }
 
@@ -472,18 +480,19 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * @return differenza dei pezzi scaricati
      */
     public int compareTo(Connessione arg0) {
+        int limite = this.downloaded;
         if (this.getInteresseUp()) {
             if (arg0.getInteresseUp()) {
-                return arg0.downloaded - this.downloaded;
+                return arg0.downloaded - this.lastDownloaded;
             } else {
-                return (arg0.downloaded - this.downloaded) - 3000;
+                return (arg0.downloaded - this.lastDownloaded) - limite;
             }
 
         } else {
             if (arg0.getInteresseUp()) {
-                return (arg0.downloaded - this.downloaded) + 3000;
+                return (arg0.downloaded - this.lastDownloaded) + limite;
             } else {
-                return arg0.downloaded - this.downloaded;
+                return arg0.downloaded - this.lastDownloaded;
             }
         }
     }

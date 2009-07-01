@@ -51,6 +51,8 @@ public class Downloader implements Runnable {
      * Corpo del task
      */
     public void run() {
+        
+        System.out.println(Thread.currentThread().getName()+" Downloader Avviato");
 
         /* setto l' interesse per la connessione */
         if (c.interested(conn.getBitfield())) {
@@ -179,5 +181,7 @@ public class Downloader implements Runnable {
         if (p != null) {
             p.setFree();
         }
+        
+        System.out.println(Thread.currentThread().getName()+" Downloader Terminato, ho scaricato: "+this.conn.getDownloaded()+" Chunk");
     }
 }

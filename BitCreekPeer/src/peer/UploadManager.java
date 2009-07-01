@@ -40,6 +40,9 @@ public class UploadManager implements Runnable {
      * Corpo del task
      */
     public void run() {
+        
+        System.out.println(Thread.currentThread().getName()+" UploadManager Avviato");
+        
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
@@ -70,5 +73,7 @@ public class UploadManager implements Runnable {
                 break;
             }
         }
+        
+        System.out.println(Thread.currentThread().getName()+" UploadManager Terminato ");
     }
 }
