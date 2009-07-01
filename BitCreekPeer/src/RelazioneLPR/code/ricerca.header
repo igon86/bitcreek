@@ -1,8 +1,0 @@
-/**
-     * Metodo esportato dal server al peer per effettuare una ricerca
-     * @param nomefile nome del file da cercare
-     * @param ind ip del peer che sta cercando
-     * @return lista di descrittori
-     * @throws java.rmi.RemoteException
-     */
-    public ArrayList<Descrittore> ricerca(String nomefile, InetAddress ind) throws RemoteException;
