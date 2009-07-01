@@ -181,6 +181,7 @@ public class Downloader implements Runnable {
         if (p != null) {
             p.setFree();
         }
+        /* metto socket a null */
         this.conn.setSocketDown(null);
         System.out.println(Thread.currentThread().getName()+" Downloader Terminato, ho scaricato: "+this.conn.getDownloaded()+" Chunk");
     }
