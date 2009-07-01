@@ -52,7 +52,7 @@ public class Downloader implements Runnable {
      */
     public void run() {
         
-        System.out.println(Thread.currentThread().getName()+" Downloader Avviato");
+        System.out.println(Thread.currentThread().getName()+" Downloader Avviato da "+this.conn.getIPVicino()+", "+this.conn.getPortaVicino());
 
         /* setto l' interesse per la connessione */
         if (c.interested(conn.getBitfield())) {
