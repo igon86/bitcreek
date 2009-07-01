@@ -42,15 +42,13 @@ public class Avvia implements Runnable {
      * Corpo del task
      */
     public void run() {
+        
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         Creek c = null;
         Descrittore d = null;
         boolean presenza = false;
 
         for (int index : this.array) {
-
-            SSLSocket s = null;
-            ObjectInputStream oin = null;
 
             /* questa provoca l'aggiornamento dell' interfaccia grafica aggiungendo il creek a arraydescr */
             try {
@@ -64,22 +62,9 @@ public class Avvia implements Runnable {
 
             /* contatto gli altri e creo i thread solo se non ho già in download quel file */
             if (presenza) {
-                int portatracker = d.getTCP();
-                /* effettuo il contatto via SSL */
-                try {
-                    s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);
-                    oin = new ObjectInputStream(s.getInputStream());
-                    int dimlista = oin.readInt();
-                    for (int j = 0; j < dimlista; j++) {
-                        lista.add((NetRecord) oin.readObject());
-                        NetRecord toPrint = lista.get(j);
-                    }
-                    s.close();
-                } catch (ClassNotFoundException ex) {
-                    System.err.println("Avvia : Classnotfound");
-                } catch (IOException ex) {
-                    System.err.println("Avvia : IOexception");
-                }
+                
+                lista = peer.contattaTracker(d);
+                
                 for (NetRecord n : lista) {
                     try {
                         if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {

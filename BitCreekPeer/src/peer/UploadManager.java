@@ -64,6 +64,8 @@ public class UploadManager implements Runnable {
                 /* esco perchè mi hanno chiuso */
                 break;
             }
+            //contatto il tracker per avere una nuova lista
+            
             /* dormo */
             try {
                 Thread.sleep(ATTESA);
