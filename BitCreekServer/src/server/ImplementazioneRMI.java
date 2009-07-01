@@ -57,6 +57,7 @@ public class ImplementazioneRMI implements InterfacciaRMI {
         Iterator<Descrittore> i = ris.iterator();
         Descrittore temp = null;
         InterfacciaCallback cb = null;
+
         /* eseguo le callback */
         while (i.hasNext()) {
             temp = i.next();

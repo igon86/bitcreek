@@ -64,7 +64,6 @@ public class Apri implements Runnable {
         boolean problema = false;
 
         /* controllo che sia un .creek */
-
         if (nome.length() > 6 && nome.substring(nome.length() - 6, nome.length()).compareTo(".creek") == 0) {
             try {
                 in = new ObjectInputStream(new FileInputStream(creek));
