@@ -278,7 +278,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     /**
      * Resetta lo stream sulla socket in download
      */
-    public synchronized void ResetDown() {
+    public void ResetDown() {
         try {
             outDown.reset();
         } catch (IOException ex) {
@@ -288,7 +288,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
     /**
      * Resetta lo stream sulla socket in upload
      */
-    public synchronized void ResetUp() {
+    public void ResetUp() {
         try {
             outUp.reset();
         } catch (IOException ex) {
@@ -300,7 +300,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * ricevuto
      * @param b array di bitfield
      */
-    public synchronized void setBitfield(boolean[] b) {
+    public void setBitfield(boolean[] b) {
         this.bitfield = b;
     }
 
@@ -309,7 +309,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * nell' array passato come parametro .
      * @param toSet array di indici dei bitfield da settare
      */
-    public synchronized void setArrayBitfield(int[] toSet) {
+    public void setArrayBitfield(int[] toSet) {
         for (int i = 0; i < toSet.length; i++) {
             this.bitfield[toSet[i]] = true;
         }
