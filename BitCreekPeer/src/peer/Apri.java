@@ -90,73 +90,9 @@ public class Apri implements Runnable {
                 /* inizializzo il creek */
                 c.setToDo();
                 /* vedo di scaricarlo */
-                ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
-                SSLSocket s = null;
-                ObjectInputStream oin = null;
-                /* recupero della lista Peer dal tracker */
-                int portatracker = c.getTCP();
-                /* contatto il tracker via SSL */
-                try {
-                    s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);
-                    oin = new ObjectInputStream(s.getInputStream());
-                    int dimlista = oin.readInt();
-                    for (int j = 0; j < dimlista; j++) {
-                        lista.add((NetRecord) oin.readObject());
-                    }
-                    s.close();
-                } catch (ClassNotFoundException ex) {
-                    System.err.println("Avvia : Classnotfound");
-                } catch (IOException ex) {
-                    System.err.println("Avvia : IOException");
-                }
+                ArrayList<NetRecord> lista = peer.contattaTracker(c);
                 /* contatto i peer nella lista */
-                for (NetRecord n : lista) {
-
-                    try {
-                        if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
-                            /* esco perchè non posso aggiungere altre connessini */
-                            break;
-                        }
-                        /* controlli */
-                        if (n.getPorta() == peer.getPortaRichieste() && n.getIp().getHostAddress().compareTo(peer.getMioIp().getHostAddress()) == 0) {
-                            continue;
-                        }
-                        if (c.presenzaConnessione(n.getIp(), n.getPorta()) != null) {
-                            continue;
-                        }
-                        /* tutto ok : contatto il peer */
-                        SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
-                        Socket sock = new Socket();
-                        sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                        Bitfield b = new Bitfield(null);
-                        ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
-                        ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
-                        /* creo la connessione in modo da essere anche ricontattato */
-                        Connessione conn = new Connessione();
-                        conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
-                        c.addConnessione(conn);
-                        /* invio le informazioni per contattarmi in seguito */
-                        contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
-                        try {
-                            /* lui mi risponde con il suo bitfield come da protocollo */
-                            b = (Bitfield) contactIN.readObject();
-                            /* aggiorno la connessione */
-                            conn.setBitfield(b.getBitfield());
-                            c.addRarita(b.getBitfield());
-                        } catch (ClassNotFoundException ex) {
-                            System.err.println("Avvia : Classnotfound");
-                        }
-                        /* creo nuovo thread downloader */
-                        peer.addTask(new Downloader(c, conn, peer));
-                        /* incremento  il numero di connessioni */
-                        peer.incrConnessioni();
-                        /* incremento numero peer */
-                        c.incrPeer();
-                    } catch (IOException ex) {
-                        /* passo al prossimo netrecord perchè nessuno mi ha risposto */
-                        continue;
-                    }
-                }
+                peer.aggiungiLista(c, lista);
                 /* creo uploaderManager */
                 peer.addTask(new UploadManager(peer, c));
             } else {

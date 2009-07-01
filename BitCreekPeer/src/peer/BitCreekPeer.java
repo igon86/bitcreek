@@ -145,28 +145,71 @@ public class BitCreekPeer {
         }
     }
 
-    public ArrayList<NetRecord> contattaTracker(Descrittore d){
+    public synchronized void aggiungiLista(Creek c, ArrayList<NetRecord> lista) {
+        for (NetRecord n : lista) {
+            try {
+                if (this.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
+                    break;
+                }
+                if (n.getPorta() == this.portarichieste && n.getIp().getHostAddress().compareTo(this.mioip.getHostAddress()) == 0) {
+                    continue;
+                }
+                if (c.presenzaConnessione(n.getIp(), n.getPorta()) != null) {
+                    continue;
+                }
+                SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
+                Socket sock = new Socket();
+                sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
+                Bitfield b = new Bitfield(null);
+                ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
+                ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
+                Connessione conn = new Connessione();
+                conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
+                c.addConnessione(conn);
+                contactOUT.writeObject(new Contact(this.mioip, this.portarichieste, c.getId()));
+                try {
+                    b = (Bitfield) contactIN.readObject();
+                    conn.setBitfield(b.getBitfield());
+                    c.addRarita(b.getBitfield());
+                } catch (ClassNotFoundException ex) {
+                    System.err.println("Avvia : Classnotfound");
+                }
+                this.addTask(new Downloader(c, conn, this));
+                /* incremento  il numero di connessioni */
+                this.incrConnessioni();
+                /* incremento numero peer */
+                c.incrPeer();
+
+            } catch (IOException ex) {
+                /* passo al prossimo netrecord perchè nessuno mi ha risposto */
+                continue;
+            }
+        }
+    }
+
+    public ArrayList<NetRecord> contattaTracker(Descrittore d) {
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         SSLSocket s = null;
         ObjectInputStream oin = null;
         int portatracker = d.getTCP();
-                /* effettuo il contatto via SSL */
-                try {
-                    s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(this.ipServer, portatracker);
-                    oin = new ObjectInputStream(s.getInputStream());
-                    int dimlista = oin.readInt();
-                    for (int j = 0; j < dimlista; j++) {
-                        lista.add((NetRecord) oin.readObject());
-                        NetRecord toPrint = lista.get(j);
-                    }
-                    s.close();
-                } catch (ClassNotFoundException ex) {
-                    System.err.println("Avvia : Classnotfound");
-                } catch (IOException ex) {
-                    System.err.println("Avvia : IOexception");
-                }
+        /* effettuo il contatto via SSL */
+        try {
+            s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(this.ipServer, portatracker);
+            oin = new ObjectInputStream(s.getInputStream());
+            int dimlista = oin.readInt();
+            for (int j = 0; j < dimlista; j++) {
+                lista.add((NetRecord) oin.readObject());
+                NetRecord toPrint = lista.get(j);
+            }
+            s.close();
+        } catch (ClassNotFoundException ex) {
+            System.err.println("Avvia : Classnotfound");
+        } catch (IOException ex) {
+            System.err.println("Avvia : IOexception");
+        }
         return lista;
     }
+
     /**
      * Restituisce il numero di connessioni
      * @return connessioni
