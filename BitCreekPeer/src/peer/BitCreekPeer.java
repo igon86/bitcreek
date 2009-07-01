@@ -410,7 +410,11 @@ public class BitCreekPeer {
         File f = null;
         for (Creek c : arraydescr) {
             if (c.getName().compareTo(nome) == 0) {
+                /* chiudo il peer */
+                c.chiudi();
+                /* lo rimuovo */
                 arraydescr.remove(pos);
+                /* eventualmente rimuovo anche il file */
                 if ((c.getStato() && c.getPercentuale() != FINITO) || !c.getStato()) {
                     f = new File("./FileCondivisi/" + nome);
                     f.delete();
