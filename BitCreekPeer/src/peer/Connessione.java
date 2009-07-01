@@ -220,7 +220,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * del Messaggio m
      * @param m Messaggio da inviare
      */
-    public synchronized void sendDown(Messaggio m) {
+    public void sendDown(Messaggio m) {
         try {
             outDown.writeObject(m);
         } catch (IOException ex) {
@@ -232,7 +232,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * del Messaggio m
      * @param m Messaggio da inviare
      */
-    public synchronized void sendUp(Messaggio m) {
+    public void sendUp(Messaggio m) {
         try {
             this.outUp.writeObject(m);
         } catch (IOException ex) {
@@ -243,7 +243,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * Effettua una receive sulla socket in download
      * @return m Messaggio ricevuto
      */
-    public synchronized Messaggio receiveDown() {
+    public Messaggio receiveDown() {
         try {
             if (inDown != null) {
                 return (Messaggio) inDown.readObject();
@@ -260,7 +260,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * Effettua una receive sulla socket in upload
      * @return m Messaggio ricevuto
      */
-    public synchronized Messaggio receiveUp() {
+    public Messaggio receiveUp() {
         try {
             if (inUp != null) {
                 return (Messaggio) inUp.readObject();
