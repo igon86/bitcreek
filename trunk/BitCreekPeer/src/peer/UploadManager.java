@@ -42,9 +42,9 @@ public class UploadManager implements Runnable {
      * Corpo del task
      */
     public void run() {
-        
-        System.out.println(Thread.currentThread().getName()+" UploadManager Avviato");
-        
+
+        System.out.println(Thread.currentThread().getName() + " UploadManager Avviato");
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
@@ -53,7 +53,6 @@ public class UploadManager implements Runnable {
         int countOrdina = 0, random = -1;
 
         /**************************** il ciclo ********************/
-
         while (true) {
             if (Thread.interrupted()) {
                 /* esco perchè mi hanno chiuso */
@@ -67,19 +66,21 @@ public class UploadManager implements Runnable {
                 break;
             }
             //contatto il tracker per avere una nuova lista
-            ArrayList<NetRecord> lista = peer.contattaTracker(this.c);
-            //aggiungo i nuovi peer
-            peer.aggiungiLista(c, lista);
-            /* dormo */
-            try {
-                Thread.sleep(ATTESA);
-            } catch (InterruptedException ex) {
-                /* esco perchè mi hanno chiuso */
-                System.err.println("uploaderManager : sono stato interrotto");
-                break;
+            if (c.getStato()) {
+                ArrayList<NetRecord> lista = peer.contattaTracker(this.c);
+                //aggiungo i nuovi peer
+                peer.aggiungiLista(c, lista);
+                /* dormo */
+                try {
+                    Thread.sleep(ATTESA);
+                } catch (InterruptedException ex) {
+                    /* esco perchè mi hanno chiuso */
+                    System.err.println("uploaderManager : sono stato interrotto");
+                    break;
+                }
             }
         }
-        
-        System.out.println(Thread.currentThread().getName()+" UploadManager Terminato ");
+
+        System.out.println(Thread.currentThread().getName() + " UploadManager Terminato ");
     }
 }
