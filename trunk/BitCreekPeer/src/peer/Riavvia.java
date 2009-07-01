@@ -46,60 +46,11 @@ public class Riavvia implements Runnable {
                 c.init();
                 /* se il file è in download */
                 if (c.getStato()) {
-                    SSLSocket s = null;
-                    ObjectInputStream oin = null;
-                    int portatracker = c.getTCP();
-                    try {
-                        s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(peer.getIpServer(), portatracker);
-                        oin = new ObjectInputStream(s.getInputStream());
-                        int dimlista = oin.readInt();
-                        for (int j = 0; j < dimlista; j++) {
-                            lista.add((NetRecord) oin.readObject());
-                        }
-                        s.close();
-                    } catch (ClassNotFoundException ex) {
-                        System.err.println("Riavvia : ClassNotFoundException");
-                    } catch (IOException ex) {
-                        System.err.println("Riavvia : IOexception");
-                    }
-                    for (NetRecord n : lista) {
-                        try {
-                            if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
-                                break;
-                            }
-                            if (n.getPorta() == peer.getPortaRichieste() && n.getIp().getHostAddress().compareTo(peer.getMioIp().getHostAddress()) == 0) {
-                                continue;
-                            }
-                            if (c.presenzaConnessione(n.getIp(), n.getPorta()) != null) {
-                                continue;
-                            }
-                            SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
-                            Socket sock = new Socket();
-                            sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                            Bitfield b = new Bitfield(null);
-                            ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
-                            ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
-                            Connessione conn = new Connessione();
-                            conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
-                            c.addConnessione(conn);
-                            contactOUT.writeObject(new Contact(peer.getMioIp(), peer.getPortaRichieste(), c.getId()));
-                            try {
-                                b = (Bitfield) contactIN.readObject();
-                                conn.setBitfield(b.getBitfield());
-                                c.addRarita(b.getBitfield());
-                            } catch (ClassNotFoundException ex) {
-                                System.err.println("Riavvia : Classnotfound");
-                            }
-                            peer.addTask(new Downloader(c, conn, peer));
-                            /* incremento  il numero di connessioni */
-                            peer.incrConnessioni();
-                            /* incremento numero peer */
-                            c.incrPeer();
-                        } catch (IOException ex) {
-                            /* passo al prossimo netrecord perchè nessuno mi ha risposto */
-                            continue;
-                        }
-                    }
+                    
+                    lista = peer.contattaTracker(c);
+                    
+                    peer.aggiungiLista(c, lista);
+                    
                     peer.addTask(new UploadManager(peer, c));
                     /* inutile continuare a ciclare se non posso creare connessioni */
                     if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
