@@ -72,7 +72,6 @@ public class Apri implements Runnable {
                 try {
                     c = new Creek((Descrittore) cr, cr.getStato(), cr.getPubblicato());
                 } catch (ErrorException ex) {
-                    problema = true;
                 }
                 in.close();
             } catch (IOException ex) {

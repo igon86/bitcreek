@@ -1,0 +1,87 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options false
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Prefazione
+\end_layout
+
+\begin_layout Standard
+L'obiettivo del progetto finale era realizzare un sistema P2P conforme alle
+ specifiche di BitTorrent per scopi didattici utilizzando un paradigma di
+ programmazione orientato agli oggetti e in linguaggio Java.
+ Possiamo affermare di aver raggiunto questo obiettivo realizzando un sistema
+ funzionale ed efficiente, conforme alle specifiche date e con features/politich
+e aggiuntive derivate direttamente da quelle del protocollo e dei client
+ BitTorrent attuali.
+ Grazie ad una buona fase iniziale di progettazione delle varie classi la
+ stesura del codice non è risultata eccessivamente complessa, come framework
+ abbiamo utilizzato NetBeans IDE sia per la strutturazione del codice java
+ che dei vari diagrammi UML; dopo una prima stesura del codice effettuata
+ "a due mani" abbiamo utilizzato Subversion per la gestione delle varie
+ revisioni del codice e la loro condivisione.
+ Abbiamo sfruttato tutte le nostre conoscenze acquisite durante il corso
+ per l'implementazione delle varie parti del progetto avendo cura di sfruttare
+ appieno il paradigma di programmazione ad oggetti e le potenzialità del
+ linguaggio Java.
+ Gran parte dei concetti e delle direttive presenti nella bozza di progetto
+ sono stati rielaborati accuratamente in sede di progetto, la scelta delle
+ politiche da utilizzare è derivata in gran parte dalle reference aggiuntive
+ presenti nella bozza mentre per la realizzazione della GUI abbiamo preso
+ a riferimento client BitTorrent attuali (Azureus nel nostro caso).
+ Altre features aggiuntive sono state implementate per rendere il nostro
+ software utilizzabile in un contesto reale, in particolare abbiamo posto
+ grande attenzione nel realizzare un interfaccia grafica il più possibile
+ reattiva e comprensibile, abbiamo aggiunto meccanismi per il salvataggio
+ su file (.creek) dei riferimenti allo swarm, meccanismi di terminazione
+ gentile sia del client che del server con salvataggio dello stato, aggiramento
+ di NAT e firewall, risolto problematiche relative al trasferimento di file
+ di grosse dimensioni.
+ Grazie a queste features aggiuntive ci sentiamo di affermare che il nostro
+ programma è utilizzabile anche in un contesto reale.
+ Tutti i vari aspetti qui trattati verrano adeguatamente spiegati nel resto
+ della relazione, sia come analisi dei singoli package sia come spiegazione
+ delle varie features e politiche implementate.
+\end_layout
+
+\end_body
+\end_document

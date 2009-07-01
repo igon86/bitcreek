@@ -1,0 +1,722 @@
+#LyX file created by tex2lyx 1.6.2
+\lyxformat 247
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize 12
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+
+Implementazione e Funzionamento
+\end_layout
+
+\begin_layout Subsection
+
+Server
+\end_layout
+
+\begin_layout Standard
+
+Analizziamo come prima cosa il funzionamento dell'intero server andando poi a focalizzare l'attenzione sugli aspetti implementativi pi\i \`{u}
+ importanti. Il main della parte server dell'applicazione si trova nella classe BitCreekServer all'interno del package 
+\begin_inset Formula $server$
+\end_inset
+
+, all'avvio viene istanziato un nuovo oggetto BitCreekServer e contestualmente alla sua creazione (quindi nel costruttore) viene ripristinato uno stato consistente a partire da un file di configurazione. Successivamente vengono avviati i thread ServerListener e ThreadSaver ed infine avviato RMI. Si noti che le porte utilizzate come ServerSocket per la connessione dei peer e come porta RMI sono fissate a programma questo perch\i \'{e}
+ abbiamo ritenuto che un server abbia piena disponibilit\i \`{a}
+ delle proprie porte, diversamente nel lato client abbiamo creato un complesso sistema di gestione del NAT interattivo e a runtime per la scelta delle porte. Nel file di configurazione viene salvato lo stato di ogni swarm di cui il server tiene traccia, al momento della creazione del server vengono ripristinati (per ogni swarm) tre thread, un thread tracker di keepalive su UDP, un thread tracker per gestire i nuovi peer che si aggiungono allo swarm e infine un thread Trimmer. Il thread ServerListener si occupa di gestire le richieste di connessione al server da parte dei peer e fornisce meccanismi per la gestione del NAT. Il thread ThreadSaver invece effettua un periodico salvataggio dello stato del server su file di configurazione, questa costituisce una feature aggiuntiva che abbiamo deciso di implementare nel nostro progetto che si rileva particolarmente utile nel nostro caso dato che non abbiamo replicazione del server e quindi un improvviso guasto causerebbe la perdita di tutti i dati relativi agli swarm. Dal diagramma delle classi\InsetSpace ~
+
+\begin_inset LatexCommand \ref{classiServer}
+
+\end_inset
+
+ si nota come La classe Descrittore sia il punto di centralizzazione di tutto il server. Questa classe definisce tutti gli attributi di uno swarm che \i \`{e}
+ bene esplicitare:
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+lstinputlisting
+\end_layout
+
+\end_inset
+
+[caption=
+\begin_inset Formula $Descrittore$
+\end_inset
+
+.,label=list:Descrittore]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+code/descrittore.code
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+Di fondamentale importanza risultano i campi: 
+\end_layout
+
+\begin_layout Itemize
+
+int id: E` l'identificativo unico dello swarm, viene creato al momento della creazione, tramite RMI, del descrittore realtivo. 
+\end_layout
+
+\begin_layout Itemize
+
+byte[] hash: E` la codifica in SHA del file relativo allo swarm, viene utilizzato al momento della creazione per verificare che non vi siano 2 file uguali associati a diversi swarm. 
+\end_layout
+
+\begin_layout Itemize
+
+int portaTCP, portaUDP: sono le porte di ascolto dei tracker inizializzate al momento della creazione del descrittore. Al momento del riavvio del server i tracker verranno riavviati sulle porte gia utilizzate di modo che un peer pu\i \`{o}
+ sempre riunirsi allo swarm. 
+\end_layout
+
+\begin_layout Itemize
+
+int numSeeders, numLeechers: sono statistiche sul numero di seeder e leecher che partecipano allo swarm, vengono tenute costantemente aggiornate dal thread Trimmer. 
+\end_layout
+
+\begin_layout Subsubsection
+
+interazioni RMI
+\end_layout
+
+\begin_layout Standard
+
+La struttura dati viene inizializzata tramite chiamate RMI da parte dei peer che vogliono condividere un nuovo file.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+lstinputlisting
+\end_layout
+
+\end_inset
+
+[caption=
+\begin_inset Formula $inviaDescr$
+\end_inset
+
+.,label=list:inviaDescr()]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+code/inviaDescr.header
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+Come prima cosa viene effettuato un controllo, tramite lo SHA, che il file inviato non sia gia associato ad un altro swarm, in tal caso il peer viene solamente aggiunto e non riceve la callback per le ricerche (si noti come l'implementazione di questo meccanismo \i \`{e}
+ del tutto trasparente al peer). Questo meccanismo risulta di fondamentale importanza in quanto permette di sfruttare appieno la rete P2P. Nel caso questo controllo viene superato il nuovo descrittore viene aggiunto alle 
+\begin_inset Formula $metainfo$
+\end_inset
+
+ (implementate tramite HashSet), vengono inizializzati i tracker TCP e UDP relativi, il thread Trimmer e le relative strutture dati.
+\end_layout
+
+\begin_layout Standard
+
+L'altra possibile interazione tramite RMI \i \`{e}
+:
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+lstinputlisting
+\end_layout
+
+\end_inset
+
+[caption=
+\begin_inset Formula $ricerca$
+\end_inset
+
+.,label=list:ricerca]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+code/ricerca.header
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+Questa chiamata provoca una scansione delle MetaInfo del server e ritorna una lista di descrittori. Le funzionalit\i \`{a}
+ di confronto lessicali sono implementate utilizzando la librerie per le espressioni regolari consigliata.
+\end_layout
+
+\begin_layout Subsubsection
+
+ListaPeer
+\end_layout
+
+\begin_layout Standard
+
+Rimane da chiarire le funzionalit\i \`{a}
+ di questa struttura condivisa che rappresenta un notevole punto di contralizzazione per il server. Per ogni swarm di cui il server tiene traccia viene istanziata una 
+\begin_inset Formula $ListaPeer$
+\end_inset
+
+ contenente i riferimento ad ogni peer che partecipa allo swarm. Questa lista viene gestita concorrentemente da 3 Thread:
+\end_layout
+
+\begin_layout Itemize
+
+Thread TrackerTCP: Questo thread si occupa di ricevere su connessioni SSL sicure le richieste di unione allo swarm da parte dei peer. Al momento della ricezione di una richiesta il Thread aggiunge una nuove entry alla ListaPeer e invia al peer una lista di NetRecord, classe condivisa che contiene tutte le credenziali del peer. 
+\end_layout
+
+\begin_layout Itemize
+
+Thread TrackerUDP: Questo thread si occupa di ricevere i messaggi di keep alive dai peer su connessioni UDP, al momento della ricezione di un messaggio di keep alive viene scandita la ListaPeer e invocato il metodo touch() sul NetRecord corrispondente. 
+\end_layout
+
+\begin_layout Itemize
+
+Thread Trimmer: Questo thread, di tipo TimerTask, viene eseguito a intervalli regolari e si occupa di eliminare dalla ListaPeer i NetRecord relatvi a peer che non hanno pi\i \`{u}
+ inviato messaggi di keep Alive. 
+\end_layout
+
+\begin_layout Standard
+
+Tutti i metodi per l'accesso e la modifica alla ListaPeer sono quindi Synchronized per garantirne la correttezza ed evitare Race Condition.
+\end_layout
+
+\begin_layout Subsubsection
+
+Features aggiuntive e chiarimenti
+\end_layout
+
+\begin_layout Standard
+
+Nel realizzare il server abbiamo fatto alcune assunzioni ulteriori rispetto a quelle presenti nella bozza di progetto:
+\end_layout
+
+\begin_layout Itemize
+
+Descrittori con zeri fonti: Differentemente da quanto specificato nella bozza di progetto i file con fonti non al momento disponibili non vengono rimosse dal server, la stato dei loro descrittori viene ugualmente salvato sul server ma la ricerca di un file con zero fonti non restituisce risultati, con questo meccanismo \i \`{e}
+ possibile che lo swarm venga riattivato al momento che si ripresentano alcuni dei seeder o un peer pubblichi nuovamente il file relativo allo swarm. 
+\end_layout
+
+\begin_layout Itemize
+
+Salvataggio periodico dello stato: Come precedentemente spiegato questa funzionalit\i \`{a}
+ \i \`{e}
+ stata aggiunta come prevenzione contro fallimenti improvvisi del server che, in mancanza di un meccanismo di salvataggio periodico, risulterebbero fatali per il buon funzionamento dell'applicazione. 
+\end_layout
+
+\begin_layout Itemize
+
+Controllo sulla pubblicazione: Per evitare che un file venga pubblicato pi\i \`{u}
+ volte abbiamo effettuato un controllo sia sullo SHA del file che sulla dimensione, in questo modo la probabilit\i \`{a}
+ che due file diversi risultino uguali \i \`{e}
+ assolutamente trascurabile. 
+\end_layout
+
+\begin_layout Subsection
+
+GUI
+\end_layout
+
+\begin_layout Standard
+
+Il main della parte server in questo caso si trova nella classe 
+\begin_inset Formula $BitCreekGui$
+\end_inset
+
+. Al momento della creazione di una nuova istanza di BitCreekGui vengono eseguite in sequneza le seguenti azioni: 
+\end_layout
+
+\begin_layout Enumerate
+
+initComponents(): Funzione che inizializza tutta la parte grafica del peer. 
+\end_layout
+
+\begin_layout Enumerate
+
+initProtocol(): Funzione che inizializza la parte di protocollo (o logica) del peer, al suo interno viene istanziato un nuovo BitCreekPeer che mantiene un riferimento alla BitCreekGui per l'aggiornamento grafico in seguito ad eventi rilevati dalla logica. 
+\end_layout
+
+\begin_layout Enumerate
+
+inizializzazione del ListenerTabelle. 
+\end_layout
+
+\begin_layout Enumerate
+
+inizializzazione del ListenerGrafico. 
+\end_layout
+
+\begin_layout Standard
+
+Al momento del'avvio la GUI si presenta come in figura:
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+mbox{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename images/GUI.jpg
+	width 15cm
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Caption
+
+snapshot della GUI.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand \label{GUI}
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+In questa sezione daremo una spiegazione delle varie politiche e delle scelte implementative fatte, per una descrizione dell'interazione utente-GUI si legga la sezione successiva. Nella realizzazione della Gui abbiamo posto grande attenzione all'utilizzo delle primitive adeguate per avere un'interfaccia grafica responsiva. In particolare abbiamo utilizzato i meccanismi della libreria 
+\begin_inset Formula $Javax.Swing$
+\end_inset
+
+ per la gestione dell'EventQueue, in particolare nessuna delle operazioni invocabili dalla Gui gira sul Thread Dispatcher ma viene assegnato ad un Thread apposito della logica che al termine dell'elaborazione invoca un apposito metodo della Gui per l'aggiornamento della grafica con il metodo 
+\begin_inset Formula $InvokeLater()$
+\end_inset
+
+. Con questi meccanismi manteniamo l'interfaccia grafica sempre responsiva anche a seguito di elaborazioni consistenti da parte della logica. In particolare per le funzionalit\i \`{a}
+ come la creazione dei Descrittori e la loro ricerca tramite RMI, molto onerose anche a causa dell'interazione client-server, l'interfaccia grafica non presenta freeze. Unica eccezione a questa politica \i \`{e}
+ la funzione di connessione, abbiamo infatti ritenuto che nel caso della connessione fosse pi\i \`{u}
+ naturale avere un freeze dell'interfaccia fino a che la procedura di connessione al server non \i \`{e}
+ completata. Altro aspetto che abbiamo considerato accuratamente \i \`{e}
+ l'abilitazione/disabilitazione dei vari bottoni, evitando quindi che un utente inesperto possa effettuare operazioni prive di senso ed eventualmente dannose per la consistenza dei dati.
+\end_layout
+
+\begin_layout Subsubsection
+
+Implementazione della GUI
+\end_layout
+
+\begin_layout Standard
+
+La GUI utilizza tre modelli con altrettanti pannelli: 
+\end_layout
+
+\begin_layout Itemize
+
+modello MieiCreek: visualizza lo stato degli swarm a cui sto partecipando. 
+\end_layout
+
+\begin_layout Itemize
+
+modello CreekPubblicati: visualizza lo stato degli swarm in cui sono seeder, il peer che ha pubblicato il file ha anche visibilit\i \`{a}
+ dei peer che effettuano la ricerca. 
+\end_layout
+
+\begin_layout Itemize
+
+modello RisultatiRicerca: vengono visualizzati i risultati della ricerca di un file, la ricerca si attiva sia dalla textbox in alto a sinistra che tramite il pulsante "Mi sento fortunato" in basso a destra. Questa funzionalit\i \`{a}
+ \i \`{e}
+ stata implementata durante il testing dell'applicazione ed \i \`{e}
+ rimasta inalterata nella versione finale del progetto. 
+\end_layout
+
+\begin_layout Paragraph
+
+Listener della GUI
+\end_layout
+
+\begin_layout Standard
+
+La GUI utilizza due listener, entrambi implementati come SwingTimer. Questi due Thread effettuano una scansione di arrayDescr<Creek> e arrayCercati<Descrittore> nella logica del peer e aggiornano le relative tabelle dell'interfaccia grafica. In fase di progetto abbiamo deciso di utilizzare i meccanismi degli SwingTimer perch\i \'{e}
+ consentono una stesura del codice coerente oltre ad essere preferibile, nel nostro caso, a degli oggetti 
+\begin_inset Formula $Observable$
+\end_inset
+
+. Degli oggetti 
+\begin_inset Formula $Observable$
+\end_inset
+
+ avrebbero causato un Overhead eccessivo per il peer e assolutamente ingiustificato. Nel nostro caso abbiamo scelto un delay tra le varie invocazioni del timer di 0.5 secondi nell'aggiornamento delle tabelle e di 1.2 secondi per l'aggiornamento del grafico delle connessioni, la scelta dei valori \i \`{e}
+ un buon compromesso tra la responsivit\i \`{a}
+ dell'interfaccia grafica e l'overhead introdotto dai Thread.
+\end_layout
+
+\begin_layout Subsection
+
+Peer
+\end_layout
+
+\begin_layout Standard
+
+Questo Package contiene le varie classi che compongono la logica dell'applicazione e definiscono il protocollo di interazione tra peer. Al momento dell'avvio (initProtocol) da parte della GUI viene istanziato un oggetto di tipo BitCreekPeer, il suo stato viene ripristinato dalla precendente esecuzione usando dei file di configurazione presenti in una cartella apposita. Come prima cosa l'utente deve connettersi da interfaccia grafica tramite l'apposito tasto, durante la connessione viene invocata la procedura di test del NAT, se la procedura da esito positivo il peer risulta connesso al server. A questo punto vengono avviati i vari thread di supporto: 
+\end_layout
+
+\begin_layout Itemize
+
+Thread KeepAlive 
+\end_layout
+
+\begin_layout Itemize
+
+Thread Listener 
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%%INSERIRE QUI COMMENTO DELLA SPIEGAZIONE NAT
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+A questo punto le varie funzionalit\i \`{a}
+ della GUI sono attive ed \i \`{e}
+ possibile: 
+\end_layout
+
+\begin_layout Enumerate
+
+creare un nuovo descrittore. 
+\end_layout
+
+\begin_layout Enumerate
+
+creare un file .creek. 
+\end_layout
+
+\begin_layout Enumerate
+
+aprire un file .creek e avviarlo. 
+\end_layout
+
+\begin_layout Enumerate
+
+avviare un file tra quelli cercati. 
+\end_layout
+
+\begin_layout Enumerate
+
+eliminare file (sia in stato di seeder che di leecher). 
+\end_layout
+
+\begin_layout Enumerate
+
+chiudere l'applicazione (ovviamente). 
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%CASI D'USO
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+arrayDescr
+\end_layout
+
+\begin_layout Standard
+
+Questa classe rappresenta il punto centrale di tutta l'applicazione. E` implementata come ArrayList
+\begin_inset Formula $\langle Creek \rangle$
+\end_inset
+
+ e contiene tutte le informazioni relative ai vari swarm a cui il peer partecipa, ogni singolo oggetto di tipo Creek infatti rappresenta un "Descrittore a runtime" e quindi racchiude tutte le informazioni necessarie a runtime per la gestione di uno swarm. Data la sua importanza riportiamo qui le sue varibili di istanza:
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+lstinputlisting
+\end_layout
+
+\end_inset
+
+[caption=
+\begin_inset Formula $Creek$
+\end_inset
+
+.,label=list:Creek]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+code/Creek.header
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+Analisi delle varie classi
+\end_layout
+
+\begin_layout Standard
+
+Andiamo ad analizzare le varie classi in dettaglio:
+\end_layout
+
+\begin_layout Standard
+
+Le seguenti classi implementano tramite appositi Thread le funzionalit\i \`{a}
+ invocate dalla GUI: 
+\end_layout
+
+\begin_layout Itemize
+
+Apri 
+\end_layout
+
+\begin_layout Itemize
+
+Avvia 
+\end_layout
+
+\begin_layout Itemize
+
+Cerca 
+\end_layout
+
+\begin_layout Itemize
+
+Crea 
+\end_layout
+
+\begin_layout Itemize
+
+Riavvia 
+\end_layout
+
+\begin_layout Standard
+
+La caratteristica comune di questi Thread \i \`{e}
+ di operare principalmente su arraydescr del peer per aggiungere/avviare/eliminare nuovi creek su cui lavorare.
+\end_layout
+
+\end_body
+\end_document
