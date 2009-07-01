@@ -832,7 +832,6 @@ public class BitCreekGui extends javax.swing.JFrame {
                 for (Creek c : array) {
                     if (c.getStato()) {
                         /* file in download */
-                        System.out.println("Peer nel creek : " + c.getPeer());
                         RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getPercentuale(), c.getPeer());
                         try {
                             modellomieicreek.addRiga(r);

@@ -154,32 +154,57 @@ public class BitCreekPeer {
                 if (n.getPorta() == this.portarichieste && n.getIp().getHostAddress().compareTo(this.mioip.getHostAddress()) == 0) {
                     continue;
                 }
-                if (c.presenzaConnessione(n.getIp(), n.getPorta()) != null) {
-                    continue;
+                Connessione conn;
+                Connessione toModify = c.presenzaConnessione(n.getIp(), n.getPorta());
+                if (toModify == null) {
+                    SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
+                    Socket sock = new Socket();
+                    sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
+                    Bitfield b = new Bitfield(null);
+                    ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
+                    ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
+                    conn = new Connessione();
+                    conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
+                    c.addConnessione(conn);
+                    contactOUT.writeObject(new Contact(this.mioip, this.portarichieste, c.getId()));
+                    try {
+                        b = (Bitfield) contactIN.readObject();
+                        conn.setBitfield(b.getBitfield());
+                        c.addRarita(b.getBitfield());
+                    } catch (ClassNotFoundException ex) {
+                        System.err.println("Avvia : Classnotfound");
+                    }
+                    this.addTask(new Downloader(c, conn, this));
+                    /* incremento  il numero di connessioni */
+                    this.incrConnessioni();
+                    /* incremento numero peer */
+                    c.incrPeer();
+                } else {
+                    /* connessione già presente */
+                    conn = toModify;
+                    if (conn.DownNull()) {
+                        SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
+                        Socket sock = new Socket();
+                        sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
+                        Bitfield b = new Bitfield(null);
+                        ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
+                        ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
+                        conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
+                        contactOUT.writeObject(new Contact(this.mioip, this.portarichieste, c.getId()));
+                        try {
+                            b = (Bitfield) contactIN.readObject();
+                            conn.setBitfield(b.getBitfield());
+                            c.addRarita(b.getBitfield());
+                        } catch (ClassNotFoundException ex) {
+                            System.err.println("Avvia : Classnotfound");
+                        }
+                        this.addTask(new Downloader(c, conn, this));
+                        /* incremento  il numero di connessioni */
+                        this.incrConnessioni();
+                        /* incremento numero peer */
+                        c.incrPeer();
+                    }
                 }
-                SocketAddress sa = new InetSocketAddress(n.getIp(), n.getPorta());
-                Socket sock = new Socket();
-                sock.connect(sa, BitCreekPeer.TIMEOUTCONNESSIONE);
-                Bitfield b = new Bitfield(null);
-                ObjectOutputStream contactOUT = new ObjectOutputStream(sock.getOutputStream());
-                ObjectInputStream contactIN = new ObjectInputStream(sock.getInputStream());
-                Connessione conn = new Connessione();
-                conn.set(true, sock, contactIN, contactOUT, b.getBitfield(), n.getPorta());
-                c.addConnessione(conn);
-                contactOUT.writeObject(new Contact(this.mioip, this.portarichieste, c.getId()));
-                try {
-                    b = (Bitfield) contactIN.readObject();
-                    conn.setBitfield(b.getBitfield());
-                    c.addRarita(b.getBitfield());
-                } catch (ClassNotFoundException ex) {
-                    System.err.println("Avvia : Classnotfound");
-                }
-                this.addTask(new Downloader(c, conn, this));
-                /* incremento  il numero di connessioni */
-                this.incrConnessioni();
-                /* incremento numero peer */
-                c.incrPeer();
-
             } catch (IOException ex) {
                 /* passo al prossimo netrecord perchè nessuno mi ha risposto */
                 continue;

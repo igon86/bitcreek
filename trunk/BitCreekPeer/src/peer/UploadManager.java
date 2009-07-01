@@ -1,6 +1,8 @@
 package peer;
 
 import condivisi.ErrorException;
+import condivisi.NetRecord;
+import java.util.ArrayList;
 
 /**
  * Thread per l'implementazione delle politiche di CHOKE/UNCHOKE delle
@@ -65,7 +67,9 @@ public class UploadManager implements Runnable {
                 break;
             }
             //contatto il tracker per avere una nuova lista
-            
+            ArrayList<NetRecord> lista = peer.contattaTracker(this.c);
+            //aggiungo i nuovi peer
+            peer.aggiungiLista(c, lista);
             /* dormo */
             try {
                 Thread.sleep(ATTESA);
