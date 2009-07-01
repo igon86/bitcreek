@@ -4,6 +4,7 @@ import condivisi.Descrittore;
 import condivisi.ErrorException;
 import condivisi.InterfacciaCallback;
 import condivisi.InterfacciaRMI;
+import condivisi.NetRecord;
 import gui.BitCreekGui;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -33,6 +34,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Parte client del protocollo BitCreek
@@ -142,6 +145,28 @@ public class BitCreekPeer {
         }
     }
 
+    public ArrayList<NetRecord> contattaTracker(Descrittore d){
+        ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
+        SSLSocket s = null;
+        ObjectInputStream oin = null;
+        int portatracker = d.getTCP();
+                /* effettuo il contatto via SSL */
+                try {
+                    s = (SSLSocket) SSLSocketFactory.getDefault().createSocket(this.ipServer, portatracker);
+                    oin = new ObjectInputStream(s.getInputStream());
+                    int dimlista = oin.readInt();
+                    for (int j = 0; j < dimlista; j++) {
+                        lista.add((NetRecord) oin.readObject());
+                        NetRecord toPrint = lista.get(j);
+                    }
+                    s.close();
+                } catch (ClassNotFoundException ex) {
+                    System.err.println("Avvia : Classnotfound");
+                } catch (IOException ex) {
+                    System.err.println("Avvia : IOexception");
+                }
+        return lista;
+    }
     /**
      * Restituisce il numero di connessioni
      * @return connessioni
