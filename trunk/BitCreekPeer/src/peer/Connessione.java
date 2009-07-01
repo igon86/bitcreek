@@ -77,6 +77,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * Se non è possibile ferma il chiamante
      */
     public synchronized void possoUploadare() {
+        if(!this.uploadable) this.sendUp(new Messaggio(Messaggio.CHOKE,null));
         while (!this.uploadable) {
             try {
                 wait();
@@ -84,6 +85,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
                 System.err.print("Connessione : sono stato interrotto");
             }
         }
+        this.sendUp(new Messaggio(Messaggio.UNCHOKE,null));
     }
 
     /**
@@ -100,7 +102,7 @@ public class Connessione implements Serializable, Comparable<Connessione> {
      * connessione
      */
     public synchronized void nonPuoiUploadare() {
-        this.uploadable = false;
+        this.uploadable = false;    
     }
 
     /**
