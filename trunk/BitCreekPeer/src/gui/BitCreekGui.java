@@ -824,52 +824,50 @@ public class BitCreekGui extends javax.swing.JFrame {
 
             public void run() {
 
-                boolean problema = false;
                 ArrayList<Creek> array = null;
                 array = peer.getDescr();
-                if (!problema) {
-                    /* rimuovo vecchi modelli */
-                    modellomieicreek.removeTutti();
-                    RigaTabellaPubblicati rigap = null;
-                    for (Creek c : array) {
-                        if (c.getStato()) {
-                            /* file in download */
-                            RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getPercentuale(), c.getPeer());
-                            try {
-                                modellomieicreek.addRiga(r);
-                            } catch (ErrorException e) {
-                                System.err.println("Listener : modellomieicreek.addRiga(r), " + e.getMessage());
-                            }
-                        } else {
-                            /* file in upload */
-                            if ((rigap = modellopubblicati.presenza(c.getName())) != null) {
-                                /* modifico riga */
-                                if (c.getPeer() > 0) {
-                                    rigap.setSituazione("Attivo");
-                                } else {
-                                    rigap.setSituazione("Non Attivo");
-                                }
-                                rigap.setPeer(c.getPeer());
-                                rigap.setPeerCerca(c.getPeerCerca());
-                                rigap.setIdentita(c.getIdentita());
-
+                /* rimuovo vecchi modelli */
+                modellomieicreek.removeTutti();
+                RigaTabellaPubblicati rigap = null;
+                for (Creek c : array) {
+                    if (c.getStato()) {
+                        /* file in download */
+                        System.out.println("Peer nel creek : " + c.getPeer());
+                        RigaTabellaMieiCreek r = new RigaTabellaMieiCreek(c.getName(), c.getDimensione(), c.getPercentuale(), c.getPeer());
+                        try {
+                            modellomieicreek.addRiga(r);
+                        } catch (ErrorException e) {
+                            System.err.println("Listener : modellomieicreek.addRiga(r), " + e.getMessage());
+                        }
+                    } else {
+                        /* file in upload */
+                        if ((rigap = modellopubblicati.presenza(c.getName())) != null) {
+                            /* modifico riga */
+                            if (c.getPeer() > 0) {
+                                rigap.setSituazione("Attivo");
                             } else {
-                                /* creek non presente : lo aggiungo */
-                                RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione(), c.getPubblicato());
-                                try {
-                                    modellopubblicati.addRiga(r);
-                                } catch (ErrorException e) {
-                                    System.err.println("Listener : modellopubblicati.addRiga(r), " + e.getMessage());
-                                }
+                                rigap.setSituazione("Non Attivo");
+                            }
+                            rigap.setPeer(c.getPeer());
+                            rigap.setPeerCerca(c.getPeerCerca());
+                            rigap.setIdentita(c.getIdentita());
+
+                        } else {
+                            /* creek non presente : lo aggiungo */
+                            RigaTabellaPubblicati r = new RigaTabellaPubblicati(c.getName(), c.getDimensione(), c.getPubblicato());
+                            try {
+                                modellopubblicati.addRiga(r);
+                            } catch (ErrorException e) {
+                                System.err.println("Listener : modellopubblicati.addRiga(r), " + e.getMessage());
                             }
                         }
                     }
-                    if (tabellamieicreek.getSelectedRowCount() == 0) {
-                        modellomieicreek.fireTableDataChanged();
-                    }
-                    if (tabellapubblicati.getSelectedRowCount() == 0) {
-                        modellopubblicati.fireTableDataChanged();
-                    }
+                }
+                if (tabellamieicreek.getSelectedRowCount() == 0) {
+                    modellomieicreek.fireTableDataChanged();
+                }
+                if (tabellapubblicati.getSelectedRowCount() == 0) {
+                    modellopubblicati.fireTableDataChanged();
                 }
             }
         });

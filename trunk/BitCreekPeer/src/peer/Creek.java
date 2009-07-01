@@ -236,6 +236,7 @@ public class Creek extends Descrittore implements Serializable {
      */
     public synchronized void init() {
         this.connessioni = new ArrayList<Connessione>();
+        this.peer = 0;
         this.file = new File("./FileCondivisi/" + this.getName());
         try {
             this.raf = new RandomAccessFile(this.file, "rw");
@@ -652,6 +653,7 @@ public class Creek extends Descrittore implements Serializable {
      * Incrementa il numero di peer
      */
     public synchronized void incrPeer() {
+        System.out.println("INCRPER nel creek");
         this.peer++;
     }
 
