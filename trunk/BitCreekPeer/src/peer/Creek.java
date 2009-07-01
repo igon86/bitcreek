@@ -653,7 +653,6 @@ public class Creek extends Descrittore implements Serializable {
      * Incrementa il numero di peer
      */
     public synchronized void incrPeer() {
-        System.out.println("INCRPER nel creek");
         this.peer++;
     }
 
