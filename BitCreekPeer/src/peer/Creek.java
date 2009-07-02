@@ -40,7 +40,7 @@ public class Creek extends Descrittore implements Serializable {
     /** Definisce STARTED */
     private static final boolean STARTED = true;
     /** Definisce la dimensione del risultato di un' applicazione di SHA-1 */
-    private static final int DIMSHA = 20;
+    protected static final int DIMSHA = 20;
     /** Definisce INIT */
     private static final int INIT = 1;
     /** Definisce RAREST */
@@ -177,35 +177,9 @@ public class Creek extends Descrittore implements Serializable {
      * @return esito dell' operazione
      * @throws ErrorException se qualcosa non va
      */
-    public synchronized boolean scriviChunk(Chunk c) throws ErrorException {
+    public synchronized boolean scriviChunk(Chunk c) {
         int offset = c.getOffset();
         if (this.have[offset] == false) {
-            /* controllo SHA */
-            byte[] stringa = this.getHash();
-            byte[] sha = new byte[DIMSHA];
-            int i = DIMSHA * offset;
-            for (int j = 0; j < DIMSHA; j++) {
-                sha[j] = stringa[i + j];
-            }
-            MessageDigest md = null;
-            try {
-                md = MessageDigest.getInstance("SHA-1");
-            } catch (NoSuchAlgorithmException ex) {
-                throw new ErrorException("No such Algorithm");
-            }
-            md.update(c.getData());
-            byte[] ris = new byte[DIMSHA];
-            ris = md.digest();
-            for (i = 0; i < ris.length; i++) {
-                if (ris[i] != sha[i]) {
-                    float temp = (float) this.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
-                    int dim = (int) Math.ceil(temp);
-                    if (c.getOffset() != dim - 1) {
-                        throw new ErrorException("SHA non corretto"); // lancio eccezione se lo sha non torna
-                    }
-                }
-            }
-            /* sha corretto : rendo consistente lo statoDownload */
             if (this.statoDownload == INIT) {
                 this.statoDownload = RAREST;
             }
