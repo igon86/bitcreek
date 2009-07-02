@@ -43,12 +43,13 @@ public class Riavvia implements Runnable {
                     
                     peer.aggiungiLista(c, lista);
                     
-                    peer.addTask(new UploadManager(peer, c));
                     /* inutile continuare a ciclare se non posso creare connessioni */
                     if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                         break;
                     }
                 }
+                
+                peer.addTask(new UploadManager(peer, c));
             }
         }
     }
