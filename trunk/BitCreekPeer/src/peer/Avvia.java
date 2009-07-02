@@ -58,9 +58,10 @@ public class Avvia implements Runnable {
                 lista = peer.contattaTracker(d);
 
                 peer.aggiungiLista(c, lista);
-
+                
+                peer.addTask(new UploadManager(peer, c));
             }
-            peer.addTask(new UploadManager(peer, c));
+            
             /* inutile continuare a ciclare se non posso creare connessioni */
             if (peer.getConnessioni() >= BitCreekPeer.MAXCONNESSIONI) {
                 break;

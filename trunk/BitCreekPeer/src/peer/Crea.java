@@ -139,6 +139,10 @@ public class Crea implements Runnable {
             f.delete();
             gui.PrintInformation("Errore Server", gui.ERRORE);
         }
+        else{
+            //ho finito tutto avvio l'uploadManager
+            peer.addTask(new UploadManager(peer, c));
+        }
         /* ricambio il cursore */
         gui.getRootPane().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
