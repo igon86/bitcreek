@@ -145,6 +145,12 @@ public class BitCreekPeer {
         }
     }
 
+    /**
+     * Contatta i peer nella lista e, se raggiungibili, crea nuove connessioni
+     * da aggiungere al creek passato come parametro
+     * @param c creek
+     * @param lista lista di peer
+     */
     public synchronized void aggiungiLista(Creek c, ArrayList<NetRecord> lista) {
         for (NetRecord n : lista) {
             try {
@@ -212,6 +218,11 @@ public class BitCreekPeer {
         }
     }
 
+    /**
+     * Metodo che si occupa di contattare il tracker TCP di uno swarm
+     * @param d descrittore dello swarm
+     * @return lista di peer dello swarm
+     */
     public ArrayList<NetRecord> contattaTracker(Descrittore d) {
         ArrayList<NetRecord> lista = new ArrayList<NetRecord>();
         SSLSocket s = null;
