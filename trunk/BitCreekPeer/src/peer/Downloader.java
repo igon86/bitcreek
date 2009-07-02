@@ -1,6 +1,10 @@
 package peer;
 
 import condivisi.ErrorException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Task che si occupa di scaricare un file
@@ -17,7 +21,6 @@ public class Downloader implements Runnable {
     private static final int PREQ = -1;
     /** Definisce la costante MAXFAILURE */
     protected static final int MAXFAILURE = 10;
-    
     /* Variabili d' istanza */
     /** Creek del file da scaricare */
     private Creek c;
@@ -51,8 +54,8 @@ public class Downloader implements Runnable {
      * Corpo del task
      */
     public void run() {
-        
-        System.out.println(Thread.currentThread().getName()+" Downloader Avviato da "+this.conn.getIPVicino()+", "+this.conn.getPortaVicino());
+
+        System.out.println(Thread.currentThread().getName() + " Downloader Avviato da " + this.conn.getIPVicino() + ", " + this.conn.getPortaVicino());
 
         /* setto l' interesse per la connessione */
         if (c.interested(conn.getBitfield())) {
@@ -67,7 +70,6 @@ public class Downloader implements Runnable {
         PIO p = null;
 
         /*********************** il ciclo ********************/
-        
         while (true) {
             /* controllo se devo terminare */
             if (!this.c.getStato() || this.conn.getTermina()) {
@@ -115,17 +117,48 @@ public class Downloader implements Runnable {
                     /* ho ricevuto un pezzo : lo scrivo su file se sha è ok */
                     count++;
                     Chunk chunk = (Chunk) m.getObj();
+                    int offset = chunk.getOffset();
                     try {
-                        if (c.scriviChunk(chunk)) {
-                            conn.incrDown();
+                        /* controllo SHA */
+                        byte[] stringa = c.getHash();
+                        byte[] sha = new byte[Creek.DIMSHA];
+                        int i = Creek.DIMSHA * offset;
+                        for (int j = 0; j < Creek.DIMSHA; j++) {
+                            sha[j] = stringa[i + j];
                         }
-                    } catch (ErrorException ex) {
+                        MessageDigest md = null;
+                        try {
+                            md = MessageDigest.getInstance("SHA-1");
+                        } catch (NoSuchAlgorithmException ex) {
+                            throw new ErrorException("No such Algorithm");
+                        }
+                        md.update(chunk.getData());
+                        byte[] ris = new byte[Creek.DIMSHA];
+                        ris = md.digest();
+                        for (i = 0; i < ris.length; i++) {
+                            if (ris[i] != sha[i]) {
+                                float temp = (float) c.getDimensione() / (float) BitCreekPeer.DIMBLOCCO;
+                                int dim = (int) Math.ceil(temp);
+                                if (chunk.getOffset() != dim - 1) {
+                                    throw new ErrorException("SHA non corretto"); // lancio eccezione se lo sha non torna
+                                }
+                            }
+                        }
+                    }
+                    catch (ErrorException ex) {
                         /* lo sha non torna : richiedo il pezzo */
                         int[] richiesta = new int[1];
                         richiesta[0] = chunk.getOffset();
                         conn.sendDown(new Messaggio(Messaggio.REQUEST, richiesta));
-                        continue;
-                    } catch (NullPointerException ex) {
+                        break;
+                    }
+                    try {
+                        //il pezzo potrebbe gia essere presente
+                        if (c.scriviChunk(chunk)) {
+                            conn.incrDown();
+                        }  
+                    }
+                    catch (NullPointerException ex) {
                         /* devo chiudere */
                         tipo = Messaggio.CLOSE;
                         break;
@@ -183,6 +216,6 @@ public class Downloader implements Runnable {
         }
         /* metto socket a null */
         this.conn.setSocketDown(null);
-        System.out.println(Thread.currentThread().getName()+" Downloader Terminato, ho scaricato: "+this.conn.getDownloaded()+" Chunk");
+        System.out.println(Thread.currentThread().getName() + " Downloader Terminato, ho scaricato: " + this.conn.getDownloaded() + " Chunk");
     }
 }
