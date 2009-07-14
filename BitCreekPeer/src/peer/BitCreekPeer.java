@@ -235,7 +235,6 @@ public class BitCreekPeer {
             int dimlista = oin.readInt();
             for (int j = 0; j < dimlista; j++) {
                 lista.add((NetRecord) oin.readObject());
-                NetRecord toPrint = lista.get(j);
             }
             s.close();
         } catch (ClassNotFoundException ex) {
